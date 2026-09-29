@@ -1,4 +1,7 @@
-"""Generate ONE private Marble world from one local photo (plus an optional text hint) and download it.
+"""Generate ONE private Marble world from one local photo or short video (plus an optional text hint) and download it.
+
+The input kind follows source.json: ``"kind": "video"`` uploads the named video file unchanged (Marble accepts one
+steady take up to 30 s); otherwise the named photo is downscaled and sent as a single image.
 
 Run inside the jobs service with a per-run credit cap, for example:
 
@@ -74,16 +77,20 @@ def prepare_marble_input_image(source_image: Path, destination: Path) -> dict[st
         return {"file": destination.name, "width_px": image.width, "height_px": image.height}
 
 
+VIDEO_CONTENT_TYPES = {".mp4": "video/mp4", ".mov": "video/quicktime", ".webm": "video/webm"}
+
+
 def build_generation_request(
-    media_asset_id: str, *, model: str, seed: int, text_prompt: str | None, display_name: str, tags: list[str]
+    media_asset_id: str, *, model: str, seed: int, text_prompt: str | None, display_name: str, tags: list[str],
+    input_kind: str = "image",
 ) -> GenerateWorldRequest:
+    media_reference = ContentReference(source="media_asset", media_asset_id=media_asset_id)
+    if input_kind == "video":
+        world_prompt = WorldPrompt(type="video", video_prompt=media_reference, text_prompt=text_prompt)
+    else:
+        world_prompt = WorldPrompt(type="image", image_prompt=media_reference, is_pano=False, text_prompt=text_prompt)
     return GenerateWorldRequest(
-        world_prompt=WorldPrompt(
-            type="image",
-            image_prompt=ContentReference(source="media_asset", media_asset_id=media_asset_id),
-            is_pano=False,
-            text_prompt=text_prompt,
-        ),
+        world_prompt=world_prompt,
         model=model,
         display_name=display_name,
         seed=seed,
@@ -131,8 +138,15 @@ def run(arguments: argparse.Namespace) -> int:
                                "label": arguments.label, "model": arguments.model, "seed": arguments.seed,
                                "text_prompt": text_prompt, "input": source_record, "ledger": str(ledger.path)}
 
-    input_jpeg = input_directory / f"marble_input_{MARBLE_INPUT_LONG_SIDE_PX}.jpg"
-    summary["marble_input"] = prepare_marble_input_image(input_directory / source_record["file"], input_jpeg)
+    input_kind = source_record.get("kind", "image")
+    if input_kind == "video":
+        upload_file = input_directory / source_record["file"]
+        upload_content_type = VIDEO_CONTENT_TYPES[upload_file.suffix.lower()]
+        summary["marble_input"] = {"file": upload_file.name, "kind": "video", "size_bytes": upload_file.stat().st_size}
+    else:
+        upload_file = input_directory / f"marble_input_{MARBLE_INPUT_LONG_SIDE_PX}.jpg"
+        upload_content_type = "image/jpeg"
+        summary["marble_input"] = prepare_marble_input_image(input_directory / source_record["file"], upload_file)
 
     existing_spends = ledger.spends_with_label(arguments.label)
     balance_before = client.credits()
@@ -144,10 +158,11 @@ def run(arguments: argparse.Namespace) -> int:
     started = None
     if not existing_spends:
         print(f"2. Upload input (free) and start ONE {arguments.model} generation", flush=True)
-        media_asset_id = client.upload_media_file(input_jpeg, kind="image", content_type="image/jpeg")
+        media_asset_id = client.upload_media_file(upload_file, kind=input_kind, content_type=upload_content_type)
         request = build_generation_request(
             media_asset_id, model=arguments.model, seed=arguments.seed, text_prompt=text_prompt,
             display_name=f"wefarm {arguments.label}"[:64], tags=["wefarm", arguments.label[:32]],
+            input_kind=input_kind,
         )
         write_json(run_directory / "generate_request.json", request.to_json_dict())
         started = client.generate(request, max_credits=per_run_cap, label=arguments.label)

@@ -166,7 +166,21 @@ export async function loadSplatWorld(options: {
     sharper.quaternion.copy(currentSplat.quaternion);
     sharper.scale.copy(currentSplat.scale);
     await sharper.initialized;
+    // Fade the sharper splat in over the current one, then drop the old one, so the scene gains
+    // detail smoothly instead of popping.
+    sharper.opacity = 0;
     parent.add(sharper);
+    const fadeMs = 1500;
+    const fadeStarted = performance.now();
+    await new Promise<void>((resolve) => {
+      const step = () => {
+        const fraction = Math.min(1, (performance.now() - fadeStarted) / fadeMs);
+        sharper.opacity = fraction * fraction * (3 - 2 * fraction);
+        if (fraction < 1) requestAnimationFrame(step);
+        else resolve();
+      };
+      requestAnimationFrame(step);
+    });
     parent.remove(currentSplat);
     currentSplat.dispose();
     currentSplat = sharper;

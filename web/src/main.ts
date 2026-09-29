@@ -64,8 +64,11 @@ async function main(): Promise<void> {
     }
   }
   const worldBaseUrl = worldSource?.baseUrl ?? "";
-  // Show a light splat quickly, then swap in a sharper one in the background (unless ?splat= pins one).
-  const splatLevel = params.get("splat") ?? (world?.files.splats["100k"] ? "100k" : "500k");
+  // First splat: from a local copy the 500k level loads in a fraction of a second and already looks
+  // good; over the network the 100k level (1.4 MB) gets a scene on screen quickly. Either way a
+  // sharper level then fades in while the operator plays (unless ?splat= pins one level).
+  const firstSplatLevel = worldSource?.origin === "remote" && world?.files.splats["100k"] ? "100k" : "500k";
+  const splatLevel = params.get("splat") ?? firstSplatLevel;
   const sharperSplatLevel = params.get("splat") ? null : SHARP_SPLAT_LEVEL;
   // Start the splat download now so it overlaps with loading physics.
   let splatDownload: Promise<Uint8Array | null> = Promise.resolve(null);
