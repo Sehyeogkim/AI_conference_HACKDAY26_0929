@@ -211,7 +211,7 @@ async function main(): Promise<void> {
    * cart, fruit): the splat renderer keeps one sort order for one camera, and drawing the splat
    * from a second camera every frame makes the main view flicker.
    */
-  let wristInsetVisible = false;
+  let wristInsetVisible = true;
   const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
