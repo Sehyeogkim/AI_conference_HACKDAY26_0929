@@ -10,7 +10,7 @@ WeFarm is a browser simulator for robot harvesting: a photoreal greenhouse (Worl
 
 | Zone | Owner | Paths | What lives there |
 | --- | --- | --- | --- |
-| **Environment** | Sean's agents | `web/src/farm/`, `web/src/render/`, `web/src/recording/`, `web/src/main.ts`, `web/index.html`, `web/src/style.css`, `src/wefarm/` (Python world generation), `data/` (ignored), `compose.yaml`, `docker/` | Scene, world packages, rendering, UI, recording format |
+| **Environment** | Sean's agents | `web/src/farm/`, `web/src/render/`, `web/src/ui/`, `web/src/recording/`, `web/src/main.ts`, `web/index.html`, `web/src/style.css`, `src/wefarm/` (Python world generation), `data/` (ignored), `compose.yaml`, `docker/` | Scene, world packages, rendering, UI, recording format |
 | **Robot** | Friend's agents | `web/src/robot/` (arm control), `robot/` (Python robot work, create as needed) | IK, controllers, policies, grasping, arm models, Python MuJoCo experiments |
 | **Shared seam** (change with care, note it in a handoff) | Both | `web/src/sim/` (scene generator + simulation core), `web/src/teleop/`, `web/public/models/`, `docs/interfaces.md` | The contract between the two zones |
 
