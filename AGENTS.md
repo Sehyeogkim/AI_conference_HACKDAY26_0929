@@ -23,6 +23,7 @@ Rules that keep merges easy:
 5. **Generated or large files are not committed**: `data/`, `runs/`, `web/dist/`, `node_modules/`. World packages are shared out of band (see `docs/README.md`).
 6. `web/package-lock.json` conflicts: take either side, then run `npm install` in the `web` container and commit the result.
 7. Small commits with plain descriptions; branch per workstream (`env/<topic>`, `robot/<topic>`); merge `main` into your branch often.
+8. **Add, don't break:** new fields optional with defaults, old names kept working until a handoff retires them, new features behind a URL option first. Details, the branch flow, and the 1-minute check before merging: [`docs/working-together.md`](docs/working-together.md).
 
 ## Run
 
