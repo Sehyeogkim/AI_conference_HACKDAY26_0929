@@ -80,7 +80,8 @@ class GraphStore:
 
     def ensure_schema(self) -> bool:
         """Create id constraints if the connected account has schema privilege."""
-        for label, key in (("Task", "task_id"), ("Episode", "episode_id"), ("QAResult", "qa_id"), ("Purchase", "purchase_id")):
+        for label, key in (("Task", "task_id"), ("Episode", "episode_id"), ("QAResult", "qa_id"),
+                           ("Purchase", "purchase_id"), ("Requester", "requester_id"), ("Player", "player_id")):
             query = f"CREATE CONSTRAINT {label.lower()}_{key}_unique IF NOT EXISTS FOR (n:{label}) REQUIRE n.{key} IS UNIQUE"
             if not self._execute(query, {}):
                 return False
@@ -98,14 +99,23 @@ class GraphStore:
             "robot": _str(spec.get("robot"), 200),
             "environment": _str(spec.get("environment"), 200),
             "objective": _str(spec.get("objective"), 500),
-            "requested_episodes": int(spec.get("requested_episodes", 1)),
+            "requested_episodes": int(spec.get("requested_episodes") or 1),
             "source": _str(task.get("source"), 40),
             "image_uri": _str(task.get("image_uri"), 1000),
             "request_text": _str(spec.get("request_text"), 5000),
             "spec_json": json.dumps(spec, ensure_ascii=False, default=str)[:16000],
             "created_at": _str(task.get("created_at"), 80),
+            "requester_id": _str(task.get("requester_id"), 120),
+            "status": _str(task.get("status") or "live", 40),
         }
-        return self._execute("MERGE (t:Task {task_id: $id}) SET t += $properties", {"id": task_id, "properties": properties})
+        requester_id = properties["requester_id"]
+        if requester_id:
+            query = ("MERGE (t:Task {task_id: $id}) SET t += $properties "
+                     "MERGE (r:Requester {requester_id: $requester_id}) "
+                     "MERGE (r)-[:REQUESTED]->(t)")
+        else:
+            query = "MERGE (t:Task {task_id: $id}) SET t += $properties"
+        return self._execute(query, {"id": task_id, "properties": properties, "requester_id": requester_id})
 
     def upsert_episode(self, episode: Mapping[str, Any], qa: Mapping[str, Any]) -> bool:
         episode_id = _str(episode.get("episode_id"), 120)
@@ -113,10 +123,20 @@ class GraphStore:
         if not episode_id or not task_id:
             self.last_error = "episode_id and task_id are required"
             return False
+        gates = qa.get("rule_results") or qa.get("hard_gates") or {}
+        if not isinstance(gates, Mapping):
+            gates = {}
         structural = qa.get("structural_pass") is True
         replay = qa.get("replay_pass") is True
-        ai_verdict = qa.get("verdict") or qa.get("ai_verdict") or "pending"
-        approved = structural and replay and ai_verdict == "pass"
+        ai_verdict = _str(qa.get("verdict") or qa.get("ai_verdict") or "pending", 30).lower()
+        ai_source = _str(qa.get("ai_source") or qa.get("source"), 40).lower()
+        status = _str(episode.get("qa_status") or qa.get("qa_status"), 40).lower()
+        hard_gates_pass = all(gates.get(key) is True for key in (
+            "data_integrity", "reproducibility", "task_completion", "uniqueness"))
+        approved = (structural and replay and hard_gates_pass and ai_verdict == "accept"
+                    and ai_source == "openrouter" and status == "approved")
+        if not status:
+            status = "approved" if approved else "pending_review"
         qa_id = _str(qa.get("qa_id") or f"{episode_id}-qa", 140)
         recording_uri = _str(episode.get("recording_uri") or episode.get("hdf5_uri"), 1000)
         episode_props = {
@@ -127,8 +147,13 @@ class GraphStore:
             "recording_uri": recording_uri,
             "recording_format": _str(episode.get("recording_format") or "jsonl.gz", 30),
             "sha256": _str(episode.get("sha256"), 64),
+            "trajectory_sha256": _str(episode.get("trajectory_sha256"), 64),
             "created_at": _str(episode.get("created_at"), 80),
             "approved": approved,
+            "qa_status": status,
+            "submitted_at": _str(episode.get("submitted_at") or episode.get("created_at"), 80),
+            "qa_started_at": _str(episode.get("qa_started_at") or qa.get("started_at"), 80),
+            "qa_completed_at": _str(episode.get("qa_completed_at") or qa.get("evaluated_at"), 80),
             "quality": int(episode.get("quality") or 0),
             "harvested_count": int(episode.get("harvested_count") or 0),
             "seed": int(episode.get("seed") or 0),
@@ -138,22 +163,67 @@ class GraphStore:
             "qa_id": qa_id, "episode_id": episode_id,
             "structural_pass": structural, "replay_pass": replay,
             "ai_verdict": _str(ai_verdict, 30),
-            "reasons": [str(v)[:240] for v in qa.get("reasons", []) if isinstance(v, str)][:8],
+            "ai_source": ai_source,
+            "qa_status": status,
+            "reasons": [str(v)[:240] for v in (qa.get("reasons") or []) if isinstance(v, str)][:8],
             "model_id": _str(qa.get("model") or qa.get("model_id"), 200),
             "qa_version": _str(qa.get("qa_version"), 80),
             "evaluated_at": _str(qa.get("evaluated_at"), 80),
+            "explanation": _str(qa.get("explanation") or qa.get("reason"), 2000),
+            "rule_results_json": json.dumps(gates, ensure_ascii=False, default=str)[:12000],
+            "evidence_json": json.dumps(qa.get("evidence") or {}, ensure_ascii=False, default=str)[:16000],
+            "model_response_json": json.dumps(qa.get("model_response") or {}, ensure_ascii=False, default=str)[:12000],
         }
-        query = (
-            "MERGE (t:Task {task_id: $task_id}) "
-            "MERGE (e:Episode {episode_id: $episode_id}) SET e += $episode "
-            "MERGE (t)-[:HAS_EPISODE]->(e) "
-            "MERGE (q:QAResult {qa_id: $qa_id}) SET q += $qa "
-            "MERGE (e)-[:HAS_QA]->(q)"
-        )
+        player_id = episode_props["player_id"]
+        query = ("MERGE (t:Task {task_id: $task_id}) "
+                 "MERGE (e:Episode {episode_id: $episode_id}) SET e += $episode "
+                 "MERGE (t)-[:HAS_EPISODE]->(e) "
+                 "MERGE (q:QAResult {qa_id: $qa_id}) SET q += $qa "
+                 "MERGE (e)-[:HAS_QA]->(q) ")
+        if player_id:
+            query += ("MERGE (p:Player {player_id: $player_id}) "
+                      "MERGE (p)-[:PLAYED]->(e)")
         return self._execute(query, {
             "task_id": task_id, "episode_id": episode_id, "qa_id": qa_id,
-            "episode": episode_props, "qa": qa_props,
+            "episode": episode_props, "qa": qa_props, "player_id": player_id,
         })
+
+    def query_task_episodes(self, task_id: str) -> list[dict[str, Any]] | None:
+        """Read the task's stored episode and QA metadata for the requester view.
+
+        ``None`` means Neo4j could not be queried. The recording remains in
+        container file storage; only its URI and digest are kept in the graph.
+        """
+        task_id = _str(task_id, 120)
+        if not task_id:
+            raise ValueError("task_id is required")
+        query = (
+            "MATCH (:Task {task_id: $task_id})-[:HAS_EPISODE]->(e:Episode) "
+            "OPTIONAL MATCH (e)-[:HAS_QA]->(q:QAResult) "
+            "RETURN properties(e) AS episode, properties(q) AS qa"
+        )
+        records = self._read(query, {"task_id": task_id})
+        if records is None:
+            return None
+        episode_keys = ("episode_id", "player_id", "recording_uri", "recording_format", "sha256",
+                        "trajectory_sha256", "submitted_at", "duration_s", "harvested_count",
+                        "quality", "qa_status", "approved")
+        qa_keys = ("structural_pass", "replay_pass", "ai_verdict", "ai_source", "model_id",
+                   "qa_version", "reasons", "explanation", "evaluated_at")
+        result = []
+        for record in records:
+            episode = record["episode"] or {}
+            qa = record["qa"] or {}
+            result.append({**{key: episode.get(key) for key in episode_keys},
+                           **{key: qa.get(key) for key in qa_keys}})
+        def submitted_at(item: dict[str, Any]) -> float:
+            try:
+                return float(item.get("submitted_at") or 0)
+            except (TypeError, ValueError):
+                return 0.0
+
+        result.sort(key=submitted_at, reverse=True)
+        return result
 
     def query_approved_episodes(self, task_id: str, filters: Mapping[str, Any] | None = None) -> list[str] | None:
         """Return approved episode IDs or ``None`` when AuraDB is unavailable.
@@ -189,7 +259,8 @@ class GraphStore:
                     raise ValueError(f"{key} must be a short string")
                 params[key] = value.strip()
 
-        clauses = ["e.approved = true", "q.structural_pass = true", "q.replay_pass = true", "q.ai_verdict = 'pass'"]
+        clauses = ["e.approved = true", "e.qa_status = 'approved'", "q.structural_pass = true",
+                   "q.replay_pass = true", "q.ai_verdict = 'accept'", "q.ai_source = 'openrouter'"]
         fixed_filters = {
             "player_id": "e.player_id = $player_id",
             "min_quality": "e.quality >= $min_quality",
@@ -237,7 +308,8 @@ class GraphStore:
         query = (
             "MATCH (:Task {task_id: $task_id})-[:HAS_EPISODE]->(e:Episode)-[:HAS_QA]->(q:QAResult) "
             "WHERE e.episode_id IN $episode_ids AND e.approved = true "
-            "AND q.structural_pass = true AND q.replay_pass = true AND q.ai_verdict = 'pass' "
+            "AND e.qa_status = 'approved' AND q.structural_pass = true AND q.replay_pass = true "
+            "AND q.ai_verdict = 'accept' AND q.ai_source = 'openrouter' "
             "WITH collect(DISTINCT e) AS episodes "
             "WHERE size(episodes) = size($episode_ids) "
             "MERGE (p:Purchase {purchase_id: $purchase_id}) "

@@ -109,6 +109,9 @@ window.Agri = (() => {
         requester_id: requesterId, request, image_name: imageName, image_data: imageData,
       }),
     farmSummary: (id) => api("GET", `/api/marketplace/${encodeURIComponent(id)}`),
+    farmGraph: (id) => api("GET", `/api/marketplace/${encodeURIComponent(id)}/graph`),
+    farmEpisodeUrl: (gameId, episodeId) =>
+      `/api/marketplace/${encodeURIComponent(gameId)}/episodes/${encodeURIComponent(episodeId)}/file`,
     farmPurchase: (id, count) => api("POST", `/api/marketplace/${encodeURIComponent(id)}/purchase`, { count }),
     farmMine: (id, request) => api("POST", `/api/marketplace/${encodeURIComponent(id)}/mine`, { request }),
     tomatoSummary: () => api("GET", "/api/marketplace/tomato-harvest"),

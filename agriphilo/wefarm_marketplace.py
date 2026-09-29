@@ -38,7 +38,8 @@ MAX_STEPS = 200_000
 PRICE = PRICING["game"]["episode_price_credits"]
 REWARD = PRICING["game"]["player_share_credits"]
 CUSTOMER = "demo-customer"
-# Demo mode: replay stored OpenRouter answers instead of calling the live model (see demo_cache.json).
+# Demo mode can replay stored OpenRouter responses; cached results remain
+# distinct from live OpenRouter QA and cannot pass the strict purchase gate.
 DEMO_CACHE_PATH = Path(__file__).resolve().parent / "demo_cache.json"
 
 
@@ -48,15 +49,7 @@ def _demo_cache() -> dict | None:
     return json.loads(DEMO_CACHE_PATH.read_text())
 
 
-def _graph_store(graph_class):
-    """Neo4j AuraDB connection; skipped in demo mode, where the local JSON index is used instead."""
-    if _demo_cache() is not None:
-        raise RuntimeError("Neo4j is skipped in demo mode")
-    return graph_class.from_env()
-
-
 def _cached_interpretation(request_text: str) -> dict | None:
-    """The stored OpenRouter reading of a known request, or the fixed template for any other text."""
     cache = _demo_cache()
     if cache is None:
         return None
@@ -69,7 +62,7 @@ def _cached_interpretation(request_text: str) -> dict | None:
 
 
 def _cached_episode_review(evidence: dict) -> dict | None:
-    """Demo QA: the server's hard gates decide; the stored OpenRouter acceptance supplies the report."""
+    """Provide an explicitly cached QA explanation, never a live approval."""
     cache = _demo_cache()
     if cache is None:
         return None
@@ -98,7 +91,8 @@ def _approved(record: dict) -> bool:
     """Only a current, audited OpenRouter acceptance is marketplace-eligible."""
     from .openrouter_qa import QA_VERSION
     gates = record.get("qa_rule_results")
-    return (record.get("qa") == "pass" and record.get("ai_source") in ("openrouter", "openrouter-cached")
+    return (record.get("qa") == "pass" and record.get("qa_status") in (None, "approved")
+            and record.get("ai_source") == "openrouter"
             and record.get("ai_verdict") == "accept" and record.get("qa_version") == QA_VERSION
             and isinstance(gates, dict) and all(gates.get(k) is True for k in
                                                  ("data_integrity", "reproducibility", "task_completion", "uniqueness"))
@@ -296,10 +290,11 @@ class WeFarmMarketplace:
             _save_json(self.requests_path, self.requests)
         try:
             from .neo4j_graph import GraphStore
-            graph = _graph_store(GraphStore)
+            graph = GraphStore.from_env()
             try:
                 graph.upsert_task({"task_id": game_id, "task_spec": task_spec, "source": record["orchestrator_source"],
-                                   "image_uri": str(image_path), "created_at": record["created_at"]})
+                                   "image_uri": str(image_path), "created_at": record["created_at"],
+                                   "requester_id": record["requester_id"], "status": record["status"]})
             finally:
                 graph.close()
         except Exception:
@@ -323,13 +318,37 @@ class WeFarmMarketplace:
             "status": request["status"], "reward_per_episode": REWARD, "episode_price": PRICE,
             "episodes_wanted": int(spec.get("requested_episodes") or 1), "episodes_submitted": len(episodes),
             "episodes_passed": len(passed), "episodes_available": sum(not e["purchased"] for e in passed),
+            "episodes_processing": sum(e.get("qa_status") in {"queued", "processing"} for e in episodes),
+            "episodes_pending_review": sum(e.get("qa_status") == "pending_review" for e in episodes),
+            "episodes_rejected": sum(e.get("qa_status") == "rejected" for e in episodes),
             "play_url": f"/games/wefarm/{game_id}", "viewer_url": None, "created_at": request["created_at"],
             "environment_status": request["environment_status"], "recording_format": "jsonl.gz",
         }
 
     def listings(self) -> list[dict]:
         with self.lock:
-            return [self.listing(r) for r in self.requests]
+            return [self.listing(r) for r in self.requests if r.get("status") != "deleted"]
+
+    def delete_listing(self, game_id: str, requester_id: str) -> dict:
+        """Remove an owner's listing from discovery without erasing paid recordings."""
+        if not GAME_ID.fullmatch(game_id):
+            raise ValueError("invalid game ID")
+        if not isinstance(requester_id, str) or not requester_id.strip():
+            raise ValueError("requester_id is required")
+        with self.lock:
+            request = self._request(game_id)
+            if request.get("requester_id") != requester_id.strip():
+                raise PermissionError("Only the requester can delete this listing")
+            changed = request.get("status") != "deleted"
+            if request.get("status") != "deleted":
+                request["status"] = "deleted"
+                request["deleted_at"] = time.time()
+                _save_json(self.requests_path, self.requests)
+            result = {"game_id": game_id, "status": "deleted",
+                      "episodes_preserved": sum(e["game_id"] == game_id for e in self.episodes)}
+        if changed:
+            self.start_graph_sync()
+        return result
 
     def summary(self, game_id: str) -> dict:
         with self.lock:
@@ -356,8 +375,7 @@ class WeFarmMarketplace:
         path = self.root / "episodes" / game_id / record["file"]
         return path if path.is_file() else None
 
-    # Free play: recordings made in the simulator without a marketplace game. They are stored on
-    # the server (not downloaded in the browser) so they can be replayed later; they earn nothing.
+    # Free-play recordings are stored for replay but do not enter paid marketplace QA.
     def _free_play_folder(self) -> Path:
         folder = self.root / "free-play"
         folder.mkdir(parents=True, exist_ok=True)
@@ -397,132 +415,239 @@ class WeFarmMarketplace:
             return [{**e, "order_id": e["game_id"], "title": "Harvest ripe tomatoes"}
                     for e in self.episodes if e["player_id"] == player_id]
 
-    def submit_episode(self, game_id: str, player_id: str, session_id: str, blob: bytes) -> dict:
+    def resume_queued_qa(self) -> None:
+        """Resume uploads that were persisted before a server restart."""
+        with self.lock:
+            ids = [e["episode_id"] for e in self.episodes
+                   if e.get("qa_status") in {"queued", "processing"}]
+        for episode_id in ids:
+            self._start_qa(episode_id)
+
+    def _start_qa(self, episode_id: str) -> None:
+        threading.Thread(target=self._run_qa, args=(episode_id,), daemon=True,
+                         name=f"wefarm-qa-{episode_id}").start()
+
+    def start_graph_sync(self) -> None:
+        """Reconcile locally durable metadata without delaying the web server."""
+        threading.Thread(target=self.sync_graph, daemon=True, name="wefarm-graph-sync").start()
+
+    def sync_graph(self) -> bool:
+        try:
+            from .neo4j_graph import GraphStore
+            graph = GraphStore.from_env()
+            try:
+                if not graph.configured:
+                    return False
+                graph.ensure_schema()  # Best effort: writes may still work without schema privilege.
+                with self.lock:
+                    requests = [dict(item) for item in self.requests]
+                    episodes = [dict(item) for item in self.episodes]
+                success = True
+                for request in requests:
+                    success = graph.upsert_task({
+                        "task_id": request["game_id"], "task_spec": request.get("task_spec") or {},
+                        "source": request.get("orchestrator_source"),
+                        "image_uri": request.get("image_path"), "created_at": request.get("created_at"),
+                        "requester_id": request.get("requester_id"), "status": request.get("status"),
+                    }) and success
+                for episode in episodes:
+                    success = self._write_graph_qa(episode, graph=graph) and success
+                return success
+            finally:
+                graph.close()
+        except Exception:
+            return False
+
+    def submit_episode(self, game_id: str, player_id: str, session_id: str, blob: bytes,
+                       *, defer_qa: bool = False) -> dict:
         if not GAME_ID.fullmatch(game_id) or not PLAYER_ID.fullmatch(player_id):
             raise ValueError("invalid game or player ID")
         if not isinstance(session_id, str) or not re.fullmatch(r"[0-9a-f-]{36}", session_id):
             raise ValueError("invalid session ID")
+        if not blob.startswith(b"\x1f\x8b") or len(blob) > MAX_RECORDING_BYTES:
+            raise ValueError("Expected a gzip recording no larger than 20 MB")
         with self.lock:
-            self._request(game_id)
-            old = next((e for e in self.episodes if e["session_id"] == session_id), None)
+            request = self._request(game_id)
+            old = next((e for e in self.episodes if e.get("session_id") == session_id), None)
             if old:
                 if old["file_sha256"] == _sha256(blob) and old["game_id"] == game_id and old["player_id"] == player_id:
-                    return old
+                    return dict(old)
                 raise ValueError("session ID has already been submitted")
+            if request.get("status") != "live":
+                raise ValueError("This game is no longer accepting episodes")
         header, facts, reasons = check_recording(blob, session_id)
         structural_pass = not reasons
-        with self.lock:
-            unique = not any(e["game_id"] == game_id and e.get("trajectory_sha256") == facts["trajectory_sha256"]
-                             for e in self.episodes)
-        if not unique:
-            raise ValueError("duplicate recording trajectory")
         digest = _sha256(blob)
         episode_id = f"{game_id}-{uuid.uuid4().hex[:12]}"
         folder = self.root / "episodes" / game_id
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / f"{episode_id}.jsonl.gz"
-        path.write_bytes(blob)
-        submitted_at = time.time()
-        review_args = (game_id, player_id, session_id, episode_id, path, digest, header, facts, reasons, structural_pass, unique, submitted_at)
-        if _demo_cache() is None:
-            return self._review(*review_args)
-        # Demo mode: accept the upload at once and run QA (physics replay, verdict) in the background;
-        # the episode shows as "Checking…" until the review replaces this placeholder.
-        placeholder = {
+        from .openrouter_qa import QA_VERSION
+        operator = header.get("operator")
+        if not isinstance(operator, dict):
+            operator = {}
+        record = {
             "episode_id": episode_id, "game_id": game_id, "file": path.name, "player_id": player_id,
-            "session_id": session_id, "submitted_at": submitted_at, **facts,
-            "qa": "pending", "quality": None, "qa_reason": "QA is replaying the physics and reviewing the episode…",
-            "reasons": [], "structural_pass": structural_pass, "replay_checked": False, "replay_pass": False,
-            "file_sha256": digest, "reward_credits": 0, "purchased": False, "kind": "wefarm_mujoco_jsonl_gz",
-            "operator_device": (header.get("operator") or {}).get("device"),
+            "session_id": session_id, "submitted_at": time.time(), **facts,
+            "qa": "pending", "qa_status": "queued", "quality": 1, "qa_reason": "QA is queued.",
+            "reasons": list(reasons), "structural_pass": structural_pass,
+            "replay_checked": False, "replay_pass": False, "ai_verdict": None,
+            "ai_source": None, "ai_model": None, "qa_version": QA_VERSION,
+            "qa_rule_results": {"data_integrity": structural_pass, "reproducibility": None,
+                                "task_completion": None, "uniqueness": True},
+            "qa_evidence": None, "qa_model_response": None, "qa_evidence_keys": [],
+            "qa_metrics": {}, "file_sha256": digest, "reward_credits": 0,
+            "purchased": False, "kind": "wefarm_mujoco_jsonl_gz", "operator_device": operator.get("device"),
         }
         with self.lock:
-            self.episodes.insert(0, placeholder)
+            if self._request(game_id).get("status") != "live":
+                raise ValueError("This game is no longer accepting episodes")
+            if any(e["game_id"] == game_id and e.get("trajectory_sha256") == facts["trajectory_sha256"]
+                   for e in self.episodes):
+                raise ValueError("duplicate recording trajectory")
+            tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+            tmp.write_bytes(blob)
+            tmp.replace(path)
+            self.episodes.insert(0, record)
             _save_json(self.episodes_path, self.episodes)
-        threading.Thread(target=self._review, args=review_args, daemon=True).start()
-        return placeholder
+        if defer_qa:
+            queued = dict(record)
+            self._start_qa(episode_id)
+            return queued
+        self._run_qa(episode_id)
+        with self.lock:
+            return dict(next(e for e in self.episodes if e["episode_id"] == episode_id))
 
-    def _review(self, game_id: str, player_id: str, session_id: str, episode_id: str, path: Path, digest: str,
-                header: dict, facts: dict, reasons: list[str], structural_pass: bool, unique: bool,
-                submitted_at: float) -> dict:
-        """Physics replay, QA verdict, reward, and index update for one stored episode."""
-        replay = _replay(path) if structural_pass and unique else {"replay_checked": False, "passed": False, "reasons": []}
+    def _run_qa(self, episode_id: str) -> None:
+        with self.lock:
+            record = next((e for e in self.episodes if e["episode_id"] == episode_id), None)
+            if record is None or record.get("qa_status") not in {"queued", "processing"}:
+                return
+            queued = dict(record)
+        if queued["qa_status"] == "queued":
+            self._write_graph_qa(queued)
+        with self.lock:
+            record = next((e for e in self.episodes if e["episode_id"] == episode_id), None)
+            if record is None or record.get("qa_status") not in {"queued", "processing"}:
+                return
+            record["qa_status"] = "processing"
+            record["qa_started_at"] = time.time()
+            record["qa_reason"] = "Replay and QA are processing."
+            _save_json(self.episodes_path, self.episodes)
+            snapshot = dict(record)
+        self._write_graph_qa(snapshot)
+        try:
+            result = self._evaluate_episode(snapshot)
+        except Exception:
+            result = {"qa": "pending", "qa_status": "pending_review", "quality": 1,
+                      "qa_reason": "QA processing could not be verified.", "ai_verdict": "review"}
+        with self.lock:
+            record = next((e for e in self.episodes if e["episode_id"] == episode_id), None)
+            if record is None:
+                return
+            record.update(result)
+            record["qa_completed_at"] = time.time()
+            if record["qa"] == "pass" and not _approved(record):
+                record.update({"qa": "pending", "qa_status": "pending_review", "quality": 1,
+                               "qa_reason": "OpenRouter QA approval could not be verified."})
+            if _approved(record):
+                try:
+                    self.ledger.reward(record["game_id"], episode_id, record["player_id"], REWARD)
+                    record["reward_credits"] = REWARD
+                except Exception:
+                    record.update({"qa": "pending", "qa_status": "pending_review", "quality": 1,
+                                   "qa_reason": "Player reward could not be recorded; QA approval is held."})
+            _save_json(self.episodes_path, self.episodes)
+            graph_record = dict(record)
+        self._write_graph_qa(graph_record)
+
+    def _evaluate_episode(self, record: dict) -> dict:
+        from .openrouter_qa import QA_VERSION, evaluate_episode
+        path = self.root / "episodes" / record["game_id"] / record["file"]
+        reasons = list(record["reasons"])
+        structural_pass = record["structural_pass"] and self._unchanged(record)
+        if not structural_pass and not reasons:
+            reasons.append("Recording changed after intake.")
+        replay = _replay(path) if structural_pass else {"replay_checked": False, "passed": False, "reasons": []}
         if replay.get("replay_checked") and not replay.get("passed"):
             reasons.extend(replay.get("reasons") or ["physics replay failed"])
-        from .openrouter_qa import QA_VERSION, evaluate_episode
         replay_checked = replay.get("replay_checked") is True
         replay_pass = replay.get("passed") is True
         replay_metrics = replay.get("metrics") if isinstance(replay.get("metrics"), dict) else {}
         hard_gates = {
             "data_integrity": structural_pass,
             "reproducibility": replay_pass if replay_checked else None,
-            "task_completion": (replay_pass and facts["harvested_count"] >= 1
+            "task_completion": (replay_pass and record["harvested_count"] >= 1
                                 and isinstance(replay_metrics.get("ripe_harvested"), (int, float))
                                 and not isinstance(replay_metrics.get("ripe_harvested"), bool)
                                 and replay_metrics["ripe_harvested"] >= 1) if replay_checked else None,
-            "uniqueness": unique,
+            "uniqueness": True,
         }
         measured_evidence = {
             "task": "tomato-path-harvest", "qa_version": QA_VERSION,
             "hard_gates": hard_gates,
-            "measurements": {"steps": facts["steps"], "duration_s": facts["duration_s"],
-                             "harvested_count": facts["harvested_count"], "dropped": facts["dropped"],
-                             "scene_hash": facts["scene_hash"], **replay_metrics},
-            "quality_signals": {"dropped": facts["dropped"]},
+            "measurements": {"steps": record["steps"], "duration_s": record["duration_s"],
+                             "harvested_count": record["harvested_count"], "dropped": record["dropped"],
+                             "scene_hash": record["scene_hash"], **replay_metrics},
+            "quality_signals": {"dropped": record["dropped"]},
             "unavailable_measurements": ["idle_ratio", "oscillation", "unintended_collisions",
                                          "near_duplicate_score", "starting_condition_coverage"],
         }
         ai = _cached_episode_review(measured_evidence) or evaluate_episode(measured_evidence)
         qa = {"accept": "pass", "review": "pending", "reject": "fail"}[ai["decision"]]
-        qa_reason = "; ".join([*reasons, ai["reason"]] if reasons else [ai["reason"]])
-        record = {
-            "episode_id": episode_id, "game_id": game_id, "file": path.name, "player_id": player_id,
-            "session_id": session_id, "submitted_at": submitted_at, **facts,
-            "qa": qa, "quality": 4 if qa == "pass" else 1, "qa_reason": qa_reason,
-            "reasons": reasons, "structural_pass": structural_pass, "replay_checked": bool(replay.get("replay_checked")),
-            "replay_pass": replay_pass, "ai_verdict": ai["decision"],
-            "ai_source": ai["source"], "ai_model": ai["model_id"], "qa_version": ai["qa_version"],
-            "qa_rule_results": hard_gates, "qa_evidence": measured_evidence,
+        verified_accept = (qa == "pass" and ai["source"] == "openrouter"
+                           and isinstance(ai.get("model_response"), dict)
+                           and all(value is True for value in hard_gates.values()))
+        if qa == "pass" and not verified_accept:
+            qa = "pending"
+            qa_reason = "OpenRouter QA approval could not be verified."
+        else:
+            qa_reason = "; ".join([*reasons, ai["reason"]] if reasons else [ai["reason"]])
+        return {
+            "qa": qa, "qa_status": {"pass": "approved", "fail": "rejected", "pending": "pending_review"}[qa],
+            "quality": 4 if qa == "pass" else 1, "qa_reason": qa_reason, "reasons": reasons,
+            "structural_pass": structural_pass, "replay_checked": replay_checked, "replay_pass": replay_pass,
+            "ai_verdict": ai["decision"], "ai_source": ai["source"], "ai_model": ai["model_id"],
+            "qa_version": ai["qa_version"], "qa_rule_results": hard_gates, "qa_evidence": measured_evidence,
             "qa_model_response": ai["model_response"], "qa_evidence_keys": ai["evidence_keys"],
-            "qa_metrics": replay_metrics, "file_sha256": digest, "reward_credits": 0,
-            "purchased": False, "kind": "wefarm_mujoco_jsonl_gz", "operator_device": (header.get("operator") or {}).get("device"),
+            "qa_metrics": replay_metrics,
         }
-        with self.lock:
-            if any(e["game_id"] == game_id and e.get("trajectory_sha256") == facts["trajectory_sha256"]
-                   and e["episode_id"] != episode_id for e in self.episodes):
-                raise ValueError("duplicate recording trajectory")
-            if record["qa"] == "pass" and not _approved(record):
-                record["qa"] = "pending"
-                record["quality"] = 1
-                record["qa_reason"] = "OpenRouter QA approval could not be verified."
-            if _approved(record):
-                self.ledger.reward(game_id, episode_id, player_id, REWARD)
-                record["reward_credits"] = REWARD
-            index = next((i for i, e in enumerate(self.episodes) if e["episode_id"] == episode_id), None)
-            if index is None:
-                self.episodes.insert(0, record)
-            else:
-                self.episodes[index] = record
-            _save_json(self.episodes_path, self.episodes)
+
+    def _write_graph_qa(self, record: dict, *, graph=None) -> bool:
+        owned = graph is None
         try:
-            from .neo4j_graph import GraphStore
-            graph = _graph_store(GraphStore)
+            if graph is None:
+                from .neo4j_graph import GraphStore
+                graph = GraphStore.from_env()
             try:
-                graph.upsert_episode({"episode_id": episode_id, "task_id": game_id, "player_id": player_id,
-                                      "duration_s": facts["duration_s"], "score": facts["harvested_count"],
-                                      "recording_uri": str(path), "sha256": digest, "created_at": record["submitted_at"],
-                                      "quality": record["quality"], "harvested_count": facts["harvested_count"],
-                                      "seed": facts["seed"], "arm": "single"},
-                                     {"qa_id": f"qa-{episode_id}", "episode_id": episode_id,
-                                      "structural_pass": record["structural_pass"], "replay_pass": record["replay_pass"],
-                                      "ai_verdict": record["ai_verdict"], "reasons": record["reasons"],
-                                      "model_id": record["ai_model"], "qa_version": record["qa_version"],
-                                      "evaluated_at": record["submitted_at"]})
+                path = self.root / "episodes" / record["game_id"] / record["file"]
+                return graph.upsert_episode({"episode_id": record["episode_id"], "task_id": record["game_id"],
+                                      "player_id": record["player_id"], "duration_s": record["duration_s"],
+                                      "score": record["harvested_count"], "recording_uri": str(path),
+                                      "sha256": record["file_sha256"], "created_at": record["submitted_at"],
+                                      "quality": record["quality"], "harvested_count": record["harvested_count"],
+                                      "seed": record["seed"], "arm": "single", "qa_status": record.get("qa_status"),
+                                      "qa_started_at": record.get("qa_started_at"),
+                                      "qa_completed_at": record.get("qa_completed_at"),
+                                      "trajectory_sha256": record.get("trajectory_sha256"),
+                                      "requester_id": self._request(record["game_id"])["requester_id"]},
+                                     {"qa_id": f"qa-{record['episode_id']}", "episode_id": record["episode_id"],
+                                      "structural_pass": record.get("structural_pass"),
+                                      "replay_pass": record.get("replay_pass"),
+                                      "ai_verdict": record.get("ai_verdict"), "reasons": record.get("reasons", []),
+                                      "model_id": record.get("ai_model"), "qa_version": record.get("qa_version"),
+                                      "qa_status": record.get("qa_status"), "ai_source": record.get("ai_source"),
+                                      "hard_gates": record.get("qa_rule_results"),
+                                      "reason": record.get("qa_reason"),
+                                      "evidence": record.get("qa_evidence"),
+                                      "model_response": record.get("qa_model_response"),
+                                      "started_at": record.get("qa_started_at"),
+                                      "evaluated_at": record.get("qa_completed_at")})
             finally:
-                graph.close()
+                if owned:
+                    graph.close()
         except Exception:
-            pass
-        return record
+            return False
 
     def _unchanged(self, record: dict) -> bool:
         path = self.root / "episodes" / record["game_id"] / record["file"]
@@ -530,7 +655,9 @@ class WeFarmMarketplace:
 
     def purchase(self, game_id: str, count: int) -> dict:
         with self.lock:
-            self._request(game_id)
+            request = self._request(game_id)
+            if request.get("status") != "live":
+                raise ValueError("This listing is no longer available for purchase")
             available = sorted((e for e in self.episodes if e["game_id"] == game_id and _approved(e) and not e["purchased"]),
                                key=lambda e: e["submitted_at"])
             if not isinstance(count, int) or isinstance(count, bool) or not 1 <= count <= len(available):
@@ -546,7 +673,7 @@ class WeFarmMarketplace:
             graph_recorded = False
             try:
                 from .neo4j_graph import GraphStore
-                graph = _graph_store(GraphStore)
+                graph = GraphStore.from_env()
                 try:
                     graph_recorded = graph.record_purchase(f"purchase-{entry['id']}", game_id, ids,
                                                            self._request(game_id)["requester_id"], entry["id"])
@@ -580,11 +707,10 @@ class WeFarmMarketplace:
         graph_source = "local_fallback"
         try:
             from .neo4j_graph import GraphStore
-            graph = _graph_store(GraphStore)
+            graph = GraphStore.from_env()
             try:
                 found = graph.query_approved_episodes(game_id, filters)
-                # An empty graph answer usually means the episode was never indexed; use the local index.
-                if found:
+                if found is not None:
                     graph_ids = set(found)
                     graph_source = "neo4j"
             finally:

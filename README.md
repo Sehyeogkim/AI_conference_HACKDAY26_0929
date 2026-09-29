@@ -55,9 +55,10 @@ harvest a ripe tomato into the basket, and click **Stop & submit**. The recordin
 and QA state appear under that listing and the player page. Only QA-approved
 episodes can be purchased and downloaded through Data Miner.
 
-Set `OPENROUTER_API_KEY` for requester interpretation and OpenRouter QA,
-`CRUSOE_VLM_ENDPOINT`, `CRUSOE_VLM_MODEL`, and `CRUSOE_VLM_API_KEY` for the
-Crusoe AI Player, and `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` for graph
+Set `OPENROUTER_API_KEY` for requester interpretation and OpenRouter QA.
+For AI Mode, `CRUSOE_API_KEY` uses Crusoe Serverless vision inference by default;
+set `CRUSOE_VLM_ENDPOINT`, `CRUSOE_VLM_MODEL`, and `CRUSOE_VLM_API_KEY` to use
+a dedicated Crusoe model server instead. Set `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` for graph
 indexing. `STRIPE_SECRET_KEY` enables Stripe **test-mode** Checkout; test
 credits are not cash payouts. Without OpenRouter, the fixed task template is
 used for requester interpretation, while submitted episodes cannot earn QA

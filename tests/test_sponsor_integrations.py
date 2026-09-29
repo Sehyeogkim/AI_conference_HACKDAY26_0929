@@ -102,7 +102,9 @@ def test_neo4j_data_miner_returns_only_query_ids_and_preserves_filter_parameters
     graph = neo4j_graph.GraphStore(driver)
     ids = graph.query_approved_episodes("task-1", {"player_id": "alice", "min_harvested": 2})
     assert ids == ["approved-1"]
-    assert "q.ai_verdict = 'pass'" in driver.query
+    assert "q.ai_verdict = 'accept'" in driver.query
+    assert "q.ai_source = 'openrouter'" in driver.query
+    assert "e.qa_status = 'approved'" in driver.query
     assert driver.params["player_id"] == "alice"
     assert driver.params["min_harvested"] == 2
     assert graph.query_approved_episodes("task-1", {"player_id": "' OR true"}) == ["approved-1"]

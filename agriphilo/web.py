@@ -39,8 +39,9 @@ PAGES = {
 PLAYER_ROUTE = re.compile(r"/api/players/([a-z0-9._-]{1,120})")
 GAME_ROUTE = re.compile(r"/api/games/([0-9a-f]{12})(?:/(approve|close))?")
 ORDER_ROUTE = re.compile(r"/api/orders/([0-9a-f-]{36})(?:/(answer|approve|purchase|close|reopen|retry|files/[\w.]+))?")
-WEFARM_ROUTE = re.compile(r"/api/marketplace/(wf-[0-9a-f]{12})(?:/(purchase|mine|image|episodes/[a-zA-Z0-9._-]+/(?:file|replay)))?")
+WEFARM_ROUTE = re.compile(r"/api/marketplace/(wf-[0-9a-f]{12})(?:/(purchase|mine|graph|image|episodes/[a-zA-Z0-9._-]+/(?:file|replay)))?")
 WEFARM_GAME_ROUTE = re.compile(r"/games/wefarm/(wf-[0-9a-f]{12})")
+WEFARM_DELETE_ROUTE = re.compile(r"/api/wefarm/games/(wf-[0-9a-f]{12})")
 # Watch a recording: redirects to the simulator in replay mode, pointed at the stored file.
 WATCH_EPISODE_ROUTE = re.compile(r"/watch/wefarm/(wf-[0-9a-f]{12})/([a-zA-Z0-9._-]+)")
 WATCH_FREE_PLAY_ROUTE = re.compile(r"/watch/free-play/([0-9a-f-]{36})")
@@ -81,6 +82,26 @@ class Handler(BaseHTTPRequestHandler):
         if urlsplit(self.path).path in {"/api/wefarm/episodes", "/api/wefarm/free-play", "/api/ai-player/decide"}:
             return self._send(204, b"", "text/plain")
         return self._json(404, {"error": "not found"})
+
+    def do_DELETE(self):
+        match = WEFARM_DELETE_ROUTE.fullmatch(urlsplit(self.path).path)
+        if match is None:
+            return self._json(404, {"error": "not found"})
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            if not 1 <= length <= 4096:
+                raise ValueError("invalid delete request")
+            body = json.loads(self.rfile.read(length))
+            if not isinstance(body, dict):
+                raise ValueError("invalid delete request")
+            result = self.wefarm.delete_listing(match.group(1), body.get("requester_id"))
+        except PermissionError as exc:
+            return self._json(403, {"error": str(exc)})
+        except KeyError:
+            return self._json(404, {"error": "unknown WeFarm game"})
+        except (ValueError, TypeError, json.JSONDecodeError) as exc:
+            return self._json(400, {"error": str(exc)})
+        return self._json(200, result)
 
     def _json(self, status: int, body) -> None:
         self._send(status, json.dumps(body, ensure_ascii=False).encode(), "application/json; charset=utf-8")
@@ -182,7 +203,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(200, {"available": vlm.configured, "model": vlm.model or None,
                                     "reason": None if vlm.configured else "Crusoe VLM endpoint and model are not configured."})
         if path == "/api/wefarm/requests":
-            return self._json(200, {"items": [self.wefarm.summary(r["game_id"]) for r in self.wefarm.requests]})
+            return self._json(200, {"items": [self.wefarm.summary(r["game_id"]) for r in self.wefarm.requests
+                                              if r.get("status") != "deleted"]})
         if path == "/api/examples":
             return self._json(200, {p.stem: p.read_text() for p in sorted(EXAMPLES.glob("cafe*_order.txt"))})
         if path == "/api/orders":
@@ -195,6 +217,14 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 if action is None:
                     return self._json(200, self.wefarm.summary(game_id))
+                if action == "graph":
+                    from .neo4j_graph import GraphStore
+                    graph = GraphStore.from_env()
+                    try:
+                        items = graph.query_task_episodes(game_id)
+                    finally:
+                        graph.close()
+                    return self._json(200, {"available": items is not None, "items": items or []})
                 if action == "image":
                     image = self.wefarm.image(game_id)
                     if image is None:
@@ -295,9 +325,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(503, {"error": "Crusoe VLM endpoint and model are not configured."})
             try:
                 observation = json.loads(self.rfile.read(length))
-                frame, status, frame_id = decode_request(observation)
+                head_frame, wrist_frame, status, frame_id = decode_request(observation)
                 started = time.perf_counter()
-                decision = vlm.decide(frame, status, frame_id)
+                decision = vlm.decide(head_frame, wrist_frame, status, frame_id)
             except (ValueError, VLMError) as exc:
                 return self._json(422, {"error": str(exc)})
             return self._json(200, {"action": decision.action, "direction": decision.direction,
@@ -318,11 +348,13 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 record = self.wefarm.submit_episode(self.headers.get("X-WeFarm-Game-Id", ""),
                                                     self.headers.get("X-WeFarm-Player-Id", ""),
-                                                    self.headers.get("X-WeFarm-Session-Id", ""), self.rfile.read(length))
+                                                    self.headers.get("X-WeFarm-Session-Id", ""), self.rfile.read(length),
+                                                    defer_qa=True)
             except (ValueError, KeyError) as err:
                 return self._json(400, {"error": str(err)})
             return self._json(201, {"episode_id": record["episode_id"], "qa": record["qa"],
-                                    "reasons": record["reasons"], "harvested_count": record["harvested_count"]})
+                                    "qa_status": record["qa_status"], "reasons": record["reasons"],
+                                    "harvested_count": record["harvested_count"]})
         if length > 9_000_000:
             return self._json(413, {"error": "request exceeds the 9 MB limit"})
         try:
@@ -469,6 +501,8 @@ def main() -> None:
     Handler.tomato = TomatoMuJoCoMarketplace(Handler.games.ledger, explainer=lambda v:
         explain_qa(v, "pass" if v.get("pass") else "fail", v.get("reasons", [])))
     Handler.wefarm = WeFarmMarketplace(Handler.games.ledger, root=Path(os.environ.get("WEFARM_DATA_ROOT", str(WEFARM_DEFAULT_ROOT))))
+    Handler.wefarm.resume_queued_qa()
+    Handler.wefarm.start_graph_sync()
     Handler.demo = True
     # Demo requester wallet starts with test credits (idempotent key: added once per ledger).
     Handler.games.ledger.topup(Handler.games.wallet()["customer_id"], 1000, "demo-starting-credits")

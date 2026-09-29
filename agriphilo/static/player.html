@@ -101,8 +101,16 @@ const { h } = Agri;
 const $ = (id) => document.getElementById(id);
 const PID = USER && USER.email ? Agri.playerId(USER.email) : "guest";
 const credits = (v) => `${(+v || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })} credits`;
-const QA = { pass: ["b-green", "Pass"], fail: ["b-red", "Fail"], pending: ["b-gray", "Checking…"] };
-const qbadge = (v) => { const [c, l] = QA[v] || ["b-gray", v]; return h("span.badge." + c, h("i"), l); };
+const qaProgress = (e) => {
+  const state = e.qa_status || ({ pass: "approved", fail: "rejected", pending: "pending_review" }[e.qa] || "queued");
+  const labels = {
+    queued: ["b-gray", "Queued"], processing: ["b-gray", "Checking…"],
+    approved: ["b-green", "✓ Approved"], rejected: ["b-red", "Rejected"],
+    pending_review: ["b-gray", "Review needed"],
+  };
+  const [cls, label] = labels[state] || ["b-gray", state];
+  return h("span.badge." + cls, label);
+};
 const stars = (n) => n == null ? h("span.muted", "—") : h("span.stars", { title: `${n} / 5` }, "★".repeat(n), h("span.off", "★".repeat(5 - n)));
 const kpi = (k, v) => h("div.kpi", h("small", k), h("b", v));
 
@@ -154,7 +162,7 @@ async function loadMine() {
       h("thead", h("tr", h("th", "Game"), h("th", "Episode"), h("th", "Submitted"), h("th", "QA"), h("th", "Quality"), h("th", "QA Agent"), h("th", { style: "text-align:right" }, "Reward"), h("th", ""))),
       h("tbody", eps.map((e) => h("tr",
         h("td", e.title), h("td.m", e.episode_id), h("td.muted", { style: "white-space:nowrap" }, e.submitted_at ? Agri.ago(e.submitted_at) : "—"),
-        h("td", qbadge(e.qa)), h("td", stars(e.quality)), h("td", e.qa_reason || (e.qa === "pending" ? "Reviewing…" : "")),
+        h("td", qaProgress(e)), h("td", stars(e.quality)), h("td", e.qa_reason || (e.qa_status === "queued" ? "Waiting for QA…" : e.qa_status === "processing" ? "QA is running…" : e.qa === "pending" ? "Reviewing…" : "")),
         h("td.r", e.reward_credits ? `+${credits(e.reward_credits)}` : "—"),
         h("td", e.kind === "wefarm_mujoco_jsonl_gz" ? h("a.btn", { href: `/watch/wefarm/${e.game_id}/${e.episode_id}`, target: "_blank", rel: "noopener", style: "padding:4px 10px" }, "▶ Watch") : ""))))))
     : h("div.note", "No episodes yet. Play a game above and submit an episode to earn credits."));

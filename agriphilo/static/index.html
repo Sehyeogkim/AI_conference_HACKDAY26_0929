@@ -254,6 +254,8 @@ ol.steps li::before { content: counter(s); flex: none; width: 20px; height: 20px
 .mcard.chosen { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-2); }
 #tomatoMarketPanel { padding: 0 20px 24px; scroll-margin-top: 12px; }
 .mcard.own:hover { border-color: #c9b7a3; box-shadow: 0 6px 20px rgba(59,36,22,.08); }
+.mcard[role="button"] { cursor: pointer; }
+.mcard[role="button"]:hover, .mcard[role="button"]:focus-visible { border-color: #c9b7a3; box-shadow: 0 6px 20px rgba(59,36,22,.08); outline: none; }
 .mcard .mimg { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: var(--line-2); }
 .mcard .mph { width: 100%; aspect-ratio: 16 / 9; display: grid; place-items: center; background: var(--line-2); color: var(--muted); font-size: 12px; }
 .mcard .mb { padding: 14px 14px 16px; display: grid; gap: 8px; flex: 1; align-content: start; }
@@ -264,11 +266,25 @@ ol.steps li::before { content: counter(s); flex: none; width: 20px; height: 20px
 .mcard .ms div small { display: block; color: var(--muted); font-size: 11px; }
 .mcard .ms div b { font-weight: 600; font-size: 13px; }
 .mcard .mf { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.market-detail { width: min(1120px, 100%); margin: 0 auto; padding: 20px; }
+.market-detail-nav { margin-bottom: 18px; }
+.market-detail-hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 22px; }
+.market-detail-hero h2 { font-size: 21px; margin: 6px 0; }
+.market-detail-hero p { color: var(--ink-2); margin: 0; }
+.market-detail-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.market-detail-panel { min-width: 0; }
+.market-card-open { color: var(--accent); font-size: 12.5px; font-weight: 600; }
+@media (max-width: 760px) { .market-detail { padding: 16px; } .market-detail-hero { display: grid; padding: 16px; } .market-detail-actions { justify-content: flex-start; } }
 .mine { font-size: 11px; font-weight: 600; color: var(--blue); background: var(--blue-bg); border-radius: 999px; padding: 1px 8px; }
 .buy { border: 1px solid var(--line); border-radius: 10px; padding: 14px; background: var(--bg); display: grid; gap: 10px; }
 .buy .row1 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .buy input[type=number] { width: 90px; font: inherit; border: 1px solid var(--line); border-radius: 7px; padding: 5px 8px; background: var(--panel); }
 .buy .tot { font-size: 18px; font-weight: 700; }
+.episode-table { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.episode-table table { min-width: 680px; }
+.episode-table td { font-size: 12.5px; }
+.episode-table .episode-id { font-family: var(--mono); font-size: 11px; overflow-wrap: anywhere; }
+.episode-table .qa-note { display: block; max-width: 300px; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
 .thumb { width: 120px; max-width: 120px; border-radius: 5px; border: 1px solid var(--line); display: block; }
 .stars { color: #d9922b; letter-spacing: 1px; white-space: nowrap; }
 .stars .off { color: var(--line); }
@@ -595,8 +611,27 @@ function renderList() {
 
 /* ---------------- marketplace (all listings) ---------------- */
 
-let market = null, marketAt = 0, selectedFarmId = null;
+let market = null, marketAt = 0, selectedFarmId = new URLSearchParams(location.search).get("listing"), marketListScrollTop = 0;
+const graphReads = new Map();
 const listingId = (m) => m.id || m.game_id || m.order_id;
+function showMarketListing(id) {
+  if (!selectedFarmId) marketListScrollTop = $("list").scrollTop;
+  selectedFarmId = id;
+  const url = new URL(location.href);
+  url.searchParams.set("listing", id);
+  history.pushState({ marketListing: id, fromMarketplace: true }, "", url);
+  renderMarket();
+  $("list").scrollTop = 0;
+}
+function closeMarketListing() {
+  selectedFarmId = null;
+  const url = new URL(location.href);
+  url.searchParams.delete("listing");
+  history.replaceState(null, "", url);
+  view = "market";
+  renderMarket();
+  $("list").scrollTop = marketListScrollTop;
+}
 async function loadMarket() {
   marketAt = Date.now();
   try {
@@ -610,13 +645,16 @@ async function loadMarket() {
 function marketCard(m) {
   const id = listingId(m);
   const farm = String(id || "").startsWith("wf-");
+  const farmOwner = farm && m.requester && m.requester === USER?.email;
   const own = summaries.some((o) => o.id === m.order_id) ||
-    (farm && m.requester && m.requester === USER?.email);
-  const attrs = farm
-    ? { onclick: () => showEpisodes(id), title: "Show this listing's episodes" }
-    : own ? { onclick: () => select(m.order_id, "market"), title: "Open your listing" } : {};
-  const chosen = farm && id === selectedFarmId;
-  return h("article.mcard" + (own ? ".own" : "") + (chosen ? ".chosen" : ""), attrs,
+    farmOwner;
+  const hasMarketDetail = farm || id === "tomato-harvest";
+  const open = () => hasMarketDetail ? showMarketListing(id) : own ? select(m.order_id, "market") : null;
+  const attrs = hasMarketDetail || own
+    ? { role: "button", tabindex: "0", onclick: open,
+        onkeydown: (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); } },
+        title: "Open marketplace listing details" } : {};
+  return h("article.mcard" + (own ? ".own" : ""), attrs,
     m.scene_image_url ? h("img.mimg", { src: m.scene_image_url, alt: "Preview of the game scene", loading: "lazy" }) : h("div.mph", "Scene preview pending"),
     h("div.mb",
       h("div.mt", h("b", m.title), own ? h("span.mine", "Your listing") : null, badge(m.status)),
@@ -628,26 +666,124 @@ function marketCard(m) {
         h("div", h("small", "Available"), h("b", (m.episodes_available || 0).toLocaleString()))),
       h("div.mf", h("span", `Player reward ${credits(m.reward_per_episode)}`), h("span", "·"), h("span", `Price ${credits(m.episode_price)} / episode`)),
       farm ? h("button.btn.sm", { onclick: (e) => { e.stopPropagation(); showEpisodes(id); } }, "View episodes") : null,
-      m.play_url ? h("a.btn.sm", { href: m.play_url, target: "_blank", rel: "noopener", onclick: (e) => e.stopPropagation() }, "Open game →") : null));
+      hasMarketDetail ? h("span.market-card-open", "View listing →") : null));
+}
+async function deleteFarmListing(gameId) {
+  if (!USER?.email || !confirm("Delete this listing from the marketplace? New plays and purchases will stop. Existing recordings and purchased downloads will be preserved.")) return;
+  try {
+    const response = await fetch(`/api/wefarm/games/${encodeURIComponent(gameId)}`, {
+      method: "DELETE", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requester_id: USER.email }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Could not delete listing");
+    if (selectedFarmId === gameId) closeMarketListing();
+    market = (market || []).filter((item) => listingId(item) !== gameId);
+    renderMarket();
+    await loadMarket();
+    toast("Listing deleted from the marketplace. Existing recordings were preserved.");
+  } catch (error) {
+    toast(error.message || "Could not delete listing");
+  }
+}
+function requesterPlayUrl(url) {
+  const target = new URL(url, location.href);
+  target.searchParams.set("player_id", Agri.playerId(USER?.email || "guest"));
+  return target.href;
+}
+function farmQaStatus(episode) {
+  const state = episode.qa_status || ({ pass: "approved", fail: "rejected", pending: "pending_review" }[episode.qa] || "queued");
+  const states = {
+    queued: ["b-gray", "Queued"], processing: ["b-blue", "Checking…"],
+    approved: ["b-green", "✓ Approved"], rejected: ["b-red", "Rejected"],
+    pending_review: ["b-amber", "Review needed"],
+  };
+  const [cls, label] = states[state] || ["b-gray", state];
+  return h("span.badge." + cls, label);
+}
+function farmEpisodeTable(gameId, episodes) {
+  if (!episodes.length) return h("div.buy", h("div.row1",
+    h("span.kv", "No episodes submitted yet. They will appear here while QA runs."),
+    h("a.btn.sm", { href: "/watch/sample", target: "_blank", rel: "noopener" }, "▶ Watch a sample recording")));
+  return h("div.episode-table", h("table",
+    h("thead", h("tr", h("th", "Episode"), h("th", "Player"), h("th", "Submitted"), h("th", "Harvested"), h("th", "Length"), h("th", "QA"), h("th", "Recording"))),
+    h("tbody", episodes.map((episode) => {
+      const qaState = episode.qa_status || ({ pass: "approved", fail: "rejected", pending: "pending_review" }[episode.qa] || "queued");
+      const approved = qaState === "approved";
+      return h("tr",
+        h("td.episode-id", episode.episode_id || "—"),
+        h("td", episode.player_id || "—", episode.operator_device === "crusoe-vlm" ? h("span.mode", { style: "margin-left:6px" }, "AI") : null),
+        h("td", episode.submitted_at ? Agri.ago(episode.submitted_at) : "—"),
+        h("td", Number(episode.harvested_count || 0).toLocaleString()),
+        h("td", `${Math.round(episode.duration_s || 0)} s`),
+        h("td", farmQaStatus(episode), episode.qa_reason ? h("span.qa-note", episode.qa_reason) : null),
+        h("td.ep-watch", h("a.btn.sm", { href: `/watch/wefarm/${encodeURIComponent(gameId)}/${encodeURIComponent(episode.episode_id)}`, target: "_blank", rel: "noopener" }, "▶ Watch"),
+          approved && episode.purchased
+            ? h("a.btn.sm", { href: Agri.farmEpisodeUrl(gameId, episode.episode_id), download: `${episode.episode_id}.jsonl.gz`, style: "margin-left:4px" }, "↓ Download")
+            : h("span.kv", { style: "margin-left:6px" }, approved ? "Available to buy" : qaState === "rejected" ? "Not available" : qaState === "pending_review" ? "Needs review" : "Awaiting QA")));
+    }))));
+}
+function graphResult(gameId) {
+  const cached = graphReads.get(gameId);
+  if (cached && Date.now() - cached.at < 15000) return cached.promise;
+  const promise = Agri.farmGraph(gameId).catch(() => ({ available: false, items: [] }));
+  graphReads.set(gameId, { at: Date.now(), promise });
+  return promise;
+}
+async function renderGraphRecords(gameId, target) {
+  const data = await graphResult(gameId);
+  if (!target.isConnected) return;
+  if (!data.available) {
+    target.replaceChildren(h("h3", "Neo4j records"),
+      h("div.buy", "Neo4j is unavailable. The submitted episodes above are still stored in the marketplace."));
+    return;
+  }
+  const items = data.items || [];
+  target.replaceChildren(h("h3", "Neo4j records"),
+    h("p.caption", `${items.length} episode metadata record${items.length === 1 ? "" : "s"} indexed. Recording files stay in storage.`),
+    items.length ? h("div.episode-table", h("table",
+      h("thead", h("tr", h("th", "Episode"), h("th", "Player"), h("th", "Harvested"), h("th", "QA status"), h("th", "QA Agent"))),
+      h("tbody", items.map((item) => h("tr",
+        h("td.episode-id", item.episode_id || "—"), h("td", item.player_id || "—"),
+        h("td", Number(item.harvested_count || 0).toLocaleString()),
+        h("td", farmQaStatus({ ...item, qa_status: item.approved ? "approved" : item.qa_status === "approved" ? "pending_review" : item.qa_status })),
+        h("td", item.explanation || (item.qa_status === "queued" ? "Waiting for QA…" : item.qa_status === "processing" ? "QA is running…" : "—")))))))
+      : h("div.buy", "No episode metadata for this game is in Neo4j yet."));
 }
 async function showEpisodes(id) {
-  selectedFarmId = id;
-  renderMarket();
+  showMarketListing(id);
   await renderTomatoMarketPanel(id);
-  $("tomatoMarketPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  $("farmEpisodeSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 function renderMarket() {
   if (!market || Date.now() - marketAt > 5000) loadMarket();
   if (!market) { setList(h("div.none", "Loading the marketplace…")); return; }
-  const farmListing = market.find((m) => listingId(m) === selectedFarmId) ||
-    market.find((m) => String(listingId(m) || "").startsWith("wf-"));
-  if (farmListing && !selectedFarmId) selectedFarmId = listingId(farmListing);
-  const selectedListing = farmListing || market.find((m) => listingId(m) === "tomato-harvest");
+  const scrollTop = $("list").scrollTop;
+  const selectedListing = selectedFarmId ? market.find((m) => listingId(m) === selectedFarmId) : null;
+  if (selectedFarmId && selectedListing) {
+    const existing = $("marketDetail");
+    if (existing?.dataset.gameId === selectedFarmId) {
+      renderTomatoMarketPanel(selectedFarmId);
+      return;
+    }
+    const playUrl = selectedListing.play_url ? requesterPlayUrl(selectedListing.play_url) : null;
+    setList(h("div.market-detail", { id: "marketDetail", "data-game-id": selectedFarmId },
+      h("div.market-detail-nav", h("button.btn", { onclick: closeMarketListing }, "← Back to Marketplace")),
+      h("div.market-detail-hero",
+        h("div", badge(selectedListing.status), h("h2", selectedListing.title || "Tomato harvest"),
+          h("p", `${selectedListing.robot} · ${selectedListing.scene}`)),
+        h("div.market-detail-actions", playUrl
+          ? h("a.btn.primary", { href: playUrl, target: "_blank", rel: "noopener" }, "Open game →") : null)),
+      h("div.market-detail-panel", { id: "tomatoMarketPanel" }, "Loading listing details…")));
+    $("list").scrollTop = 0;
+    renderTomatoMarketPanel(selectedFarmId);
+    return;
+  }
+  if (selectedFarmId && !selectedListing) selectedFarmId = null;
   setList(
     h("p.caption", { style: "padding:16px 20px 0;margin:0" }, "Every published game. Players pick one and play it in the browser; the QA Agent checks each episode. Open your own listing to buy its QA-passed episodes."),
-    market.length ? h("div.mgrid", market.map(marketCard)) : h("div.none", "No games are published yet. Create a farm request to publish the prepared greenhouse simulator."),
-    selectedListing ? h("div.sec", { id: "tomatoMarketPanel" }, "Loading tomato harvest episodes…") : null);
-  if (selectedListing) renderTomatoMarketPanel(listingId(selectedListing));
+    market.length ? h("div.mgrid", market.map(marketCard)) : h("div.none", "No games are published yet. Create a farm request to publish the prepared greenhouse simulator."));
+  $("list").scrollTop = scrollTop;
 }
 
 async function renderTomatoMarketPanel(gameId = "tomato-harvest") {
@@ -657,6 +793,16 @@ async function renderTomatoMarketPanel(gameId = "tomato-harvest") {
   try {
     const data = isWeFarm ? await Agri.farmSummary(gameId) : await Agri.tomatoSummary();
     if (!panel.isConnected) return;
+    const snapshot = JSON.stringify([data.listing.status, data.listing.episodes_submitted,
+      data.listing.episodes_passed, data.listing.episodes_available, data.wallet_balance,
+      (data.episodes || []).map((episode) => [episode.episode_id, episode.qa_status, episode.qa_reason,
+        episode.purchased, episode.harvested_count])]);
+    if (panel.dataset.snapshot === snapshot) {
+      const graphPanel = panel.querySelector("#marketGraphPanel");
+      if (graphPanel && Date.now() - (graphReads.get(gameId)?.at || 0) > 15000) renderGraphRecords(gameId, graphPanel);
+      return;
+    }
+    panel.dataset.snapshot = snapshot;
     const available = data.listing.episodes_available;
     const count = h("input", { type: "number", min: "1", max: String(Math.max(1, available)), value: "1", style: "width:72px", "aria-label": "Tomato episodes to buy" });
     const arm = isWeFarm ? null : h("select", { "aria-label": "Harvesting arm" },
@@ -684,38 +830,26 @@ async function renderTomatoMarketPanel(gameId = "tomato-harvest") {
       } catch (e) { status.textContent = e.message; }
       finally { mine.disabled = false; }
     } }, "Mine selected data ↓");
+    const graphPanel = isWeFarm ? h("div", { id: "marketGraphPanel" }, h("h3", "Neo4j records"), h("div.buy", "Checking Neo4j…")) : null;
     panel.replaceChildren(
-      h("h3", `${data.listing.title || "Tomato harvest"} · requester tools`),
+      h("h3", "Data collection & QA"),
+      isWeFarm && data.listing.requester === USER?.email
+        ? h("button.btn.sm", { onclick: () => deleteFarmListing(gameId) }, "Delete listing") : null,
       isWeFarm && data.request ? h("div.buy",
         h("div.kv", h("b", "Request image: "), data.request.image_name || "Farm reference"),
         h("div.kv", h("b", "Data request: "), data.request.text || "Tomato harvest episodes"),
         h("p.caption", "Environment: prepared teammate greenhouse simulator template.")) : null,
       h("p.caption", `Submitted ${data.listing.episodes_submitted} · QA passed ${data.listing.episodes_passed} · available ${available} · wallet ${credits(data.wallet_balance)}`),
+      isWeFarm ? h("div", { id: "farmEpisodeSection" }, h("h3", "Submitted episodes"), farmEpisodeTable(gameId, data.episodes || [])) : null,
+      graphPanel,
       h("div.buy", h("div.row1", count, buy, h("span.caption", "Use Billing to top up credits through Stripe Checkout."))),
       h("div.buy", h("div.row1", h("span.kv", "Minimum tomatoes"), minScore, arm, mine)),
       status,
-      isWeFarm ? episodeTable(gameId, data.episodes || []) : null,
       h("p.caption", isWeFarm
         ? "Recorded robot states, actions, and harvest events are delivered as JSONL.gz after QA."
         : "MuJoCo simulation trajectories are delivered as HDF5 after replay QA."));
+    if (graphPanel) renderGraphRecords(gameId, graphPanel);
   } catch (e) { panel.textContent = `Could not load tomato episodes: ${e.message}`; }
-}
-
-function episodeTable(gameId, episodes) {
-  if (!episodes.length) return h("div.buy", h("div.row1", h("span.kv", "No episodes yet. They appear here as soon as players submit them."),
-    h("a.btn.sm", { href: "/watch/sample", target: "_blank", rel: "noopener" }, "▶ Watch a sample recording")));
-  return h("div.scroll-x", h("table.tbl",
-    h("thead", h("tr", h("th", "Episode"), h("th", "Player"), h("th", "Submitted"), h("th.r", "Ripe picked"), h("th.r", "Length"), h("th", "QA"), h("th", "QA Agent"), h("th", ""))),
-    h("tbody", episodes.map((e) => h("tr",
-      h("td.m", e.episode_id.slice(-12)),
-      h("td", e.player_id, e.operator_device === "crusoe-vlm" ? h("span.mode", { style: "margin-left:6px" }, "AI") : null),
-      h("td.kv", { style: "white-space:nowrap" }, Agri.ago(e.submitted_at)),
-      h("td.r", String(e.harvested_count ?? 0)),
-      h("td.r", `${Math.round(e.duration_s || 0)} s`),
-      h("td", qbadge(e.qa), e.purchased ? h("span.badge.b-blue", { style: "margin-left:4px" }, h("i"), "Bought") : null),
-      h("td.kv", { style: "min-width:200px" }, e.qa_reason || ""),
-      h("td.ep-watch", h("a.btn.sm", { href: `/watch/wefarm/${gameId}/${e.episode_id}`, target: "_blank", rel: "noopener" }, "▶ Watch"),
-        e.purchased ? h("a.btn.sm", { href: `/api/marketplace/${gameId}/episodes/${e.episode_id}/file`, download: true, style: "margin-left:4px" }, "↓") : null))))));
 }
 
 /* ---------------- wallet (credits, Stripe top-up) ---------------- */
@@ -1244,9 +1378,16 @@ async function runGeneration(photoUrl, publish) {
   $("genSub").textContent = `“${result.game?.title || "Harvest ripe tomatoes"}” is in the marketplace. Players can pick it now; QA checks every episode they submit.`;
   $("genFoot").hidden = false;
   $("genPlay").hidden = false;
-  $("genPlay").href = result.game?.play_url ? `${result.game.play_url}?player_id=${encodeURIComponent(Agri.playerId(USER?.email || "demo-requester"))}` : "/player";
+  $("genPlay").href = result.game?.play_url ? requesterPlayUrl(result.game.play_url) : "/player";
   $("genOpen").textContent = "Open the listing";
-  $("genOpen").onclick = () => { $("gen").hidden = true; view = "market"; renderList(); };
+  $("genOpen").onclick = () => {
+    $("gen").hidden = true;
+    view = "market";
+    selectedFarmId = null;
+    renderList();
+    const id = result.game ? listingId(result.game) : result.game_id || result.request_id;
+    if (id) showMarketListing(id);
+  };
   return result;
 }
 
@@ -1269,7 +1410,6 @@ $("mSubmit").onclick = async () => {
     const photoUrl = URL.createObjectURL(file);
     closeModal();
     const result = await runGeneration(photoUrl, () => Agri.createFarmRequest(USER?.email || "demo-requester", request, file.name, imageData));
-    selectedFarmId = result.game ? listingId(result.game) : result.game_id || result.request_id || null;
     market = null;
     $("mText").value = ""; $("mImage").value = ""; $("mCredit").hidden = true;
     $("mImagePreview").hidden = true;
@@ -1279,8 +1419,25 @@ $("mSubmit").onclick = async () => {
   } catch (e) { /* the generation screen shows the error */ }
   finally { $("mSubmit").disabled = false; }
 };
-document.querySelectorAll(".nav[data-view]").forEach((b) => b.addEventListener("click", () => { view = b.dataset.view; renderList(); }));
-$("viewSelect").addEventListener("change", (e) => { view = e.target.value; closeDetail(); });
+function clearListingSelection() {
+  selectedFarmId = null;
+  if (new URLSearchParams(location.search).has("listing")) {
+    const url = new URL(location.href);
+    url.searchParams.delete("listing");
+    history.replaceState(null, "", url);
+  }
+}
+document.querySelectorAll(".nav[data-view]").forEach((b) => b.addEventListener("click", () => {
+  clearListingSelection();
+  view = b.dataset.view;
+  renderList();
+}));
+$("viewSelect").addEventListener("change", (e) => { clearListingSelection(); view = e.target.value; closeDetail(); });
+window.addEventListener("popstate", () => {
+  selectedFarmId = new URLSearchParams(location.search).get("listing");
+  if (selectedFarmId) view = "market";
+  renderList();
+});
 
 /* ---------------- polling ---------------- */
 

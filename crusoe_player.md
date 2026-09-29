@@ -18,7 +18,7 @@ Game camera frame + compact game status + task goal
   -> fresh frame and status; repeat until success, stop, or timeout
 ```
 
-The VLM sees rendered frames, preferably the main view and wrist camera, plus only the game status needed to act. Its goal is to pick the tomato and place it in the harvest tray. It chooses one **bounded action at a time**: move base, position arm, orient wrist, open/close gripper, wait, request another view, or stop. The WEFARM controller validates the output, clamps motion and duration, and uses the existing simulator/controller to execute it. The VLM does not send unrestricted motor commands directly to MuJoCo. After every short action, it observes the new result and may recover from a mistake. Do not claim that a single prompt can control a robot continuously at the simulator's frame rate.
+The VLM receives two separately labeled JPEG images for each decision: a wide head-camera frame and a close wrist-camera frame, plus only the game status needed to act. The visible game display may still show a wrist inset, but the inference request sends two full-size images rather than one composited frame. Its goal is to pick the tomato and place it in the harvest tray. It chooses one **bounded action at a time**: move base, position arm, orient wrist, open/close gripper, wait, request another view, or stop. The WEFARM controller validates the output, clamps motion and duration, and uses the existing simulator/controller to execute it. The VLM does not send unrestricted motor commands directly to MuJoCo. After every short action, it observes the new result and may recover from a mistake. Do not claim that a single prompt can control a robot continuously at the simulator's frame rate.
 
 Example action schema for the first integration (exact skill names must match the selected game adapter):
 
@@ -35,7 +35,7 @@ All actions need a strict allowlist, time limit, movement limit, and server-side
 
 ## Crusoe role
 
-Run a compatible **vision-language model** on the Crusoe GPU instance and expose a private inference endpoint to the WEFARM AI Player controller. The browser never calls the GPU endpoint directly. Select the exact VLM and serving runtime only after checking the instance's GPU memory, model license, image input support, latency, and actual endpoint response. The existing SSH details do not by themselves prove that a VLM is installed or serving. If the model is too slow, use shorter observations and higher-level skills; report actual latency in the demo rather than claiming real-time control without measurement.
+The first live adapter can use Crusoe Serverless Inference with the Gemma 4 vision model when a Crusoe API key is available. A dedicated Crusoe GPU instance can replace that endpoint once its model server is installed and tested. The browser never calls either inference endpoint directly. Select any dedicated-instance VLM and serving runtime only after checking GPU memory, model license, image input support, latency, and an actual endpoint response. A synthetic-image Serverless Inference call has succeeded; this does not establish successful autonomous tomato harvesting. If the model is too slow, use shorter observations and higher-level skills; report actual latency in the demo rather than claiming real-time control without measurement.
 
 ## Website flow
 

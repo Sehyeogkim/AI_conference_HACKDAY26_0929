@@ -311,7 +311,9 @@ async function main(): Promise<void> {
   const aiUi = {
     state: document.querySelector<HTMLDivElement>("#ai-state")!,
     message: document.querySelector<HTMLParagraphElement>("#ai-message")!,
+    observations: document.querySelector<HTMLDivElement>("#ai-observations")!,
     observation: document.querySelector<HTMLImageElement>("#ai-observation")!,
+    wristObservation: document.querySelector<HTMLImageElement>("#ai-wrist-observation")!,
     model: document.querySelector<HTMLElement>("#ai-model")!,
     action: document.querySelector<HTMLElement>("#ai-action")!,
     reason: document.querySelector<HTMLElement>("#ai-reason")!,
@@ -735,13 +737,13 @@ async function main(): Promise<void> {
     aiDecisionCount = 0;
     aiFrameId = 0;
     aiLastLatencyMs = null;
-    aiUi.observation.hidden = true;
+    aiUi.observations.hidden = true;
     aiSessionStartedAt = performance.now();
     aiNextObservationAt = aiSessionStartedAt + 200;
     recorder = new SessionRecorder(newRecordingHeader("crusoe-vlm", aiModel));
     hud.record.textContent = "● AI recording";
     hud.record.classList.add("recording");
-    setAiPhase("observing", "Capturing a live game frame for the Crusoe VLM.");
+    setAiPhase("observing", "Capturing head and wrist camera frames for the Crusoe VLM.");
   });
   aiUi.pause.addEventListener("click", () => {
     if (aiMode !== "running") return;
@@ -753,7 +755,7 @@ async function main(): Promise<void> {
     if (aiMode !== "paused") return;
     aiMode = "running";
     aiNextObservationAt = performance.now();
-    setAiPhase("observing", "Capturing a fresh game frame.");
+    setAiPhase("observing", "Capturing fresh head and wrist camera frames.");
   });
   aiUi.stop.addEventListener("click", () => { void finishAi("AI Player stopped. Saving the native recording."); });
   aiUi.take.addEventListener("click", () => { void finishAi("Returning control to the human player. Saving the AI recording."); });
@@ -762,6 +764,44 @@ async function main(): Promise<void> {
   observationCanvas.width = 640;
   observationCanvas.height = 360;
   const observationContext = observationCanvas.getContext("2d")!;
+  const renderWristMeshes = () => {
+    const markerWasVisible = targetMarker.visible;
+    const splatWasVisible = spark.visible;
+    const mainBackground = scene.background;
+    targetMarker.visible = false;
+    spark.visible = false;
+    scene.background = WRIST_INSET_BACKGROUND;
+    try {
+      renderer.render(scene, wristCamera);
+    } finally {
+      scene.background = mainBackground;
+      spark.visible = splatWasVisible;
+      targetMarker.visible = markerWasVisible;
+    }
+  };
+  const renderAiWristInset = () => {
+    const size = renderer.getSize(new THREE.Vector2());
+    const insetWidth = Math.round(Math.min(360, size.x * 0.28));
+    const insetHeight = Math.round(insetWidth * (size.y / size.x));
+    const insetX = size.x - insetWidth - 16;
+    const insetY = 34;
+    renderer.setScissorTest(true);
+    renderer.setViewport(insetX, insetY, insetWidth, insetHeight);
+    renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
+    try {
+      renderWristMeshes();
+    } finally {
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, size.x, size.y);
+    }
+    Object.assign(wristInsetLabel.style, { display: "block", right: "16px", bottom: `${insetY + insetHeight - 22}px`, width: `${insetWidth}px` });
+  };
+  const captureAiCamera = (camera: THREE.Camera) => {
+    if (camera === wristCamera) renderWristMeshes();
+    else renderer.render(scene, camera);
+    observationContext.drawImage(renderer.domElement, 0, 0, observationCanvas.width, observationCanvas.height);
+    return observationCanvas.toDataURL("image/jpeg", 0.65);
+  };
   const requestAiDecision = async () => {
     if (aiMode !== "running" || aiAbort || aiAction) return;
     const frameId = ++aiFrameId;
@@ -769,18 +809,27 @@ async function main(): Promise<void> {
     const observedAt = new Date().toISOString();
     const controller = new AbortController();
     aiAbort = controller;
-    setAiPhase("thinking", `Crusoe VLM is evaluating live frame ${frameId}.`);
+    setAiPhase("thinking", `Crusoe VLM is evaluating head and wrist frames ${frameId}.`);
     try {
-      observationContext.drawImage(renderer.domElement, 0, 0, observationCanvas.width, observationCanvas.height);
-      const frameDataUrl = observationCanvas.toDataURL("image/jpeg", 0.65);
-      const frame_jpeg_base64 = frameDataUrl.split(",", 2)[1];
-      if (!frame_jpeg_base64) throw new Error("Could not capture the live camera frame.");
-      aiUi.observation.src = frameDataUrl;
-      aiUi.observation.hidden = false;
+      let headDataUrl: string;
+      let wristDataUrl: string;
+      try {
+        headDataUrl = captureAiCamera(headCamera);
+        wristDataUrl = captureAiCamera(wristCamera);
+      } finally {
+        renderer.render(scene, headCamera);
+        renderAiWristInset();
+      }
+      const head_jpeg_base64 = headDataUrl.split(",", 2)[1];
+      const wrist_jpeg_base64 = wristDataUrl.split(",", 2)[1];
+      if (!head_jpeg_base64 || !wrist_jpeg_base64) throw new Error("Could not capture both live camera frames.");
+      aiUi.observation.src = headDataUrl;
+      aiUi.wristObservation.src = wristDataUrl;
+      aiUi.observations.hidden = false;
       const totals = tally(simulation.events);
       const response = await fetch(`${aiApiBase}/api/ai-player/decide`, {
         method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
-        body: JSON.stringify({ frame_id: frameId, frame_jpeg_base64, status: {
+        body: JSON.stringify({ frame_id: frameId, head_jpeg_base64, wrist_jpeg_base64, status: {
           step: simulation.controlStep, harvested: totals.harvestedRipe, dropped: totals.dropped,
           gripper_open: simulation.command.gripperOpen, task: TASK_GOAL,
         } }),
@@ -889,7 +938,7 @@ async function main(): Promise<void> {
             aiAction = null;
             aiActionRemaining = 0;
             aiNextObservationAt = now + 150;
-            setAiPhase("observing", "Checking the result in a fresh camera frame.");
+            setAiPhase("observing", "Checking the result in fresh head and wrist camera frames.");
           }
         } else if (aiMode === "human") teleop.applyHeldKeys(controlPeriod);
         simulation.controlTick();
@@ -938,30 +987,7 @@ async function main(): Promise<void> {
     if (controls.enabled) controls.update();
     renderer.render(scene, activeCamera());
     if ((wristInsetVisible || aiMode === "running" || aiMode === "paused") && cameraMode !== "wrist") {
-      // Bottom-right inset, above the credit line; the wrist camera keeps the main view's aspect.
-      const size = renderer.getSize(new THREE.Vector2());
-      const insetWidth = Math.round(Math.min(360, size.x * 0.28));
-      const insetHeight = Math.round(insetWidth * (size.y / size.x));
-      const insetX = size.x - insetWidth - 16;
-      const insetY = 34;
-      renderer.setScissorTest(true);
-      renderer.setViewport(insetX, insetY, insetWidth, insetHeight);
-      renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
-      // The hand-target ring sits right in front of the wrist camera; leave it out of this view.
-      targetMarker.visible = false;
-      // The splat renderer keeps one sort order for one camera; drawing the splat from a second
-      // camera made the main view flicker on some machines (even with re-sorting switched off for
-      // the inset). So the inset draws only the meshes: robot, cart, crate, and fruit.
-      spark.visible = false;
-      const mainBackground = scene.background;
-      scene.background = WRIST_INSET_BACKGROUND;
-      renderer.render(scene, wristCamera);
-      scene.background = mainBackground;
-      spark.visible = true;
-      targetMarker.visible = true;
-      renderer.setScissorTest(false);
-      renderer.setViewport(0, 0, size.x, size.y);
-      Object.assign(wristInsetLabel.style, { display: "block", right: "16px", bottom: `${insetY + insetHeight - 22}px`, width: `${insetWidth}px` });
+      renderAiWristInset();
     } else {
       wristInsetLabel.style.display = "none";
     }

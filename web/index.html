@@ -11,8 +11,10 @@
       #ai-panel h2 { margin: 0 0 8px; font-size: 15px; }
       #ai-state { color: #a9deb7; font-weight: 600; }
       #ai-message { margin: 6px 0 9px; font-size: 12px; opacity: .88; }
-      #ai-observation { display: block; width: 100%; max-height: 130px; object-fit: cover; border: 1px solid #4a5c4f; border-radius: 5px; margin-bottom: 9px; }
-      #ai-observation[hidden] { display: none; }
+      #ai-observations { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 9px; }
+      #ai-observations figure { margin: 0; min-width: 0; font-size: 11px; opacity: .9; }
+      #ai-observations img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border: 1px solid #4a5c4f; border-radius: 5px; }
+      #ai-observations[hidden] { display: none; }
       #ai-details { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 4px 7px; margin: 0 0 10px; font-size: 12px; }
       #ai-details dt { opacity: .65; }
       #ai-details dd { margin: 0; overflow-wrap: anywhere; }
@@ -52,7 +54,10 @@
       <h2>AI Mode · Crusoe VLM</h2>
       <div id="ai-state" role="status" aria-live="polite">Checking availability…</div>
       <p id="ai-message">AI Mode requires a live Crusoe vision model.</p>
-      <img id="ai-observation" alt="Latest frame sent to the AI Player" hidden />
+      <div id="ai-observations" hidden>
+        <figure><img id="ai-observation" alt="Head camera frame sent to the AI Player" /><figcaption>Head camera</figcaption></figure>
+        <figure><img id="ai-wrist-observation" alt="Wrist camera frame sent to the AI Player" /><figcaption>Wrist camera</figcaption></figure>
+      </div>
       <dl id="ai-details">
         <dt>Model</dt><dd id="ai-model">—</dd>
         <dt>Action</dt><dd id="ai-action">—</dd>
