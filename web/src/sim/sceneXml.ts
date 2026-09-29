@@ -60,7 +60,7 @@ export function buildSceneXml(layout: FarmLayout): string {
       (tomato) =>
         `    <body name="${tomato.name}" pos="${format(tomato.position)}">
       <freejoint name="${tomato.name}_free"/>
-      <geom name="${tomato.name}_geom" type="sphere" size="${format([tomato.radiusM])}" rgba="${format(tomato.rgba)}" mass="0.02" friction="1.5 0.02 0.002" condim="4" solref="0.004 1"/>
+      <geom name="${tomato.name}_geom" type="sphere" size="${format([tomato.radiusM])}" rgba="${format(tomato.rgba)}" mass="${format([tomato.massKg])}" friction="1.5 0.02 0.002" condim="4" solref="0.004 1"/>
     </body>`,
     )
     .join("\n");

@@ -33,7 +33,10 @@ export function applyScaleChoice(world: WorldPackage, choice: string | null): Wo
 export interface LoadedSplatWorld {
   world: WorldPackage;
   splat: SplatMesh;
+  /** Erases the photo's plants along the whole work cell (used with the generated plants). */
   plantEraser: SplatEdit;
+  /** Swap in a sharper splat level once it has downloaded; the old one is removed afterwards. */
+  upgradeSplat(splatFileBytes: Uint8Array, splatFileName: string): Promise<void>;
 }
 
 export async function loadWorldPackage(baseUrl: string): Promise<WorldPackage> {
@@ -147,5 +150,19 @@ export async function loadSplatWorld(options: {
     plantEraser.addSdf(box);
   }
   parent.add(plantEraser);
-  return { world, splat, plantEraser };
+
+
+  let currentSplat = splat;
+  const upgradeSplat = async (splatFileBytes: Uint8Array, splatFileName: string) => {
+    const sharper = new SplatMesh({ fileBytes: splatFileBytes, fileName: splatFileName });
+    sharper.position.copy(currentSplat.position);
+    sharper.quaternion.copy(currentSplat.quaternion);
+    sharper.scale.copy(currentSplat.scale);
+    await sharper.initialized;
+    parent.add(sharper);
+    parent.remove(currentSplat);
+    currentSplat.dispose();
+    currentSplat = sharper;
+  };
+  return { world, splat, plantEraser, upgradeSplat };
 }

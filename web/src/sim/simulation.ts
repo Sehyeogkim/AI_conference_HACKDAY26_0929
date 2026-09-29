@@ -20,6 +20,7 @@ type MjModel = any;
 type MjData = any;
 
 export const CONTROL_RATE_HZ = 50;
+/** Fallback stem detach force; each tomato's own `detachForceN` (by ripeness) takes precedence. */
 export const DETACH_FORCE_N = 8;
 /** Grasp assist: closing the gripper holds a tomato whose centre is this close to the fingertips. */
 export const GRASP_ASSIST_RADIUS_M = 0.035;
@@ -333,7 +334,7 @@ export class TomatoHarvestSimulation {
     this.weldIds.forEach((weldId, tomatoIndex) => {
       if (this.tomatoState[tomatoIndex] !== "attached") return;
       const force = Math.sqrt(forceSquaredByWeld.get(weldId) ?? 0);
-      if (force > DETACH_FORCE_N) {
+      if (force > (this.layout.tomatoes[tomatoIndex]?.detachForceN ?? DETACH_FORCE_N)) {
         this.setEqualityActive(weldId, false);
         this.tomatoState[tomatoIndex] = "free";
         this.events.push({ kind: "detach", time: data.time, tomato: tomatoIndex, forceN: Number(force.toFixed(2)) });

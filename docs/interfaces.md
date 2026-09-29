@@ -32,8 +32,8 @@ Input devices (keyboard today; gamepad, VR, or a policy later) only write this c
 
 - Arm: Menagerie Panda attached with prefix `arm0/` (`arm0/joint1…7`, `arm0/actuator1…8`, `arm0/hand`). Gripper `arm0/actuator8`: 0 closed, 255 open (stiffness raised 10× at load).
 - Cart: joints `cart_x`, `cart_y`, `cart_yaw`; actuators `cart_drive_x`, `cart_drive_y`, `cart_turn` (position servos).
-- Tomatoes: bodies `tomato_<i>`; stem constraints `stem_<i>` (switched off above 8 N pull); grasp-assist constraints `grip_<i>` (tomato ↔ `arm0/hand`).
-- Physics constants robot code may depend on: timestep 2 ms; control 50 Hz (`CONTROL_RATE_HZ`); stem detach force 8 N (`DETACH_FORCE_N`); grasp-assist radius 3.5 cm (`GRASP_ASSIST_RADIUS_M`); hand-target glide speed 0.4 m/s (`HAND_TARGET_SPEED_M_PER_S`); gripper stiffness 10× Menagerie. All in `web/src/sim/simulation.ts`.
+- Tomatoes: bodies `tomato_<i>`; stem constraints `stem_<i>` (switched off when the pull exceeds that tomato's `detachForceN`: 6 N ripe, 9 N turning, 14 N green; `DETACH_FORCE_N_BY_RIPENESS` in `web/src/farm/farmLayout.ts`); mass from volume at 1000 kg/m³ (`massKg`, about 20–40 g for the current 1.7–2.1 cm radii); grasp-assist constraints `grip_<i>` (tomato ↔ `arm0/hand`).
+- Physics constants robot code may depend on: timestep 2 ms; control 50 Hz (`CONTROL_RATE_HZ`); stem detach force per tomato by ripeness (above; `DETACH_FORCE_N` = 8 N is only the fallback); grasp-assist radius 3.5 cm (`GRASP_ASSIST_RADIUS_M`); hand-target glide speed 0.4 m/s (`HAND_TARGET_SPEED_M_PER_S`); gripper stiffness 10× Menagerie. All in `web/src/sim/simulation.ts`.
 
 ## 4. Recording (`web/src/recording/sessionRecording.ts`) — environment zone
 

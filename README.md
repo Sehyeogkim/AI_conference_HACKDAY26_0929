@@ -16,7 +16,7 @@ Needs Docker (Colima on macOS).
 docker compose up -d web          # Vite dev server on http://127.0.0.1:5180
 ```
 
-Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (7.3 MB for the default splat). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full`, `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground).
+Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (a 1.4 MB splat first, so the scene appears quickly; a sharper 28 MB one then swaps in while you play). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full` (pin one level; use `500k` on weaker machines), `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground).
 
 ## Controls
 
@@ -31,7 +31,7 @@ Open <http://127.0.0.1:5180>. A loading screen shows each step with live progres
 | [ / ] | Cart to the previous / next stop |
 | H | Hand back to the ready pose |
 | C | Camera: orbit (drag) → head → wrist |
-| P | Show or hide the photo's own plants |
+| P | Switch between the photo's own plants (default) and generated plants |
 
 Picking: click a red tomato, press **F** to lower until the fingers surround it, **Space** to close (the tomato snaps off when pulled), **R** to lift, **S** to bring it back over the basket (or press **H**), **Space** to drop. A ripe tomato in the basket scores.
 

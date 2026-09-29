@@ -11,11 +11,17 @@ import { buildMujocoMeshes } from "./render/mujocoMeshes.ts";
 import { buildTomatoPlants } from "./render/tomatoPlants.ts";
 import { applyScaleChoice, downloadWithProgress, loadSplatWorld, loadWorldPackage, splatFileFor, worldPackageSources, type LoadedSplatWorld, type WorldPackage, type WorldPackageSource } from "./render/splatWorld.ts";
 import { LoadingScreen, formatMegabytes } from "./render/loadingScreen.ts";
+import { dressTomatoes } from "./render/tomatoFruit.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import "./style.css";
 
-const SIMULATOR_VERSION = "wefarm-web 0.1.0";
+const SIMULATOR_VERSION = "wefarm-web 0.2.0";
+/**
+ * Splat level swapped in after the first, light one has loaded. "full" (about 28 MB) ran at 78 fps
+ * next to the physics on an Apple-silicon laptop in Chrome; `?splat=500k` suits weaker machines.
+ */
+const SHARP_SPLAT_LEVEL = "full";
 const TASK_GOAL = "Drive along the tomato path and pick the ripe (red) tomatoes into the basket. Leave green ones on the plant.";
 const params = new URLSearchParams(location.search);
 const baseUrl = import.meta.env.BASE_URL;
@@ -57,7 +63,9 @@ async function main(): Promise<void> {
     }
   }
   const worldBaseUrl = worldSource?.baseUrl ?? "";
-  const splatLevel = params.get("splat") ?? "500k";
+  // Show a light splat quickly, then swap in a sharper one in the background (unless ?splat= pins one).
+  const splatLevel = params.get("splat") ?? (world?.files.splats["100k"] ? "100k" : "500k");
+  const sharperSplatLevel = params.get("splat") ? null : SHARP_SPLAT_LEVEL;
   // Start the splat download now so it overlaps with loading physics.
   let splatDownload: Promise<Uint8Array | null> = Promise.resolve(null);
   if (world && worldSource) {
@@ -119,7 +127,7 @@ async function main(): Promise<void> {
   const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   const scene = new THREE.Scene();
@@ -143,6 +151,16 @@ async function main(): Promise<void> {
   worldRoot.add(meshes.root);
   const plants = buildTomatoPlants(layout);
   worldRoot.add(plants.root);
+  const fruit = dressTomatoes(meshes, layout);
+
+  // The photoreal scene cannot receive shadows, so an invisible ground that shows only shadows
+  // grounds the cart, arm, and plants on the photographed path.
+  const shadowCatcher = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.ShadowMaterial({ opacity: 0.38, depthWrite: false }));
+  shadowCatcher.position.set(20, 0, 0.003);
+  shadowCatcher.receiveShadow = true;
+  shadowCatcher.renderOrder = 10;
+  shadowCatcher.visible = false;
+  worldRoot.add(shadowCatcher);
 
   const targetMarker = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.004, 8, 24), new THREE.MeshBasicMaterial({ color: 0x39ff88 }));
   worldRoot.add(targetMarker);
@@ -169,11 +187,15 @@ async function main(): Promise<void> {
     try {
       splatWorld = await loadSplatWorld({ baseUrl: worldBaseUrl, world, splatLevel, parent: worldRoot, layout, splatFileBytes });
       meshes.setGroundVisible(false);
+      shadowCatcher.visible = true;
+      // Default: the photo's own plants, whole; the pickable trusses hang in front of them.
+      splatWorld.plantEraser.visible = false;
+      plants.setGeneratedFoliageVisible(false);
       scene.background = new THREE.Color(0xe8ecef);
       loading.done("build", "photoreal scene placed");
     } catch (error) {
       console.warn("World package failed to load; showing the work cell only", error);
-      loading.fail("build", "could not decode the scene: plain ground instead");
+      loading.fail("build", `could not build the scene (${(error as Error).message}): plain ground instead`);
     }
   } else {
     loading.done("build", "work cell on plain ground");
@@ -247,7 +269,7 @@ async function main(): Promise<void> {
   let replay: { recording: Recording; frame: number; playing: boolean; accumulator: number } | null = null;
   const teleop = new KeyboardTeleop(simulation, layout);
   // Debug handle for the browser console (inspect the simulation, script a pick).
-  Object.assign(window, { wefarm: { simulation, layout, teleop } });
+  Object.assign(window, { wefarm: { simulation, layout, teleop, orbitCamera, orbitControls: controls, splatWorld } });
 
   const newRecordingHeader = () => ({
     type: "header" as const,
@@ -308,11 +330,14 @@ async function main(): Promise<void> {
   hud.cameraButton.addEventListener("click", cycleCamera);
   const toggleScenery = () => {
     if (!splatWorld) return;
-    splatWorld.plantEraser.visible = !splatWorld.plantEraser.visible;
-    hud.scenery.textContent = splatWorld.plantEraser.visible ? "Show photo plants" : "Hide photo plants";
+    const useGeneratedPlants = !splatWorld.plantEraser.visible;
+    splatWorld.plantEraser.visible = useGeneratedPlants;
+    plants.setGeneratedFoliageVisible(useGeneratedPlants);
+    hud.scenery.textContent = useGeneratedPlants ? "Photo plants (P)" : "Generated plants (P)";
   };
   hud.scenery.addEventListener("click", toggleScenery);
   hud.scenery.disabled = !splatWorld;
+  hud.scenery.textContent = "Generated plants (P)";
   window.addEventListener("keydown", (event) => {
     if ((event.target as HTMLElement).tagName === "TEXTAREA") return;
     if (event.code === "KeyV") cycleCamera();
@@ -404,6 +429,23 @@ async function main(): Promise<void> {
   const pointer = new THREE.Vector2();
   let pointerDown: { x: number; y: number } | null = null;
   renderer.domElement.addEventListener("pointerdown", (event) => (pointerDown = { x: event.clientX, y: event.clientY }));
+  // Hover: light up the tomato under the mouse, so it is clear what a click will reach for.
+  let hoverPending = false;
+  renderer.domElement.addEventListener("pointermove", (event) => {
+    if (hoverPending) return;
+    hoverPending = true;
+    requestAnimationFrame(() => {
+      hoverPending = false;
+      if (mode !== "play" || cameraMode === "wrist") return fruit.setHighlighted(null);
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+      raycaster.setFromCamera(pointer, activeCamera());
+      const tomatoMeshes = [...meshes.meshesByGeom.values()].filter((mesh) => mesh.name.startsWith("tomato_"));
+      const hit = raycaster.intersectObjects(tomatoMeshes, false)[0];
+      fruit.setHighlighted(hit ? Number(hit.object.name.split("_")[1]) : null);
+      renderer.domElement.style.cursor = hit ? "pointer" : "";
+    });
+  });
   renderer.domElement.addEventListener("pointerup", (event) => {
     if (!pointerDown || mode !== "play" || cameraMode === "wrist") return;
     const moved = Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y);
@@ -448,6 +490,22 @@ async function main(): Promise<void> {
   const controlPeriod = 1 / CONTROL_RATE_HZ;
   setStatus(splatWorld ? "Ready. Click a red tomato, or move the arm with W A S D R F." : "Ready (no photoreal world found).");
   loading.finish();
+
+  // Sharpen the scene in the background once everything else is running.
+  if (splatWorld && world && sharperSplatLevel && world.files.splats[sharperSplatLevel] && sharperSplatLevel !== splatLevel) {
+    const sharperFile = splatFileFor(world, sharperSplatLevel);
+    const readyStatus = statusElement.textContent ?? "";
+    downloadWithProgress(`${worldBaseUrl}/${sharperFile}`, (loadedBytes, totalBytes) => {
+      // Only annotate the ready message; never overwrite a newer status (e.g. a click hint).
+      const current = statusElement.textContent ?? "";
+      if (totalBytes > 0 && loadedBytes < totalBytes && current.startsWith(readyStatus)) setStatus(`${readyStatus} (sharpening the scene… ${Math.round((100 * loadedBytes) / totalBytes)}%)`);
+    })
+      .then((bytes) => splatWorld!.upgradeSplat(bytes, sharperFile.split("/").pop()!))
+      .then(() => {
+        if (statusElement.textContent?.includes("sharpening")) setStatus(readyStatus);
+      })
+      .catch((error: unknown) => console.warn("Sharper splat failed to load; keeping the light one", error));
+  }
 
   renderer.setAnimationLoop(() => {
     const now = performance.now();

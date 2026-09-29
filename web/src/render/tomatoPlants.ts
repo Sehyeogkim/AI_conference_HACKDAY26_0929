@@ -8,6 +8,11 @@ import { createSeededRandom, randomBetween } from "../farm/seededRandom.ts";
 export interface TomatoPlantVisuals {
   root: THREE.Group;
   setFruitStemVisible(tomatoIndex: number, visible: boolean): void;
+  /**
+   * Generated stems, strings, and leaves are shown only when the photo's own plants are erased;
+   * the truss and fruit stalks always show, coming out of whichever plants are visible.
+   */
+  setGeneratedFoliageVisible(visible: boolean): void;
 }
 
 function leafGeometry(): THREE.BufferGeometry {
@@ -32,9 +37,13 @@ export function buildTomatoPlants(layout: FarmLayout): TomatoPlantVisuals {
   root.name = "tomato-plants";
   const random = createSeededRandom(layout.parameters.seed * 7919 + 17);
   const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x4f7a2a, roughness: 0.8 });
+  const stalkMaterial = new THREE.MeshStandardMaterial({ color: 0x55682f, roughness: 0.85 });
   const stringMaterial = new THREE.MeshStandardMaterial({ color: 0xd9d2b8, roughness: 1 });
   const leafMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.75, side: THREE.DoubleSide });
 
+  const foliage = new THREE.Group();
+  foliage.name = "generated-foliage";
+  root.add(foliage);
   const leafTransforms: THREE.Matrix4[] = [];
   const leafColours: THREE.Color[] = [];
   const dummy = new THREE.Object3D();
@@ -50,10 +59,10 @@ export function buildTomatoPlants(layout: FarmLayout): TomatoPlantVisuals {
     }
     const stem = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 24, 0.011, 6, false), stemMaterial);
     stem.castShadow = true;
-    root.add(stem);
+    foliage.add(stem);
     const twine = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.002, 2.6, 4).rotateX(Math.PI / 2), stringMaterial);
     twine.position.set(baseX, baseY, 1.3 + 0.9);
-    root.add(twine);
+    foliage.add(twine);
 
     // Leaves: compound-leaf clusters along the stem, mostly facing away from the path so the
     // trusses stay reachable.
@@ -78,7 +87,7 @@ export function buildTomatoPlants(layout: FarmLayout): TomatoPlantVisuals {
     for (const anchor of plant.trussAnchors) {
       const stemPoint = new THREE.Vector3(baseX, baseY, anchor[2] + 0.06);
       const anchorPoint = new THREE.Vector3(...anchor);
-      root.add(cylinderBetween(stemPoint, anchorPoint, 0.005, stemMaterial));
+      root.add(cylinderBetween(stemPoint, anchorPoint, 0.0035, stalkMaterial));
     }
   }
 
@@ -89,12 +98,12 @@ export function buildTomatoPlants(layout: FarmLayout): TomatoPlantVisuals {
   });
   leaves.castShadow = true;
   leaves.receiveShadow = true;
-  root.add(leaves);
+  foliage.add(leaves);
 
   const fruitStems = layout.tomatoes.map((tomato) => {
     const top = new THREE.Vector3(...tomato.stemAnchor);
     const fruitTop = new THREE.Vector3(tomato.position[0], tomato.position[1], tomato.position[2] + tomato.radiusM);
-    const stalk = cylinderBetween(top, fruitTop, 0.0025, stemMaterial);
+    const stalk = cylinderBetween(top, fruitTop, 0.0018, stalkMaterial);
     root.add(stalk);
     return stalk;
   });
@@ -104,6 +113,9 @@ export function buildTomatoPlants(layout: FarmLayout): TomatoPlantVisuals {
     setFruitStemVisible: (tomatoIndex, visible) => {
       const stalk = fruitStems[tomatoIndex];
       if (stalk) stalk.visible = visible;
+    },
+    setGeneratedFoliageVisible: (visible) => {
+      foliage.visible = visible;
     },
   };
 }

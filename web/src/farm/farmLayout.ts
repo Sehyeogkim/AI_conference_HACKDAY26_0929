@@ -18,6 +18,10 @@ export interface TomatoSpec {
   side: "left" | "right";
   /** Where the fruit's stem joins its truss (for drawing the stem). */
   stemAnchor: [number, number, number];
+  /** Fruit mass from its volume at the density of tomato flesh (about that of water). */
+  massKg: number;
+  /** Pull on the stem (N) that snaps the fruit free; riper fruit separates more easily. */
+  detachForceN: number;
 }
 
 export interface PlantSpec {
@@ -72,6 +76,15 @@ export const DEFAULT_FARM_PARAMETERS: FarmLayoutParameters = {
   armCount: 1,
 };
 
+/** Tomato flesh is close to water in density. */
+export const TOMATO_DENSITY_KG_PER_M3 = 1000;
+/**
+ * Stem pull (N) that detaches a fruit, by ripeness. Working defaults: ripe fruit separates at its
+ * abscission joint more easily than unripe fruit; the values are placeholders to calibrate against
+ * measured detachment forces for the variety.
+ */
+export const DETACH_FORCE_N_BY_RIPENESS: Record<Ripeness, number> = { ripe: 6, turning: 9, green: 14 };
+
 const RIPENESS_COLOURS: Record<Ripeness, [number, number, number, number]> = {
   ripe: [0.78, 0.07, 0.04, 1],
   turning: [0.93, 0.45, 0.08, 1],
@@ -122,6 +135,8 @@ export function generateFarmLayout(parameters: FarmLayoutParameters = DEFAULT_FA
           rgba: RIPENESS_COLOURS[ripeness],
           side,
           stemAnchor: [position[0], trussAnchor[1], trussAnchor[2]],
+          massKg: Number(((4 / 3) * Math.PI * radiusM ** 3 * TOMATO_DENSITY_KG_PER_M3).toFixed(4)),
+          detachForceN: DETACH_FORCE_N_BY_RIPENESS[ripeness],
         });
       }
       plants.push(plant);
