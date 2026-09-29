@@ -104,6 +104,7 @@ async function main(): Promise<void> {
   const layout = generateFarmLayout(layoutParameters);
   setStatus("Loading physics and the Franka Panda model…");
   loading.start("physics", "MuJoCo (WebAssembly) and robot model files…");
+  const physicsStarted = performance.now();
   const pandaBase = `${baseUrl}models/franka_emika_panda`;
   let pandaFilesTotal = 0;
   let pandaFilesLoaded = 0;
@@ -120,7 +121,8 @@ async function main(): Promise<void> {
       return names;
     },
   });
-  loading.done("physics", `${layout.tomatoes.length} tomatoes · ${simulation.model.nq} joint positions`);
+  loading.done("physics", `${layout.tomatoes.length} tomatoes · ${simulation.model.nq} joint positions · ${((performance.now() - physicsStarted) / 1000).toFixed(1)} s`);
+  console.info(`[load] physics ready in ${Math.round(performance.now() - physicsStarted)} ms`);
   const sceneHash = await sha256Hex(simulation.sceneXml);
 
   // ---------- Renderer, scene, cameras ----------
@@ -172,8 +174,12 @@ async function main(): Promise<void> {
   const wristCamera = new THREE.PerspectiveCamera(75, 1, 0.01, 100);
   const headCamera = new THREE.PerspectiveCamera(70, 1, 0.02, 200);
   const cameraModes = ["orbit", "head", "wrist"] as const;
-  /** Small picture-in-picture view from the wrist camera (key M), shown unless the main view is the wrist. */
-  let wristInsetVisible = true;
+  /**
+   * Small picture-in-picture view from the wrist camera (key M). It draws only the meshes (robot,
+   * cart, fruit): the splat renderer keeps one sort order for one camera, and drawing the splat
+   * from a second camera every frame makes the main view flicker.
+   */
+  let wristInsetVisible = false;
   const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
@@ -190,12 +196,13 @@ async function main(): Promise<void> {
   if (world && splatFileBytes) {
     setStatus("Building the photoreal greenhouse…");
     loading.progress("build", null, "decoding the splat…");
+    const buildStarted = performance.now();
     try {
       splatWorld = await loadSplatWorld({ baseUrl: worldBaseUrl, world, splatLevel, parent: worldRoot, layout, splatFileBytes });
       meshes.setGroundVisible(false);
       shadowCatcher.visible = true;
       // Default: the photo's own plants, whole; the pickable trusses hang in front of them.
-      splatWorld.plantEraser.visible = false;
+      splatWorld.setPlantEraserActive(false);
       plants.setGeneratedFoliageVisible(false);
       scene.background = new THREE.Color(0xe8ecef);
       // Light the robot, cart, and fruit with the world's own panorama, so they take on the
@@ -214,7 +221,8 @@ async function main(): Promise<void> {
           (error: unknown) => console.warn("Lighting panorama failed to load; keeping the default lights", error),
         );
       }
-      loading.done("build", "photoreal scene placed");
+      loading.done("build", `photoreal scene placed · ${((performance.now() - buildStarted) / 1000).toFixed(1)} s`);
+      console.info(`[load] splat built in ${Math.round(performance.now() - buildStarted)} ms`);
     } catch (error) {
       console.warn("World package failed to load; showing the work cell only", error);
       loading.fail("build", `could not build the scene (${(error as Error).message}): plain ground instead`);
@@ -352,8 +360,8 @@ async function main(): Promise<void> {
   hud.cameraButton.addEventListener("click", cycleCamera);
   const toggleScenery = () => {
     if (!splatWorld) return;
-    const useGeneratedPlants = !splatWorld.plantEraser.visible;
-    splatWorld.plantEraser.visible = useGeneratedPlants;
+    const useGeneratedPlants = !splatWorld.plantEraserActive();
+    splatWorld.setPlantEraserActive(useGeneratedPlants);
     plants.setGeneratedFoliageVisible(useGeneratedPlants);
     hud.scenery.textContent = useGeneratedPlants ? "Photo plants (P)" : "Generated plants (P)";
   };
@@ -592,7 +600,12 @@ async function main(): Promise<void> {
       renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
       // The hand-target ring sits right in front of the wrist camera; leave it out of this view.
       targetMarker.visible = false;
+      spark.visible = false;
+      const mainBackground = scene.background;
+      scene.background = new THREE.Color(0x6f7f6a);
       renderer.render(scene, wristCamera);
+      scene.background = mainBackground;
+      spark.visible = true;
       targetMarker.visible = true;
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, size.x, size.y);
