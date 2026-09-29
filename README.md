@@ -4,6 +4,10 @@
 
 ![WeFarm concept cover: requester, game, player, and QA](docs/assets/wefarm-readme-cover.png)
 
+
+https://github.com/user-attachments/assets/41123ccf-e880-4393-8777-31ea22ba8e8e
+
+
 ![WeFarm architecture concept](docs/assets/wefarm-readme-architecture-concept.png)
 
 **What runs today:** the two images are concept visuals. The browser game has **one Franka Panda arm on a wheeled cart** and records **`.jsonl.gz`**, not HDF5. An uploaded farm photo is stored with the request; the demo opens a prepared World Labs greenhouse and a procedural MuJoCo work cell. OpenRouter interprets requests and reviews QA evidence, while Crusoe is the optional AI Player VLM. Neo4j indexes metadata when configured; recording files stay in local storage.
