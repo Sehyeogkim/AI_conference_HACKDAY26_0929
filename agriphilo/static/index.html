@@ -1135,20 +1135,20 @@ $("mText").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.meta
    The World Labs steps replay the real, pre-built Crete world (generated ahead of the demo); "coming soon"
    steps show planned features. Reading the request and publishing are real server calls. */
 const GEN_STAGES = [
-  { key: "read", label: "Reading your photo and request", tag: "live", who: "OpenRouter orchestrator", ms: 2600, visual: "photo", scan: true },
-  { key: "pano", label: "Estimating a 360° panorama", tag: "prebuilt", who: "World Labs Marble", ms: 3000, visual: "pano",
+  { key: "read", label: "Reading your photo and request", tag: "live", who: "OpenRouter orchestrator", ms: 1100, visual: "photo", scan: true },
+  { key: "pano", label: "Estimating a 360° panorama", tag: "prebuilt", who: "World Labs Marble", ms: 1100, visual: "pano",
     detail: "Imagines the parts of the greenhouse the photo doesn't show." },
-  { key: "world", label: "Generating the 3D Gaussian-splat world", tag: "prebuilt", who: "World Labs Marble 1.1", ms: 4200, visual: "splat",
+  { key: "world", label: "Generating the 3D Gaussian-splat world", tag: "prebuilt", who: "World Labs Marble 1.1", ms: 1600, visual: "splat",
     detail: "Millions of coloured splats; streamed as a 1.4 MB preview, then 28 MB full detail." },
-  { key: "scale", label: "Measuring true scale and the ground", tag: "prebuilt", who: "WeFarm world builder", ms: 2000, visual: "splat",
+  { key: "scale", label: "Measuring true scale and the ground", tag: "prebuilt", who: "WeFarm world builder", ms: 800, visual: "splat",
     detail: "Fits the floor and sets metres, so the robot and tomatoes are life-size." },
-  { key: "fruit", label: "Detecting tomatoes in the photo", tag: "future", who: "Vision model", ms: 3200, visual: "boxes",
+  { key: "fruit", label: "Detecting tomatoes in the photo", tag: "future", who: "Vision model", ms: 1500, visual: "boxes",
     detail: "Will find each fruit, its ripeness and truss, and place pickable tomatoes where the real ones hang." },
-  { key: "assets", label: "Lifting plant and fruit assets out of the scan", tag: "future", who: "Asset extraction", ms: 2400, visual: "splat",
+  { key: "assets", label: "Lifting plant and fruit assets out of the scan", tag: "future", who: "Asset extraction", ms: 900, visual: "splat",
     detail: "Will turn scanned plants into touchable meshes with physics shapes." },
-  { key: "physics", label: "Building the physics scene", tag: "live", who: "MuJoCo", ms: 2200, visual: "splat",
+  { key: "physics", label: "Building the physics scene", tag: "live", who: "MuJoCo", ms: 900, visual: "splat",
     detail: "Franka Panda on a harvest cart, a basket, and tomatoes on breakable stems; runs in the player's browser." },
-  { key: "publish", label: "Publishing to the marketplace", tag: "live", who: "WeFarm", ms: 900, visual: "splat" },
+  { key: "publish", label: "Publishing to the marketplace", tag: "live", who: "WeFarm", ms: 500, visual: "splat" },
 ];
 const TAG_TEXT = { live: "live", prebuilt: "pre-built", future: "coming soon" };
 const FRUIT_BOXES = [[17, 50, "ripe"], [27, 60, "ripe"], [11, 67, "turning"], [33, 45, "green"], [69, 54, "ripe"], [78, 64, "ripe"], [63, 71, "turning"], [85, 47, "ripe"]];
@@ -1198,7 +1198,7 @@ async function runGeneration(photoUrl, publish) {
       $("genBar").style.width = `${((doneMs + fraction * stage.ms) / total) * 100}%`;
     }, 100);
     await sleep(stage.ms);
-    if (stage.key === "read" || stage.key === "publish") {
+    if (stage.key === "publish") {
       try { result = await published; }
       catch (error) {
         clearInterval(tick);
@@ -1211,9 +1211,10 @@ async function runGeneration(photoUrl, publish) {
         $("genPlay").hidden = true;
         throw error;
       }
-      if (stage.key === "read") detail.textContent = result.orchestrator_source === "openrouter"
+      const readDetail = rows[0].detail;
+      readDetail.textContent = result.orchestrator_source === "openrouter" || result.orchestrator_source === "openrouter-cached"
         ? `OpenRouter turned the request into a task: “${result.game?.title || "Harvest ripe tomatoes"}”.`
-        : "Used the standard tomato-harvest task (OpenRouter unavailable).";
+        : "Used the standard tomato-harvest task.";
     }
     clearInterval(tick);
     doneMs += stage.ms;

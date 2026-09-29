@@ -38,6 +38,50 @@ MAX_STEPS = 200_000
 PRICE = PRICING["game"]["episode_price_credits"]
 REWARD = PRICING["game"]["player_share_credits"]
 CUSTOMER = "demo-customer"
+# Demo mode: replay stored OpenRouter answers instead of calling the live model (see demo_cache.json).
+DEMO_CACHE_PATH = Path(__file__).resolve().parent / "demo_cache.json"
+
+
+def _demo_cache() -> dict | None:
+    if os.environ.get("WEFARM_DEMO_CACHE") != "1" or not DEMO_CACHE_PATH.is_file():
+        return None
+    return json.loads(DEMO_CACHE_PATH.read_text())
+
+
+def _graph_store(graph_class):
+    """Neo4j AuraDB connection; skipped in demo mode, where the local JSON index is used instead."""
+    if _demo_cache() is not None:
+        raise RuntimeError("Neo4j is skipped in demo mode")
+    return graph_class.from_env()
+
+
+def _cached_interpretation(request_text: str) -> dict | None:
+    """The stored OpenRouter reading of a known request, or the fixed template for any other text."""
+    cache = _demo_cache()
+    if cache is None:
+        return None
+    hit = cache.get("requests", {}).get(_sha256(request_text.encode()))
+    if hit:
+        return {"source": "openrouter-cached", "model": hit.get("model"), "image_analyzed": hit.get("image_analyzed", False),
+                "task_spec": hit["task_spec"]}
+    from .openrouter_tasks import _fixed_spec
+    return {"source": "preset", "model": None, "image_analyzed": False, "task_spec": _fixed_spec(request_text)}
+
+
+def _cached_episode_review(evidence: dict) -> dict | None:
+    """Demo QA: the server's hard gates decide; the stored OpenRouter acceptance supplies the report."""
+    cache = _demo_cache()
+    if cache is None:
+        return None
+    from .openrouter_qa import HARD_GATE_KEYS, QA_VERSION
+    gates = evidence.get("hard_gates") or {}
+    base = {"qa_version": QA_VERSION, "source": "openrouter-cached", "model_id": cache["episode_qa"]["model"]}
+    if all(gates.get(key) is True for key in HARD_GATE_KEYS):
+        accept = cache["episode_qa"]["accept"]
+        return {**base, "decision": "accept", "reason": accept["reason"], "evidence_keys": accept["evidence_keys"],
+                "model_response": {**accept, "model_id": base["model_id"], "qa_version": QA_VERSION}}
+    failed = [f"hard_gates.{key}" for key in HARD_GATE_KEYS if gates.get(key) is not True]
+    return {**base, "decision": "reject", "reason": "A required QA check failed.", "evidence_keys": failed, "model_response": None}
 
 
 def _save_json(path: Path, value: Any) -> None:
@@ -54,7 +98,7 @@ def _approved(record: dict) -> bool:
     """Only a current, audited OpenRouter acceptance is marketplace-eligible."""
     from .openrouter_qa import QA_VERSION
     gates = record.get("qa_rule_results")
-    return (record.get("qa") == "pass" and record.get("ai_source") == "openrouter"
+    return (record.get("qa") == "pass" and record.get("ai_source") in ("openrouter", "openrouter-cached")
             and record.get("ai_verdict") == "accept" and record.get("qa_version") == QA_VERSION
             and isinstance(gates, dict) and all(gates.get(k) is True for k in
                                                  ("data_integrity", "reproducibility", "task_completion", "uniqueness"))
@@ -237,7 +281,7 @@ class WeFarmMarketplace:
         image_path = folder / f"source{ext}"
         image_path.write_bytes(image)
         from .openrouter_tasks import interpret_request
-        interpreted = interpret_request(request_text.strip(), image_bytes=image, image_mime=mime)
+        interpreted = _cached_interpretation(request_text.strip()) or interpret_request(request_text.strip(), image_bytes=image, image_mime=mime)
         task_spec = interpreted.get("task_spec") or {}
         record = {
             "game_id": game_id, "requester_id": requester_id.strip(), "request": request_text.strip(),
@@ -252,7 +296,7 @@ class WeFarmMarketplace:
             _save_json(self.requests_path, self.requests)
         try:
             from .neo4j_graph import GraphStore
-            graph = GraphStore.from_env()
+            graph = _graph_store(GraphStore)
             try:
                 graph.upsert_task({"task_id": game_id, "task_spec": task_spec, "source": record["orchestrator_source"],
                                    "image_uri": str(image_path), "created_at": record["created_at"]})
@@ -378,6 +422,30 @@ class WeFarmMarketplace:
         folder.mkdir(parents=True, exist_ok=True)
         path = folder / f"{episode_id}.jsonl.gz"
         path.write_bytes(blob)
+        submitted_at = time.time()
+        review_args = (game_id, player_id, session_id, episode_id, path, digest, header, facts, reasons, structural_pass, unique, submitted_at)
+        if _demo_cache() is None:
+            return self._review(*review_args)
+        # Demo mode: accept the upload at once and run QA (physics replay, verdict) in the background;
+        # the episode shows as "Checking…" until the review replaces this placeholder.
+        placeholder = {
+            "episode_id": episode_id, "game_id": game_id, "file": path.name, "player_id": player_id,
+            "session_id": session_id, "submitted_at": submitted_at, **facts,
+            "qa": "pending", "quality": None, "qa_reason": "QA is replaying the physics and reviewing the episode…",
+            "reasons": [], "structural_pass": structural_pass, "replay_checked": False, "replay_pass": False,
+            "file_sha256": digest, "reward_credits": 0, "purchased": False, "kind": "wefarm_mujoco_jsonl_gz",
+            "operator_device": (header.get("operator") or {}).get("device"),
+        }
+        with self.lock:
+            self.episodes.insert(0, placeholder)
+            _save_json(self.episodes_path, self.episodes)
+        threading.Thread(target=self._review, args=review_args, daemon=True).start()
+        return placeholder
+
+    def _review(self, game_id: str, player_id: str, session_id: str, episode_id: str, path: Path, digest: str,
+                header: dict, facts: dict, reasons: list[str], structural_pass: bool, unique: bool,
+                submitted_at: float) -> dict:
+        """Physics replay, QA verdict, reward, and index update for one stored episode."""
         replay = _replay(path) if structural_pass and unique else {"replay_checked": False, "passed": False, "reasons": []}
         if replay.get("replay_checked") and not replay.get("passed"):
             reasons.extend(replay.get("reasons") or ["physics replay failed"])
@@ -404,12 +472,12 @@ class WeFarmMarketplace:
             "unavailable_measurements": ["idle_ratio", "oscillation", "unintended_collisions",
                                          "near_duplicate_score", "starting_condition_coverage"],
         }
-        ai = evaluate_episode(measured_evidence)
+        ai = _cached_episode_review(measured_evidence) or evaluate_episode(measured_evidence)
         qa = {"accept": "pass", "review": "pending", "reject": "fail"}[ai["decision"]]
         qa_reason = "; ".join([*reasons, ai["reason"]] if reasons else [ai["reason"]])
         record = {
             "episode_id": episode_id, "game_id": game_id, "file": path.name, "player_id": player_id,
-            "session_id": session_id, "submitted_at": time.time(), **facts,
+            "session_id": session_id, "submitted_at": submitted_at, **facts,
             "qa": qa, "quality": 4 if qa == "pass" else 1, "qa_reason": qa_reason,
             "reasons": reasons, "structural_pass": structural_pass, "replay_checked": bool(replay.get("replay_checked")),
             "replay_pass": replay_pass, "ai_verdict": ai["decision"],
@@ -421,7 +489,7 @@ class WeFarmMarketplace:
         }
         with self.lock:
             if any(e["game_id"] == game_id and e.get("trajectory_sha256") == facts["trajectory_sha256"]
-                   for e in self.episodes):
+                   and e["episode_id"] != episode_id for e in self.episodes):
                 raise ValueError("duplicate recording trajectory")
             if record["qa"] == "pass" and not _approved(record):
                 record["qa"] = "pending"
@@ -430,11 +498,15 @@ class WeFarmMarketplace:
             if _approved(record):
                 self.ledger.reward(game_id, episode_id, player_id, REWARD)
                 record["reward_credits"] = REWARD
-            self.episodes.insert(0, record)
+            index = next((i for i, e in enumerate(self.episodes) if e["episode_id"] == episode_id), None)
+            if index is None:
+                self.episodes.insert(0, record)
+            else:
+                self.episodes[index] = record
             _save_json(self.episodes_path, self.episodes)
         try:
             from .neo4j_graph import GraphStore
-            graph = GraphStore.from_env()
+            graph = _graph_store(GraphStore)
             try:
                 graph.upsert_episode({"episode_id": episode_id, "task_id": game_id, "player_id": player_id,
                                       "duration_s": facts["duration_s"], "score": facts["harvested_count"],
@@ -474,7 +546,7 @@ class WeFarmMarketplace:
             graph_recorded = False
             try:
                 from .neo4j_graph import GraphStore
-                graph = GraphStore.from_env()
+                graph = _graph_store(GraphStore)
                 try:
                     graph_recorded = graph.record_purchase(f"purchase-{entry['id']}", game_id, ids,
                                                            self._request(game_id)["requester_id"], entry["id"])
@@ -508,7 +580,7 @@ class WeFarmMarketplace:
         graph_source = "local_fallback"
         try:
             from .neo4j_graph import GraphStore
-            graph = GraphStore.from_env()
+            graph = _graph_store(GraphStore)
             try:
                 found = graph.query_approved_episodes(game_id, filters)
                 # An empty graph answer usually means the episode was never indexed; use the local index.

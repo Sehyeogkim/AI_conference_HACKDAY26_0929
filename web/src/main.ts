@@ -451,7 +451,7 @@ async function main(): Promise<void> {
       const blob = await finished.toGzipBlob({ type: "footer", steps: finished.steps, duration_s: Number((finished.steps / CONTROL_RATE_HZ).toFixed(2)), harvested_ripe: totals.harvestedRipe, harvested_unripe: totals.harvestedUnripe, dropped: totals.dropped });
       const filename = `wefarm-session-${header.started_at.replace(/[:.]/g, "-")}.jsonl.gz`;
       if (submissionUrl && marketplaceGameId && marketplacePlayerId) {
-        setStatus(`Submitting ${finished.steps} recorded steps. QA is replaying the physics and reviewing the episode (about 30 s)…`);
+        setStatus(`Submitting ${finished.steps} recorded steps to the marketplace…`);
         try {
           const endpoint = new URL(submissionUrl, location.href);
           if (endpoint.protocol !== "http:" && endpoint.protocol !== "https:") throw new Error("Unsupported upload URL");
@@ -467,7 +467,9 @@ async function main(): Promise<void> {
           });
           if (!response.ok) throw new Error(`Server returned HTTP ${response.status}`);
           const result = await response.json() as { episode_id?: string; qa?: string; reasons?: string[] };
-          const qaText = result.qa ? ` QA: ${result.qa}${result.reasons?.length ? ` (${result.reasons.join("; ")})` : ""}.` : " QA result unavailable.";
+          const qaText = result.qa === "pending"
+            ? " QA is checking it now; the verdict appears on the WeFarm pages in about 20 s."
+            : result.qa ? ` QA: ${result.qa}${result.reasons?.length ? ` (${result.reasons.join("; ")})` : ""}.` : " QA result unavailable.";
           setStatus(`Recording saved to the marketplace: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB).${qaText}`);
           if (aiRecording) setAiPhase("completed", `Episode ${result.episode_id ?? "saved"}.${qaText}`);
         } catch (error) {

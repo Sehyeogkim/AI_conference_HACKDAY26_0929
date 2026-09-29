@@ -1,0 +1,38 @@
+{
+  "_about": "Stored OpenRouter answers replayed when WEFARM_DEMO_CACHE=1, so the demo never waits on a live model. Recorded 2026-09-29 from real calls.",
+  "requests": {
+    "d3b0b89727be69b2c64c5305b9c621bbd75b696189d4a895de90aff5f2ce6060": {
+      "request_text": "Collect 50 successful ripe-tomato harvest episodes in our cherry-tomato greenhouse (Sitia, Crete) using the single-arm harvest cart. Pick only ripe red tomatoes into the basket and leave green ones on the plant. Record operator actions, robot joint states, and harvest events, and include the QA result for every episode. Reject episodes that drop fruit or damage plants.",
+      "model": "google/gemini-2.5-flash",
+      "image_analyzed": true,
+      "task_spec": {
+        "robot": "single-arm Franka Panda on a mobile cart",
+        "simulator": "browser MuJoCo",
+        "environment": "teammate tomato farm",
+        "task": "tomato-harvest",
+        "objective": "Harvest ripe red tomatoes into the basket, leaving green ones on the plant.",
+        "requested_episodes": 50,
+        "quality_requirements": [
+          "Record operator actions, robot joint states, and harvest events.",
+          "Include QA result for every episode.",
+          "Reject episodes that drop fruit.",
+          "Reject episodes that damage plants."
+        ],
+        "request_text": "Collect 50 successful ripe-tomato harvest episodes in our cherry-tomato greenhouse (Sitia, Crete) using the single-arm harvest cart. Pick only ripe red tomatoes into the basket and leave green ones on the plant. Record operator actions, robot joint states, and harvest events, and include the QA result for every episode. Reject episodes that drop fruit or damage plants.",
+        "environment_generation": "assumed teammate handoff; not run by this API",
+        "image_description": "A greenhouse with rows of tomato plants laden with red and green tomatoes, and a dirt path in the middle."
+      }
+    }
+  },
+  "episode_qa": {
+    "model": "google/gemini-2.5-flash",
+    "accept": {
+      "decision": "accept",
+      "reason": "The harvest was successful and reproducible.",
+      "evidence_keys": [
+        "hard_gates.task_completion",
+        "hard_gates.reproducibility"
+      ]
+    }
+  }
+}

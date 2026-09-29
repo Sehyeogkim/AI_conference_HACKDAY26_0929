@@ -54,6 +54,8 @@ services:
     environment:
       WEFARM_GAME_URL: http://127.0.0.1:${WEB_DEV_PORT:-5180}/
       WEFARM_DATA_ROOT: /app/runs/wefarm
+      # 1 = replay stored OpenRouter answers (agriphilo/demo_cache.json) instead of live calls; 0 = live.
+      WEFARM_DEMO_CACHE: ${WEFARM_DEMO_CACHE:-1}
     volumes:
       - .:/app
       - /app/web/node_modules
