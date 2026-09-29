@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wefarm"
+version = "0.0.1"
+description = "WeFarm: photoreal greenhouse worlds where people teleoperate robot arms to harvest, recorded as robot training data"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.7,<3",
+    "numpy>=1.26",
+    "Pillow>=10.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider --import-mode=importlib -m 'not live_worldlabs'"
+markers = [
+    "live_worldlabs: calls the real World Labs API and may spend credits; requires WORLDLABS_MAX_CREDITS",
+]
