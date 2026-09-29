@@ -172,6 +172,9 @@ async function main(): Promise<void> {
   const wristCamera = new THREE.PerspectiveCamera(75, 1, 0.01, 100);
   const headCamera = new THREE.PerspectiveCamera(70, 1, 0.02, 200);
   const cameraModes = ["orbit", "head", "wrist"] as const;
+  /** Small picture-in-picture view from the wrist camera (key M), shown unless the main view is the wrist. */
+  let wristInsetVisible = true;
+  const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
   controls.enableDamping = true;
@@ -361,6 +364,7 @@ async function main(): Promise<void> {
     if ((event.target as HTMLElement).tagName === "TEXTAREA") return;
     if (event.code === "KeyV") cycleCamera();
     if (event.code === "KeyP") toggleScenery();
+    if (event.code === "KeyM") wristInsetVisible = !wristInsetVisible;
   });
 
   // Replay (QA) mode.
@@ -497,10 +501,11 @@ async function main(): Promise<void> {
     wristCamera.matrixAutoUpdate = false;
     wristCamera.matrix.copy(zUpToScene).multiply(handMatrix).multiply(cameraInHand);
     wristCamera.matrixWorldNeedsUpdate = true;
-    // Head camera: above the cart's rear, looking forward and down at the work area.
+    // Head camera: on a mast at the cart's rear right corner, high enough to look past the arm
+    // at the trusses ahead and on both sides.
     const pose = simulation.cartPose();
-    headCamera.position.copy(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [-0.55, 0, 1.75])));
-    headCamera.lookAt(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [0.6, 0, 0.75])));
+    headCamera.position.copy(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [-0.5, -0.3, 1.95])));
+    headCamera.lookAt(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [0.9, 0.05, 0.85])));
   };
 
   let lastTime = performance.now();
@@ -575,6 +580,26 @@ async function main(): Promise<void> {
     placeCameras();
     if (controls.enabled) controls.update();
     renderer.render(scene, activeCamera());
+    if (wristInsetVisible && cameraMode !== "wrist") {
+      // Bottom-right inset, above the credit line; the wrist camera keeps the main view's aspect.
+      const size = renderer.getSize(new THREE.Vector2());
+      const insetWidth = Math.round(Math.min(360, size.x * 0.28));
+      const insetHeight = Math.round(insetWidth * (size.y / size.x));
+      const insetX = size.x - insetWidth - 16;
+      const insetY = 34;
+      renderer.setScissorTest(true);
+      renderer.setViewport(insetX, insetY, insetWidth, insetHeight);
+      renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
+      // The hand-target ring sits right in front of the wrist camera; leave it out of this view.
+      targetMarker.visible = false;
+      renderer.render(scene, wristCamera);
+      targetMarker.visible = true;
+      renderer.setScissorTest(false);
+      renderer.setViewport(0, 0, size.x, size.y);
+      Object.assign(wristInsetLabel.style, { display: "block", right: "16px", bottom: `${insetY + insetHeight - 22}px`, width: `${insetWidth}px` });
+    } else {
+      wristInsetLabel.style.display = "none";
+    }
   });
 }
 

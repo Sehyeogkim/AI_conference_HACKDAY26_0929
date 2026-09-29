@@ -59,3 +59,4 @@ button.recording { background: var(--accent); border-color: var(--accent); }
 .loading-note { margin: 16px 0 0; font-size: 11.5px; opacity: 0.55; }
 @keyframes loading-spin { to { transform: rotate(360deg); } }
 @keyframes loading-stripes { to { background-position: 40px 0; } }
+#wrist-inset-label { position: fixed; display: none; padding: 3px 8px; font-size: 11px; background: rgba(14, 20, 16, 0.7); border-radius: 0 0 6px 0; pointer-events: none; width: auto !important; }

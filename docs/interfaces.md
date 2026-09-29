@@ -38,3 +38,13 @@ Input devices (keyboard today; gamepad, VR, or a policy later) only write this c
 ## 4. Recording (`web/src/recording/sessionRecording.ts`) — environment zone
 
 Schema version **0**: gzip JSON Lines with a header, one step line per control step (`command`, `ctrl`, `qpos`, `attached`), event lines (`grasp`, `detach`, `release`, `harvested`, `dropped`), and the full MuJoCo state once per second. A change to fields bumps the version.
+
+## 5. Cameras (`web/src/main.ts`) — environment zone
+
+Listed here because recorded sessions will later be rendered from them for training data. Changing a camera's placement means a note in `handoffs/`.
+
+| Name | Where | Looks at |
+| --- | --- | --- |
+| `orbit` | Operator's free view (drag to orbit); follows the cart | — |
+| `head` | Mast at the cart's rear right corner: cart frame `[-0.5, -0.3, 1.95]` m | Cart frame `[0.9, 0.05, 0.85]` m; 70° vertical field of view |
+| `wrist` | On `arm0/hand`, 7 cm behind the fingers along hand −x, 2 cm along hand +z | Along the gripper (hand +z); 75° vertical field of view. Always shown as an inset (key M) |
