@@ -177,7 +177,8 @@ async function loadFreePlay() {
         h("td.muted", r.saved_at ? Agri.ago(r.saved_at) : "—"), h("td", `${Math.round(r.duration_s || 0)} s`),
         h("td", String(r.harvested_ripe ?? 0)), h("td", String(r.dropped ?? 0)),
         h("td", h("a.btn", { href: `/watch/free-play/${r.session_id}`, target: "_blank", rel: "noopener", style: "padding:4px 10px" }, "▶ Watch")))))))
-    : h("div.note", "Recordings made in the simulator outside a marketplace game are stored here for playback."));
+    : h("div.note", "Recordings made in the simulator outside a marketplace game are stored here for playback. ",
+      h("a", { href: "/watch/sample", target: "_blank", rel: "noopener" }, "Watch a sample recording")));
 }
 
 loadGames(); loadMine(); loadFreePlay();

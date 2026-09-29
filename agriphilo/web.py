@@ -33,6 +33,8 @@ PAGES = {
     "/static/demo/crete-farm-photo.jpg": ("demo/crete-farm-photo.jpg", "image/jpeg"),
     "/static/demo/crete-world-render.jpg": ("demo/crete-world-render.jpg", "image/jpeg"),
     "/static/demo/crete-world-panorama.jpg": ("demo/crete-world-panorama.jpg", "image/jpeg"),
+    # A real, QA-passed recording from the prepared greenhouse, for demos before anyone has played.
+    "/static/demo/sample-episode.jsonl.gz": ("demo/sample-episode.jsonl.gz", "application/gzip"),
 }
 PLAYER_ROUTE = re.compile(r"/api/players/([a-z0-9._-]{1,120})")
 GAME_ROUTE = re.compile(r"/api/games/([0-9a-f]{12})(?:/(approve|close))?")
@@ -128,6 +130,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(404, {"error": "unknown episode"})
             return self._redirect(self._simulator_url(
                 {"replay": f"http://{host}/api/marketplace/{game_id}/episodes/{episode_id}/replay", "replay_label": episode_id}))
+        if path == "/watch/sample":
+            return self._redirect(self._simulator_url(
+                {"replay": f"http://{host}/static/demo/sample-episode.jsonl.gz", "replay_label": "sample"}))
         watch = WATCH_FREE_PLAY_ROUTE.fullmatch(path)
         if watch:
             if self.wefarm.free_play_path(watch.group(1)) is None:
