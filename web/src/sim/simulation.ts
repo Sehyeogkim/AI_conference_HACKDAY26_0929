@@ -8,6 +8,7 @@
 // constraint force passes a threshold the weld is switched off and the tomato comes free.
 import loadMujoco from "@mujoco/mujoco";
 import type { FarmLayout } from "../farm/farmLayout.ts";
+import { ARM_REST_POSTURE, DampedLeastSquaresArmController, type ArmController, type ArmState } from "../robot/armController.ts";
 import { ARM_PREFIX, CART_ACTUATORS, CART_JOINTS, PANDA_MODEL_FILE, buildSceneXml, tomatoGripName, tomatoWeldName } from "./sceneXml.ts";
 
 // The bindings' TypeScript types are very large; the simulation uses a small, explicit surface.
@@ -27,8 +28,6 @@ const EQUALITY_DATA_SIZE = 11;
 /** Hand pointing straight down; gripper centre this far beyond the hand body's origin. */
 const GRIPPER_CENTRE_OFFSET_M = 0.103;
 const ARM_JOINT_COUNT = 7;
-/** A comfortable arm posture the IK drifts towards when the task leaves freedom (null space). */
-const ARM_REST_POSTURE = [0, -0.3, 0, -2.2, 0, 1.9, 0.785];
 
 export interface OperatorCommand {
   /** Cart base target in the world: x along the path, y across it (metres), heading (radians). */
@@ -90,10 +89,9 @@ export class TomatoHarvestSimulation {
   private previousGripperOpen = true;
   private readonly tomatoBodyIds: number[];
   private readonly tomatoState: Array<"attached" | "free" | "harvested">;
-  private readonly jacobianPosition: { GetView(): Float64Array; delete(): void };
-  private readonly jacobianRotation: { GetView(): Float64Array; delete(): void };
+  private readonly armController: ArmController;
 
-  private constructor(mujoco: MujocoModule, model: MjModel, layout: FarmLayout, sceneXml: string) {
+  private constructor(mujoco: MujocoModule, model: MjModel, layout: FarmLayout, sceneXml: string, armController: ArmController) {
     this.mujoco = mujoco;
     this.model = model;
     this.data = new mujoco.MjData(model);
@@ -120,16 +118,19 @@ export class TomatoHarvestSimulation {
     this.gripIds = layout.tomatoes.map((tomato) => id(obj.mjOBJ_EQUALITY.value, tomatoGripName(tomato.index)));
     this.tomatoBodyIds = layout.tomatoes.map((tomato) => id(obj.mjOBJ_BODY.value, tomato.name));
     this.tomatoState = layout.tomatoes.map(() => "attached");
-    this.jacobianPosition = new mujoco.DoubleBuffer(3 * model.nv);
-    this.jacobianRotation = new mujoco.DoubleBuffer(3 * model.nv);
+    this.armController = armController;
 
     const startX = layout.cart.stationsX[0] ?? 0;
     this.command = { baseTarget: [startX, 0, 0], handTargetInCart: [0.55, 0, 1.15], gripperYaw: 0, gripperPitch: 0, gripperOpen: true };
     this.reset();
   }
 
-  static async create(layout: FarmLayout, files: FileSource, mujocoOptions?: Record<string, unknown>): Promise<TomatoHarvestSimulation> {
-    const mujoco: MujocoModule = await loadMujoco(mujocoOptions);
+  /**
+   * Build the simulation. `armController` turns hand targets into arm joint targets; pass your own
+   * to replace the built-in damped-least-squares IK (see web/src/robot/armController.ts).
+   */
+  static async create(layout: FarmLayout, files: FileSource, options: { armController?: ArmController; mujocoOptions?: Record<string, unknown> } = {}): Promise<TomatoHarvestSimulation> {
+    const mujoco: MujocoModule = await loadMujoco(options.mujocoOptions);
     const vfs = new mujoco.MjVFS();
     const [pandaXml, assetNames] = await Promise.all([files.readPandaFile(PANDA_MODEL_FILE), files.pandaAssetList()]);
     vfs.addBuffer(PANDA_MODEL_FILE, strengthenGripper(pandaXml));
@@ -138,7 +139,7 @@ export class TomatoHarvestSimulation {
     const sceneXml = buildSceneXml(layout);
     const model = mujoco.MjModel.from_xml_string(sceneXml, vfs);
     vfs.delete();
-    return new TomatoHarvestSimulation(mujoco, model, layout, sceneXml);
+    return new TomatoHarvestSimulation(mujoco, model, layout, sceneXml, options.armController ?? new DampedLeastSquaresArmController());
   }
 
   get time(): number {
@@ -198,6 +199,20 @@ export class TomatoHarvestSimulation {
     return this.tomatoState[index]!;
   }
 
+  /** What an arm controller may read about the arm (live views into MuJoCo's state). */
+  armState(): ArmState {
+    return {
+      mujoco: this.mujoco,
+      model: this.model,
+      data: this.data,
+      armQposAddresses: this.armQposAddresses,
+      armDofAddresses: this.armDofAddresses,
+      armJointRanges: this.armJointRanges,
+      handBodyId: this.handBodyId,
+      gripperCentreWorld: this.gripperCentreWorld(),
+    };
+  }
+
   /** World position of the point between the fingertips. */
   gripperCentreWorld(): [number, number, number] {
     const position = this.data.xpos;
@@ -245,73 +260,9 @@ export class TomatoHarvestSimulation {
     const ctrl = this.data.ctrl;
     this.cartActuatorIds.forEach((actuator, index) => (ctrl[actuator] = this.command.baseTarget[index]!));
     ctrl[this.gripperActuatorId] = this.command.gripperOpen ? 255 : 0;
-    const jointTargets = this.solveArmIk();
+    const yawWorld = this.command.gripperYaw + this.cartPose()[2];
+    const jointTargets = this.armController.jointTargets(this.armState(), { positionWorld: this.handTargetWorld(), yawWorld, pitch: this.command.gripperPitch });
     jointTargets.forEach((angle, index) => (ctrl[this.armActuatorIds[index]!] = angle));
-  }
-
-  /**
-   * One damped-least-squares step from the current joint angles towards the hand target
-   * (position of the gripper centre and a downward-pointing gripper with the commanded yaw),
-   * with a null-space pull towards a comfortable posture.
-   */
-  private solveArmIk(): number[] {
-    const { mujoco, model, data } = this;
-    const nv = model.nv;
-    const gripper = this.gripperCentreWorld();
-    mujoco.mj_jac(model, data, this.jacobianPosition, this.jacobianRotation, gripper, this.handBodyId);
-    const jacobianP = this.jacobianPosition.GetView();
-    const jacobianR = this.jacobianRotation.GetView();
-
-    const target = this.handTargetWorld();
-    const positionError = [target[0] - gripper[0], target[1] - gripper[1], target[2] - gripper[2]];
-    const positionErrorNorm = Math.hypot(...positionError);
-    const maximumStepM = 0.04;
-    if (positionErrorNorm > maximumStepM) for (let axis = 0; axis < 3; axis += 1) positionError[axis]! *= maximumStepM / positionErrorNorm;
-
-    // Desired hand axes: the gripper (hand z) points down, tilted by the pitch towards the wrist's
-    // yaw direction (world yaw = cart heading + wrist yaw); hand x is perpendicular; y = z × x.
-    const yaw = this.command.gripperYaw + this.cartPose()[2];
-    const pitch = this.command.gripperPitch;
-    const [cosPitch, sinPitch] = [Math.cos(pitch), Math.sin(pitch)];
-    const desiredX = [cosPitch * Math.cos(yaw), cosPitch * Math.sin(yaw), sinPitch];
-    const desiredZ = [sinPitch * Math.cos(yaw), sinPitch * Math.sin(yaw), -cosPitch];
-    const desiredY = [desiredZ[1]! * desiredX[2]! - desiredZ[2]! * desiredX[1]!, desiredZ[2]! * desiredX[0]! - desiredZ[0]! * desiredX[2]!, desiredZ[0]! * desiredX[1]! - desiredZ[1]! * desiredX[0]!];
-    const matrix = data.xmat;
-    const offset = this.handBodyId * 9;
-    const currentAxis = (column: number) => [matrix[offset + column], matrix[offset + 3 + column], matrix[offset + 6 + column]];
-    const rotationError = [0, 0, 0];
-    [desiredX, desiredY, desiredZ].forEach((desired, column) => {
-      const current = currentAxis(column);
-      rotationError[0]! += 0.5 * (current[1]! * desired[2]! - current[2]! * desired[1]!);
-      rotationError[1]! += 0.5 * (current[2]! * desired[0]! - current[0]! * desired[2]!);
-      rotationError[2]! += 0.5 * (current[0]! * desired[1]! - current[1]! * desired[0]!);
-    });
-    const error = [...positionError, ...rotationError.map((value) => value * 0.6)];
-
-    // 6×7 Jacobian restricted to the arm's joints.
-    const jacobian: number[][] = [];
-    for (let row = 0; row < 3; row += 1) jacobian.push(this.armDofAddresses.map((dof) => jacobianP[row * nv + dof]!));
-    for (let row = 0; row < 3; row += 1) jacobian.push(this.armDofAddresses.map((dof) => jacobianR[row * nv + dof]!));
-
-    const damping = 0.05;
-    const jjt = jacobian.map((rowA) => jacobian.map((rowB) => rowA.reduce((sum, value, index) => sum + value * rowB[index]!, 0)));
-    for (let index = 0; index < 6; index += 1) jjt[index]![index]! += damping * damping;
-    const pseudoInverseTimes = (vector: number[]) => {
-      const solved = solveLinearSystem(jjt, vector);
-      return Array.from({ length: ARM_JOINT_COUNT }, (_, joint) => jacobian.reduce((sum, row, rowIndex) => sum + row[joint]! * solved[rowIndex]!, 0));
-    };
-    const taskStep = pseudoInverseTimes(error);
-
-    const current = this.armQposAddresses.map((address) => data.qpos[address] as number);
-    const postureStep = current.map((angle, index) => 0.05 * (ARM_REST_POSTURE[index]! - angle));
-    const postureInTask = jacobian.map((row) => row.reduce((sum, value, index) => sum + value * postureStep[index]!, 0));
-    const postureCorrection = pseudoInverseTimes(postureInTask);
-    const nullSpaceStep = postureStep.map((value, index) => value - postureCorrection[index]!);
-
-    return current.map((angle, index) => {
-      const [low, high] = this.armJointRanges[index]!;
-      return Math.min(high - 0.01, Math.max(low + 0.01, angle + taskStep[index]! + nullSpaceStep[index]!));
-    });
   }
 
   /**
@@ -469,29 +420,6 @@ export class TomatoHarvestSimulation {
     this.writeEqualityActive(active);
     this.mujoco.mj_kinematics(this.model, this.data);
   }
-}
-
-/** Solve A x = b for a small dense system (Gaussian elimination with partial pivoting). */
-function solveLinearSystem(matrix: number[][], vector: number[]): number[] {
-  const size = vector.length;
-  const augmented = matrix.map((row, index) => [...row, vector[index]!]);
-  for (let column = 0; column < size; column += 1) {
-    let pivot = column;
-    for (let row = column + 1; row < size; row += 1) if (Math.abs(augmented[row]![column]!) > Math.abs(augmented[pivot]![column]!)) pivot = row;
-    [augmented[column], augmented[pivot]] = [augmented[pivot]!, augmented[column]!];
-    const pivotRow = augmented[column]!;
-    for (let row = column + 1; row < size; row += 1) {
-      const factor = augmented[row]![column]! / pivotRow[column]!;
-      for (let entry = column; entry <= size; entry += 1) augmented[row]![entry]! -= factor * pivotRow[entry]!;
-    }
-  }
-  const solution = new Array<number>(size).fill(0);
-  for (let row = size - 1; row >= 0; row -= 1) {
-    let sum = augmented[row]![size]!;
-    for (let column = row + 1; column < size; column += 1) sum -= augmented[row]![column]! * solution[column]!;
-    solution[row] = sum / augmented[row]![row]!;
-  }
-  return solution;
 }
 
 /**
