@@ -11,6 +11,12 @@ Plan for the environment workstream (Sean's agents), written 2026-09-29. It is u
 | Head camera blocked by the arm | Placed directly behind the arm |
 | World blurry at the edges, behind the start point, and at the far end | Generated from a single photo; World Labs guesses anything the photo does not show |
 
+## Done since the first draft
+
+| Date | What | Handoff |
+| --- | --- | --- |
+| 2026-09-29 | World package loads from the public S3 bucket when there is no local copy; loading screen with per-step progress | [handoff](handoffs/2026-09-29-env-world-from-cloud-and-loading-screen.md) |
+
 ## Next steps, in order
 
 | # | Step | Why | Touches seams? |
