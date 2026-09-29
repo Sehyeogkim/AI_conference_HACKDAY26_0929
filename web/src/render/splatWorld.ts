@@ -14,7 +14,8 @@ export interface WorldPackage {
   path?: { width_m?: number; usable_length_m?: number };
   scale?: { meters_per_raw_unit?: number; method?: string };
   input?: { page_url?: string; author?: string; license?: string };
-  files: { splats: Record<string, string>; collider?: string; pano?: string };
+  /** `lighting_pano`: a small equirectangular JPEG of the world's panorama, for lighting meshes. */
+  files: { splats: Record<string, string>; collider?: string; pano?: string; lighting_pano?: string };
   /** Present when Marble's own scale disagreed with the camera-height estimate. */
   scale_alternative_camera_height?: { meters_per_raw_unit: number; raw_to_world: number[][]; path_width_m: number; path_usable_length_m: number };
 }

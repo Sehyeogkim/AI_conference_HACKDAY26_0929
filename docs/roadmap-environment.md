@@ -17,6 +17,7 @@ Plan for the environment workstream (Sean's agents), written 2026-09-29. It is u
 | --- | --- | --- |
 | 2026-09-29 | World package loads from the public S3 bucket when there is no local copy; loading screen with per-step progress | [handoff](handoffs/2026-09-29-env-world-from-cloud-and-loading-screen.md) |
 | 2026-09-29 | Realism pass: photo plants kept (generated foliage optional), shadows on the photo ground, glossy lobed tomatoes with calyx, hover highlight, sharper splat swapped in; tomato mass from size, detach force by ripeness | [handoff](handoffs/2026-09-29-env-realism-pass.md) |
+| 2026-09-29 | Robot, cart, and fruit lit by the world's own panorama (`files.lighting_pano` in `world.json`, optional); galvanised-steel cart and green plastic crate (drawing only) | none needed (environment zone only) |
 
 ## Next steps, in order
 

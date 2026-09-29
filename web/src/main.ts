@@ -12,6 +12,7 @@ import { buildTomatoPlants } from "./render/tomatoPlants.ts";
 import { applyScaleChoice, downloadWithProgress, loadSplatWorld, loadWorldPackage, splatFileFor, worldPackageSources, type LoadedSplatWorld, type WorldPackage, type WorldPackageSource } from "./render/splatWorld.ts";
 import { LoadingScreen, formatMegabytes } from "./render/loadingScreen.ts";
 import { dressTomatoes } from "./render/tomatoFruit.ts";
+import { dressCart } from "./render/cartAppearance.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import "./style.css";
@@ -139,7 +140,8 @@ async function main(): Promise<void> {
   worldRoot.rotation.x = -Math.PI / 2;
   scene.add(worldRoot);
 
-  scene.add(new THREE.HemisphereLight(0xfffaf0, 0x5a4a38, 1.5));
+  const hemisphereLight = new THREE.HemisphereLight(0xfffaf0, 0x5a4a38, 1.5);
+  scene.add(hemisphereLight);
   const sun = new THREE.DirectionalLight(0xfff1dc, 2.2);
   sun.position.set(2, 6, 3);
   sun.castShadow = true;
@@ -152,6 +154,7 @@ async function main(): Promise<void> {
   const plants = buildTomatoPlants(layout);
   worldRoot.add(plants.root);
   const fruit = dressTomatoes(meshes, layout);
+  dressCart(meshes);
 
   // The photoreal scene cannot receive shadows, so an invisible ground that shows only shadows
   // grounds the cart, arm, and plants on the photographed path.
@@ -192,6 +195,22 @@ async function main(): Promise<void> {
       splatWorld.plantEraser.visible = false;
       plants.setGeneratedFoliageVisible(false);
       scene.background = new THREE.Color(0xe8ecef);
+      // Light the robot, cart, and fruit with the world's own panorama, so they take on the
+      // greenhouse's colours (sky-lit roof above, green rows around, sandy ground below).
+      if (world.files.lighting_pano) {
+        new THREE.TextureLoader().loadAsync(`${worldBaseUrl}/${world.files.lighting_pano}`).then(
+          (panorama) => {
+            panorama.mapping = THREE.EquirectangularReflectionMapping;
+            panorama.colorSpace = THREE.SRGBColorSpace;
+            scene.environment = panorama;
+            scene.environmentIntensity = 0.9;
+            // The panorama's centre looks down the path (+x world, which is -z in three.js).
+            scene.environmentRotation.set(0, Math.PI / 2, 0);
+            hemisphereLight.intensity = 0.5;
+          },
+          (error: unknown) => console.warn("Lighting panorama failed to load; keeping the default lights", error),
+        );
+      }
       loading.done("build", "photoreal scene placed");
     } catch (error) {
       console.warn("World package failed to load; showing the work cell only", error);
