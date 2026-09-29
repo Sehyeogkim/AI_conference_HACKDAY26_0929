@@ -1,4 +1,4 @@
-"""Prepaid credit ledger (plan_game_platform §6). TEST MODE: no Stripe call is made.
+"""Prepaid credit ledger (plan_game_platform §6). Stripe calls run in stripe_checkout.py.
 
 Double-entry and append-only: every entry moves credits between accounts and its deltas sum to zero.
 A balance is the sum of an account's deltas; nothing is edited in place. 1 credit = 1 USD (placeholder).

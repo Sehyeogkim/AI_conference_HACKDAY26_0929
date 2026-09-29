@@ -61,6 +61,16 @@ approval from an unavailable model. Without a configured Crusoe VLM, AI Mode
 is unavailable and human play remains available. Neo4j connection status is
 separate from local recording storage.
 
+For a Stripe billing demo, put an `sk_test_` key in the ignored `.env` as
+`STRIPE_API_KEY` (or `STRIPE_SECRET_KEY`). On the requester site, open **Billing**,
+choose a credit pack, complete Stripe Checkout with a test card, and return to
+see the wallet balance. The server retrieves the Checkout Session and credits
+the wallet only after verifying a paid test payment; the session ID prevents
+double crediting on refresh. Set `WEFARM_PUBLIC_URL` to the site's HTTPS origin
+when using a public deployment. This local demo confirms on browser return;
+a production deployment also needs a Stripe webhook so payments are credited
+if the browser never returns.
+
 The OpenRouter QA code and Crusoe AI Player backend have local tests; the AI Mode
 browser code typechecks and builds. One
 synthetic OpenRouter QA request returned a valid evidence-based response, but

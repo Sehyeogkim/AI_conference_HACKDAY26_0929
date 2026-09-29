@@ -302,7 +302,7 @@ class Handler(BaseHTTPRequestHandler):
                 credits = float(body.get("credits", 0))
                 if not 1 <= credits <= 100000:
                     raise ValueError("credits must be between 1 and 100000")
-                origin = f"http://{self.headers.get('Host', 'localhost:8000')}"
+                origin = os.environ.get("WEFARM_PUBLIC_URL", "").rstrip("/") or f"http://{self.headers.get('Host', 'localhost:8000')}"
                 s = stripe_checkout.create_topup_session(
                     self.games.wallet()["customer_id"], credits,
                     success_url=f"{origin}/requester?topup=success&session_id={{CHECKOUT_SESSION_ID}}",
@@ -315,15 +315,8 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/wallet/confirm":
             try:
                 s = stripe_checkout.retrieve_session(str(body.get("session_id", "")))
-                meta = s.get("metadata") or {}
                 customer = self.games.wallet()["customer_id"]
-                if meta.get("kind") != "credit_topup" or meta.get("customer") != customer:
-                    raise ValueError("not a credit top-up for this wallet")
-                if s.get("payment_status") != "paid":
-                    raise ValueError(f"Stripe reports payment_status={s.get('payment_status')}")
-                credits = float(meta["credits"])
-                if s.get("amount_total") != int(round(credits * 100)):
-                    raise ValueError("paid amount does not match the credits")
+                credits = stripe_checkout.confirmed_topup(s, customer)
                 # keyed by the Checkout Session id, so a reload of the return page never credits twice
                 e = self.games.ledger.topup(customer, credits, f"stripe:{s['id']}")
             except ValueError as err:
@@ -332,6 +325,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(502, {"error": str(err)})
             return self._json(200, {"entry": e, "wallet": self.games.wallet()})
         if self.path == "/api/wallet/topup":
+            if stripe_checkout.enabled() or not self.demo:
+                return self._json(403, {"error": "Use Stripe Checkout to add credits"})
             try:
                 amount = float(body.get("amount", 0))
                 e = self.games.ledger.topup(self.games.wallet()["customer_id"], amount,

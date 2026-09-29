@@ -5,6 +5,8 @@ test key (sk_test_...): live keys are refused, so this can never make a real cha
 Stripe's hosted checkout page; on return the server retrieves the session and only then marks the order paid.
 """
 import os
+import re
+from decimal import Decimal, InvalidOperation
 from typing import Any, Dict
 
 import httpx
@@ -52,11 +54,34 @@ def create_session(order_id: str, amount_usd: float, description: str, success_u
 
 
 def retrieve_session(session_id: str) -> Dict[str, Any]:
+    if not re.fullmatch(r"cs_test_[A-Za-z0-9]+", session_id):
+        raise ValueError("invalid test Checkout Session ID")
     with _client() as c:
         r = c.get(f"/checkout/sessions/{session_id}")
     if r.status_code >= 400:
         raise RuntimeError(f"Stripe: {r.json().get('error', {}).get('message', r.text)}")
     return r.json()
+
+
+def confirmed_topup(session: Dict[str, Any], customer: str) -> float:
+    """Return credits only after checking Stripe's test payment and our wallet contract."""
+    metadata = session.get("metadata") or {}
+    if (not str(session.get("id", "")).startswith("cs_test_") or session.get("livemode") is not False
+            or session.get("mode") != "payment" or session.get("status") != "complete"
+            or session.get("payment_status") != "paid" or session.get("currency") != "usd"
+            or session.get("client_reference_id") != customer
+            or metadata.get("kind") != "credit_topup" or metadata.get("customer") != customer):
+        raise ValueError("Stripe has not confirmed a paid test top-up for this wallet")
+    try:
+        credits = Decimal(str(metadata["credits"]))
+    except (KeyError, TypeError, InvalidOperation) as exc:
+        raise ValueError("invalid credit amount in Stripe session") from exc
+    cents = credits * 100
+    if (not credits.is_finite() or not 1 <= credits <= 100000
+            or cents != cents.to_integral_value()
+            or session.get("amount_total") != int(cents)):
+        raise ValueError("paid amount does not match the credits")
+    return float(credits)
 
 
 def create_topup_session(customer: str, credits: float, success_url: str, cancel_url: str) -> Dict[str, Any]:
