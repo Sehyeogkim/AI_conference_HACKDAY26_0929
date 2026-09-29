@@ -46,6 +46,15 @@
         <button id="replay-exit" type="button">Back to live</button>
       </div>
     </section>
+    <div id="loading-screen" hidden>
+      <div class="loading-card">
+        <h2>WeFarm <span>tomato harvest sim</span></h2>
+        <p class="loading-subtitle">Getting the greenhouse, the robot, and the physics ready…</p>
+        <div class="loading-overall"><div class="loading-bar"><div class="loading-bar-fill"></div></div><span class="loading-overall-percent">0%</span></div>
+        <ol class="loading-stages"></ol>
+        <p class="loading-note">Everything runs in this tab: MuJoCo physics (WebAssembly) and a photoreal World Labs scene.</p>
+      </div>
+    </div>
     <pre id="error-box" hidden></pre>
     <footer id="world-credit"></footer>
     <script type="module" src="/src/main.ts"></script>

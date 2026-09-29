@@ -1,6 +1,6 @@
 // Vite configuration for the WeFarm browser simulator.
 // In development the server also exposes, read-only, /data/... from the data folder (world packages
-// with splats). A shareable static build copies the chosen world package into public/worlds/ instead.
+// with splats). Without a local copy the page falls back to the public S3 copy (see render/splatWorld.ts).
 import { createReadStream, existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

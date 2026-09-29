@@ -16,7 +16,7 @@ Needs Docker (Colima on macOS).
 docker compose up -d web          # Vite dev server on http://127.0.0.1:5180
 ```
 
-Open <http://127.0.0.1:5180>. The page looks for a world package at `/data/worlds/crete-path/v2`, then `v1` (served from `data/`). Without one it shows the work cell on a plain ground. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full`, `?world=<url>` or `?world=none`.
+Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (7.3 MB for the default splat). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full`, `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground).
 
 ## Controls
 
@@ -43,7 +43,7 @@ Picking: click a red tomato, press **F** to lower until the fingers surround it,
 
 ## Share it
 
-`docker compose run --rm web npm run build` writes a static site to `web/dist/`. Copy the chosen world package into `web/public/worlds/crete-path/v1/` (or v2) before building so the static site includes it. Any static file host can serve `dist/`. Nothing is hosted by default.
+`docker compose run --rm web npm run build` writes a static site to `web/dist/`. The static site loads the world package from the public bucket (or a `?world=<url>` you choose), so `dist/` stays small. Any static file host can serve `dist/`. Nothing is hosted by default.
 
 ## What's inside
 

@@ -12,4 +12,4 @@ Shared between Sean's and his teammate's people and coding agents. Start with [`
 
 ## Getting the world package
 
-The photoreal scene (`data/worlds/crete-path/v2/`, about 40 MB) is not in Git. Get the folder from Sean and put it at the same path; the page finds it automatically. Without it the simulator runs on a plain ground (`?world=none`).
+The photoreal scene is not in Git. The page loads it by itself: first from a local copy at `data/worlds/<id>/<version>/`, otherwise from the public, read-only S3 bucket `wefarm-aiconf-2026-assets` (folder `worlds/`, CC BY-SA 4.0, credit in each package's `ATTRIBUTION.txt`). No setup is needed. To work offline, download the package folder into `data/worlds/` at the same path. `?world=none` runs on a plain ground. New worlds are uploaded by the environment side; the bucket's other folders are private.

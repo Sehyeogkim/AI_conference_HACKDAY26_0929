@@ -9,7 +9,8 @@ import { DEFAULT_FARM_PARAMETERS, generateFarmLayout, type FarmLayoutParameters 
 import { CONTROL_RATE_HZ, TomatoHarvestSimulation } from "./sim/simulation.ts";
 import { buildMujocoMeshes } from "./render/mujocoMeshes.ts";
 import { buildTomatoPlants } from "./render/tomatoPlants.ts";
-import { applyScaleChoice, loadSplatWorld, loadWorldPackage, type LoadedSplatWorld, type WorldPackage } from "./render/splatWorld.ts";
+import { applyScaleChoice, downloadWithProgress, loadSplatWorld, loadWorldPackage, splatFileFor, worldPackageSources, type LoadedSplatWorld, type WorldPackage, type WorldPackageSource } from "./render/splatWorld.ts";
+import { LoadingScreen, formatMegabytes } from "./render/loadingScreen.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import "./style.css";
@@ -32,21 +33,60 @@ window.addEventListener("error", (event) => showError(event.error?.stack ?? even
 window.addEventListener("unhandledrejection", (event) => showError(String((event.reason as Error)?.stack ?? event.reason)));
 
 async function main(): Promise<void> {
-  // ---------- Task layout and simulation ----------
-  const worldCandidates = params.get("world") ? [params.get("world")!] : [`${baseUrl}worlds/crete-path/v2`, `${baseUrl}worlds/crete-path/v1`, "/data/worlds/crete-path/v2", "/data/worlds/crete-path/v1"];
+  const loading = new LoadingScreen(document.querySelector<HTMLDivElement>("#loading-screen")!, [
+    { id: "world", label: "Find the greenhouse scene", weight: 3 },
+    { id: "download", label: "Download the photoreal greenhouse", weight: 55 },
+    { id: "physics", label: "Load physics and the Franka Panda", weight: 30 },
+    { id: "build", label: "Build the 3D scene", weight: 12 },
+  ]);
+
+  // ---------- World package: local copy first, then the public bucket ----------
+  loading.start("world", "looking for a local copy…");
   let world: WorldPackage | null = null;
-  let worldBaseUrl = "";
+  let worldSource: WorldPackageSource | null = null;
   if (params.get("world") !== "none") {
-    for (const candidate of worldCandidates) {
+    for (const source of worldPackageSources(params.get("world"))) {
+      if (source.origin === "remote") loading.progress("world", null, "no local copy; trying the cloud…");
       try {
-        world = applyScaleChoice(await loadWorldPackage(candidate), params.get("scale"));
-        worldBaseUrl = candidate;
+        world = applyScaleChoice(await loadWorldPackage(source.baseUrl), params.get("scale"));
+        worldSource = source;
         break;
       } catch {
         /* try the next location */
       }
     }
   }
+  const worldBaseUrl = worldSource?.baseUrl ?? "";
+  const splatLevel = params.get("splat") ?? "500k";
+  // Start the splat download now so it overlaps with loading physics.
+  let splatDownload: Promise<Uint8Array | null> = Promise.resolve(null);
+  if (world && worldSource) {
+    loading.done("world", `${world.world_id} v${world.version} · ${worldSource.origin === "local" ? "local copy" : "from the cloud"}`);
+    const splatUrl = `${worldBaseUrl}/${splatFileFor(world, splatLevel)}`;
+    const downloadStarted = performance.now();
+    const origin = worldSource.origin === "local" ? "local" : "cloud";
+    loading.start("download", `starting (${origin})…`, 0);
+    splatDownload = downloadWithProgress(splatUrl, (loadedBytes, totalBytes) => {
+      const seconds = (performance.now() - downloadStarted) / 1000;
+      const speed = seconds > 0.3 ? ` · ${formatMegabytes(loadedBytes / seconds)}/s` : "";
+      loading.progress("download", totalBytes > 0 ? loadedBytes / totalBytes : null, `${formatMegabytes(loadedBytes)}${totalBytes > 0 ? ` / ${formatMegabytes(totalBytes)}` : ""} · ${origin}${speed}`);
+    }).then(
+      (bytes) => {
+        loading.done("download", `${formatMegabytes(bytes.byteLength)} · ${origin} · ${((performance.now() - downloadStarted) / 1000).toFixed(1)} s`);
+        return bytes;
+      },
+      (error: unknown) => {
+        console.warn("Splat download failed; showing the work cell only", error);
+        loading.fail("download", "download failed: plain ground instead");
+        return null;
+      },
+    );
+  } else {
+    loading.skip("world", params.get("world") === "none" ? "turned off (?world=none)" : "not found: plain ground instead");
+    loading.skip("download", "no photoreal scene");
+  }
+
+  // ---------- Task layout and simulation ----------
   const layoutParameters: FarmLayoutParameters = {
     ...DEFAULT_FARM_PARAMETERS,
     seed: Number(params.get("seed") ?? DEFAULT_FARM_PARAMETERS.seed),
@@ -54,11 +94,24 @@ async function main(): Promise<void> {
   };
   const layout = generateFarmLayout(layoutParameters);
   setStatus("Loading physics and the Franka Panda model…");
+  loading.start("physics", "MuJoCo (WebAssembly) and robot model files…");
   const pandaBase = `${baseUrl}models/franka_emika_panda`;
+  let pandaFilesTotal = 0;
+  let pandaFilesLoaded = 0;
   const simulation = await TomatoHarvestSimulation.create(layout, {
-    readPandaFile: async (relativePath) => new Uint8Array(await (await fetch(`${pandaBase}/${relativePath}`)).arrayBuffer()),
-    pandaAssetList: async () => (await fetch(`${pandaBase}/asset-list.json`)).json(),
+    readPandaFile: async (relativePath) => {
+      const bytes = new Uint8Array(await (await fetch(`${pandaBase}/${relativePath}`)).arrayBuffer());
+      pandaFilesLoaded += 1;
+      if (pandaFilesTotal > 0) loading.progress("physics", (0.9 * pandaFilesLoaded) / pandaFilesTotal, `robot files ${pandaFilesLoaded} / ${pandaFilesTotal}`);
+      return bytes;
+    },
+    pandaAssetList: async () => {
+      const names: string[] = await (await fetch(`${pandaBase}/asset-list.json`)).json();
+      pandaFilesTotal = names.length + 1;
+      return names;
+    },
   });
+  loading.done("physics", `${layout.tomatoes.length} tomatoes · ${simulation.model.nq} joint positions`);
   const sceneHash = await sha256Hex(simulation.sceneXml);
 
   // ---------- Renderer, scene, cameras ----------
@@ -108,22 +161,22 @@ async function main(): Promise<void> {
   controls.target.copy(toScene(1.2, 0, 0.9));
 
   let splatWorld: LoadedSplatWorld | null = null;
-  if (world) {
-    setStatus("Loading the photoreal greenhouse…");
+  loading.start("build", "waiting for the download…");
+  const splatFileBytes = await splatDownload;
+  if (world && splatFileBytes) {
+    setStatus("Building the photoreal greenhouse…");
+    loading.progress("build", null, "decoding the splat…");
     try {
-      splatWorld = await loadSplatWorld({
-        baseUrl: worldBaseUrl,
-        world,
-        splatLevel: params.get("splat") ?? "500k",
-        parent: worldRoot,
-        layout,
-        onProgress: (fraction) => setStatus(`Loading the photoreal greenhouse… ${Math.round(fraction * 100)}%`),
-      });
+      splatWorld = await loadSplatWorld({ baseUrl: worldBaseUrl, world, splatLevel, parent: worldRoot, layout, splatFileBytes });
       meshes.setGroundVisible(false);
       scene.background = new THREE.Color(0xe8ecef);
+      loading.done("build", "photoreal scene placed");
     } catch (error) {
       console.warn("World package failed to load; showing the work cell only", error);
+      loading.fail("build", "could not decode the scene: plain ground instead");
     }
+  } else {
+    loading.done("build", "work cell on plain ground");
   }
 
   const resize = () => {
@@ -394,6 +447,7 @@ async function main(): Promise<void> {
   let lastCartPose = simulation.cartPose();
   const controlPeriod = 1 / CONTROL_RATE_HZ;
   setStatus(splatWorld ? "Ready. Click a red tomato, or move the arm with W A S D R F." : "Ready (no photoreal world found).");
+  loading.finish();
 
   renderer.setAnimationLoop(() => {
     const now = performance.now();
@@ -449,6 +503,7 @@ async function main(): Promise<void> {
 
 main().catch((error) => {
   console.error(error);
+  document.querySelector<HTMLDivElement>("#loading-screen")!.hidden = true;
   showError((error as Error).stack ?? String(error));
   setStatus(`Failed to start: ${(error as Error).message}`);
 });
