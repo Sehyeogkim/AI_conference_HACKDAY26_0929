@@ -7,3 +7,8 @@ data/
 __pycache__/
 *.pyc
 .venv/
+*.pem
+Neo4j-*.txt
+friend-macos-wireguard-24h.zip
+friend-macos-wireguard-24h/
+sim/third_party/

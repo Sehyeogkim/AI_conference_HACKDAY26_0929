@@ -24,7 +24,7 @@ export interface RecordingHeader {
   control_rate_hz: number;
   physics_timestep_s: number;
   nq: number;
-  operator: { device: string; user_agent: string };
+  operator: { device: string; user_agent: string; model?: string };
 }
 
 export interface RecordingStep {
@@ -40,6 +40,8 @@ export interface RecordingStep {
 export type RecordingLine =
   | RecordingHeader
   | RecordingStep
+  | { type: "ai_decision"; frame_id: number; step: number; observed_at: string; model: string; action: string; direction: string; duration_s: number; reason: string; latency_ms: number }
+  | { type: "ai_action_result"; frame_id: number; step: number; completed_at: string; outcome: "completed" | "cancelled" }
   | { type: "event"; event: SimulationEvent }
   | { type: "state"; i: number; t: number; state: number[] }
   | { type: "footer"; steps: number; duration_s: number; harvested_ripe: number; harvested_unripe: number; dropped: number };
@@ -63,6 +65,14 @@ export class SessionRecorder {
 
   get steps(): number {
     return this.stepCount;
+  }
+
+  addAiDecision(decision: Extract<RecordingLine, { type: "ai_decision" }>): void {
+    this.lines.push(decision);
+  }
+
+  addAiActionResult(result: Extract<RecordingLine, { type: "ai_action_result" }>): void {
+    this.lines.push(result);
   }
 
   addStep(step: Omit<RecordingStep, "type">, allEvents: SimulationEvent[], fullState: (() => number[]) | null): void {

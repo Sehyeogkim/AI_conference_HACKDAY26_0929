@@ -26,6 +26,32 @@ const SHARP_SPLAT_LEVEL = "full";
 const TASK_GOAL = "Drive along the tomato path and pick the ripe (red) tomatoes into the basket. Leave green ones on the plant.";
 const params = new URLSearchParams(location.search);
 const baseUrl = import.meta.env.BASE_URL;
+const marketplaceGameId = params.get("game_id")?.trim() ?? "";
+const marketplacePlayerId = params.get("player_id")?.trim() ?? "";
+const submissionUrl = params.get("submission_url")?.trim() ?? "";
+const aiApiBase = submissionUrl ? new URL(submissionUrl, location.href).origin : "http://127.0.0.1:8765";
+
+type AiPhase = "checking" | "unavailable" | "ready" | "observing" | "thinking" | "acting" | "paused" | "stopped" | "completed" | "error";
+type AiActionName = "move_arm" | "orient_wrist" | "move_base" | "gripper" | "wait" | "view" | "stop";
+interface AiDecision {
+  action: AiActionName;
+  direction: string;
+  duration_s: number;
+  reason: string;
+  model: string;
+  latency_ms: number;
+  frame_id: number;
+}
+const AI_DIRECTIONS: Record<AiActionName, readonly string[]> = {
+  move_arm: ["forward", "backward", "left", "right", "up", "down"],
+  orient_wrist: ["yaw_left", "yaw_right", "pitch_up", "pitch_down"],
+  move_base: ["forward", "backward", "left", "right", "turn_left", "turn_right"],
+  gripper: ["open", "close"],
+  wait: [""],
+  view: ["overview", "left", "right", "top"],
+  stop: [""],
+};
+const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
 
 const statusElement = document.querySelector<HTMLDivElement>("#status")!;
 const setStatus = (text: string) => (statusElement.textContent = text);
@@ -261,6 +287,27 @@ async function main(): Promise<void> {
     qaNotes: document.querySelector<HTMLTextAreaElement>("#qa-notes")!,
     worldCredit: document.querySelector<HTMLDivElement>("#world-credit")!,
   };
+  const aiUi = {
+    state: document.querySelector<HTMLDivElement>("#ai-state")!,
+    message: document.querySelector<HTMLParagraphElement>("#ai-message")!,
+    observation: document.querySelector<HTMLImageElement>("#ai-observation")!,
+    model: document.querySelector<HTMLElement>("#ai-model")!,
+    action: document.querySelector<HTMLElement>("#ai-action")!,
+    reason: document.querySelector<HTMLElement>("#ai-reason")!,
+    decisions: document.querySelector<HTMLElement>("#ai-decisions")!,
+    latency: document.querySelector<HTMLElement>("#ai-latency")!,
+    start: document.querySelector<HTMLButtonElement>("#ai-start")!,
+    pause: document.querySelector<HTMLButtonElement>("#ai-pause")!,
+    resume: document.querySelector<HTMLButtonElement>("#ai-resume")!,
+    stop: document.querySelector<HTMLButtonElement>("#ai-stop")!,
+    take: document.querySelector<HTMLButtonElement>("#ai-take")!,
+  };
+  const marketplaceContext = document.querySelector<HTMLDivElement>("#marketplace-context")!;
+  aiUi.stop.textContent = submissionUrl && marketplaceGameId && marketplacePlayerId ? "Stop & submit" : "Stop & save";
+  if (marketplaceGameId && marketplacePlayerId) {
+    marketplaceContext.hidden = false;
+    marketplaceContext.textContent = `Marketplace game: ${marketplaceGameId} · Player: ${marketplacePlayerId}`;
+  }
   const ripeCount = layout.tomatoes.filter((tomato) => tomato.ripeness === "ripe").length;
   if (world?.input) hud.worldCredit.innerHTML = `Scene: World Labs Marble (${world.model}) from <a href="${world.input.page_url}" target="_blank" rel="noopener">a photo</a> by ${world.input.author}, ${world.input.license}. Robot: MuJoCo Menagerie Franka Panda (Apache-2.0).`;
   else hud.worldCredit.textContent = "No world package loaded: work cell only. Robot: MuJoCo Menagerie Franka Panda (Apache-2.0).";
@@ -287,13 +334,28 @@ async function main(): Promise<void> {
 
   // ---------- Modes: play (live physics) and replay (QA) ----------
   let mode: "play" | "replay" = "play";
+  let aiMode: "human" | "running" | "paused" | "finishing" = "human";
+  let aiPhase: AiPhase = "checking";
+  let aiAvailable = false;
+  let aiMessage = "Checking the Crusoe VLM connection…";
+  let aiModel = "";
+  let aiDecisionCount = 0;
+  let aiFrameId = 0;
+  let aiGeneration = 0;
+  let aiAbort: AbortController | null = null;
+  let aiAction: AiDecision | null = null;
+  let aiActionRemaining = 0;
+  let aiNextObservationAt = 0;
+  let aiSessionStartedAt = 0;
+  let aiLastLatencyMs: number | null = null;
   let recorder: SessionRecorder | null = null;
+  let savingRecording = false;
   let replay: { recording: Recording; frame: number; playing: boolean; accumulator: number } | null = null;
   const teleop = new KeyboardTeleop(simulation, layout);
   // Debug handle for the browser console (inspect the simulation, script a pick).
   Object.assign(window, { wefarm: { simulation, layout, teleop, orbitCamera, orbitControls: controls, splatWorld } });
 
-  const newRecordingHeader = () => ({
+  const newRecordingHeader = (device = "keyboard+mouse", model = "") => ({
     type: "header" as const,
     schema_version: RECORDING_SCHEMA_VERSION,
     session_id: crypto.randomUUID(),
@@ -305,8 +367,63 @@ async function main(): Promise<void> {
     control_rate_hz: CONTROL_RATE_HZ,
     physics_timestep_s: simulation.model.opt.timestep,
     nq: simulation.model.nq,
-    operator: { device: "keyboard+mouse", user_agent: navigator.userAgent },
+    operator: { device, user_agent: navigator.userAgent, ...(model ? { model } : {}) },
   });
+
+  const updateAiUi = () => {
+    const labels: Record<AiPhase, string> = {
+      checking: "Checking availability…", unavailable: "Unavailable", ready: "Ready", observing: "Observing",
+      thinking: "Thinking", acting: "Acting", paused: "Paused", stopped: "Stopped", completed: "Completed", error: "Unavailable",
+    };
+    aiUi.state.textContent = labels[aiPhase];
+    aiUi.message.textContent = aiMessage;
+    aiUi.model.textContent = aiModel || "—";
+    aiUi.action.textContent = aiAction ? `${aiAction.action}${aiAction.direction ? ` · ${aiAction.direction}` : ""}` : "—";
+    aiUi.reason.textContent = aiAction?.reason || "—";
+    aiUi.decisions.textContent = String(aiDecisionCount);
+    aiUi.latency.textContent = aiLastLatencyMs === null ? "—" : `${aiLastLatencyMs} ms`;
+    const active = aiMode === "running" || aiMode === "paused";
+    aiUi.start.disabled = !aiAvailable || aiMode !== "human" || mode !== "play" || Boolean(recorder) || savingRecording;
+    aiUi.pause.disabled = aiMode !== "running";
+    aiUi.resume.disabled = aiMode !== "paused";
+    aiUi.stop.disabled = !active;
+    aiUi.take.disabled = !active;
+    hud.record.disabled = active || aiMode === "finishing" || savingRecording;
+    hud.reset.disabled = active || aiMode === "finishing";
+    hud.load.disabled = active || aiMode === "finishing";
+  };
+
+  const setAiPhase = (phase: AiPhase, message: string) => {
+    aiPhase = phase;
+    aiMessage = message;
+    updateAiUi();
+  };
+
+  const cancelAiDecision = () => {
+    aiGeneration += 1;
+    aiAbort?.abort();
+    aiAbort = null;
+    if (aiAction) recorder?.addAiActionResult({ type: "ai_action_result", frame_id: aiAction.frame_id,
+      step: simulation.controlStep, completed_at: new Date().toISOString(), outcome: "cancelled" });
+    aiAction = null;
+    aiActionRemaining = 0;
+  };
+
+  const refreshAiConfig = async () => {
+    try {
+      const response = await fetch(`${aiApiBase}/api/ai-player/config`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const config = await response.json() as { available?: boolean; model?: string | null; reason?: string | null };
+      aiAvailable = config.available === true;
+      aiModel = config.model ?? "";
+      setAiPhase(aiAvailable ? "ready" : "unavailable", aiAvailable
+        ? "Crusoe VLM is configured. Start AI Mode to test live inference."
+        : config.reason || "Crusoe VLM is not configured. Human mode remains available.");
+    } catch {
+      aiAvailable = false;
+      setAiPhase("unavailable", "AI Player API is unreachable. Human mode remains available.");
+    }
+  };
 
   const downloadBlob = (blob: Blob, filename: string) => {
     const link = document.createElement("a");
@@ -317,33 +434,76 @@ async function main(): Promise<void> {
   };
 
   const stopRecording = async () => {
-    if (!recorder) return;
+    if (!recorder || savingRecording) return;
     const finished = recorder;
     recorder = null;
-    hud.record.textContent = "● Record";
+    savingRecording = true;
+    hud.record.disabled = true;
+    hud.record.textContent = "Saving…";
     hud.record.classList.remove("recording");
-    const totals = tally(simulation.events);
-    const header = finished.lines[0] as ReturnType<typeof newRecordingHeader>;
-    const blob = await finished.toGzipBlob({ type: "footer", steps: finished.steps, duration_s: Number((finished.steps / CONTROL_RATE_HZ).toFixed(2)), harvested_ripe: totals.harvestedRipe, harvested_unripe: totals.harvestedUnripe, dropped: totals.dropped });
-    downloadBlob(blob, `wefarm-session-${header.started_at.replace(/[:.]/g, "-")}.jsonl.gz`);
-    setStatus(`Saved recording: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB). Load it with "Replay" to review.`);
+    try {
+      const totals = tally(simulation.events);
+      const header = finished.lines[0] as ReturnType<typeof newRecordingHeader>;
+      const aiRecording = header.operator.device === "crusoe-vlm";
+      const blob = await finished.toGzipBlob({ type: "footer", steps: finished.steps, duration_s: Number((finished.steps / CONTROL_RATE_HZ).toFixed(2)), harvested_ripe: totals.harvestedRipe, harvested_unripe: totals.harvestedUnripe, dropped: totals.dropped });
+      const filename = `wefarm-session-${header.started_at.replace(/[:.]/g, "-")}.jsonl.gz`;
+      if (submissionUrl && marketplaceGameId && marketplacePlayerId) {
+        setStatus(`Uploading ${finished.steps} recorded steps to the marketplace…`);
+        try {
+          const endpoint = new URL(submissionUrl, location.href);
+          if (endpoint.protocol !== "http:" && endpoint.protocol !== "https:") throw new Error("Unsupported upload URL");
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/gzip",
+              "X-WeFarm-Game-Id": marketplaceGameId,
+              "X-WeFarm-Player-Id": marketplacePlayerId,
+              "X-WeFarm-Session-Id": header.session_id,
+            },
+            body: blob,
+          });
+          if (!response.ok) throw new Error(`Server returned HTTP ${response.status}`);
+          const result = await response.json() as { episode_id?: string; qa?: string; reasons?: string[] };
+          const qaText = result.qa ? ` QA: ${result.qa}${result.reasons?.length ? ` (${result.reasons.join("; ")})` : ""}.` : " QA result unavailable.";
+          setStatus(`Recording saved to the marketplace: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB).${qaText}`);
+          if (aiRecording) setAiPhase("completed", `Episode ${result.episode_id ?? "saved"}.${qaText}`);
+        } catch (error) {
+          downloadBlob(blob, filename);
+          setStatus(`Marketplace upload failed (${(error as Error).message}). A local recording was downloaded for recovery.`);
+          if (aiRecording) setAiPhase("error", `Marketplace upload failed. A local recording was downloaded for recovery.`);
+        }
+      } else {
+        downloadBlob(blob, filename);
+        setStatus(`Saved recording: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB). Load it with "Replay" to review.`);
+        if (aiRecording) setAiPhase("completed", "AI recording saved locally. No marketplace QA was run.");
+      }
+    } catch (error) {
+      setStatus(`Could not save recording: ${(error as Error).message}`);
+      setAiPhase("error", `Could not save recording: ${(error as Error).message}`);
+    } finally {
+      savingRecording = false;
+      hud.record.textContent = "● Record";
+      updateAiUi();
+    }
   };
 
   hud.record.addEventListener("click", async () => {
-    if (mode !== "play") return;
+    if (mode !== "play" || savingRecording || aiMode !== "human") return;
     if (recorder) return void (await stopRecording());
     simulation.reset();
     recorder = new SessionRecorder(newRecordingHeader());
-    hud.record.textContent = "■ Stop & save";
+    hud.record.textContent = submissionUrl ? "■ Stop & submit" : "■ Stop & save";
     hud.record.classList.add("recording");
     setStatus("Recording from a fresh start. Pick the ripe tomatoes!");
+    updateAiUi();
   });
   hud.reset.addEventListener("click", () => {
-    if (mode !== "play") return;
+    if (mode !== "play" || aiMode !== "human") return;
     recorder = null;
     hud.record.textContent = "● Record";
     hud.record.classList.remove("recording");
     simulation.reset();
+    updateAiUi();
   });
   const cycleCamera = () => {
     cameraMode = cameraModes[(cameraModes.indexOf(cameraMode) + 1) % cameraModes.length]!;
@@ -382,6 +542,7 @@ async function main(): Promise<void> {
     targetMarker.position.set(target[0], target[1], target[2]);
   };
   hud.load.addEventListener("change", async () => {
+    if (aiMode !== "human") { hud.load.value = ""; return; }
     const file = hud.load.files?.[0];
     if (!file) return;
     try {
@@ -392,6 +553,7 @@ async function main(): Promise<void> {
       }
       recorder = null;
       mode = "replay";
+      updateAiUi();
       replay = { recording, frame: 0, playing: true, accumulator: 0 };
       hud.playPanel.hidden = true;
       hud.replayPanel.hidden = false;
@@ -428,6 +590,7 @@ async function main(): Promise<void> {
     hud.playPanel.hidden = false;
     hud.replayPanel.hidden = true;
     simulation.reset();
+    updateAiUi();
     setStatus("Live simulation.");
   });
   const saveReview = (verdict: "pass" | "fail") => {
@@ -470,7 +633,7 @@ async function main(): Promise<void> {
     });
   });
   renderer.domElement.addEventListener("pointerup", (event) => {
-    if (!pointerDown || mode !== "play" || cameraMode === "wrist") return;
+    if (!pointerDown || mode !== "play" || aiMode !== "human" || cameraMode === "wrist") return;
     const moved = Math.hypot(event.clientX - pointerDown.x, event.clientY - pointerDown.y);
     pointerDown = null;
     if (moved > 5) return;
@@ -508,6 +671,127 @@ async function main(): Promise<void> {
     headCamera.lookAt(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [0.9, 0.05, 0.85])));
   };
 
+  const finishAi = async (message: string) => {
+    if (aiMode !== "running" && aiMode !== "paused") return;
+    cancelAiDecision();
+    aiMode = "finishing";
+    setAiPhase("stopped", message);
+    if (recorder) await stopRecording();
+    aiMode = "human";
+    teleop.setHumanEnabled(true);
+    updateAiUi();
+  };
+
+  aiUi.start.addEventListener("click", () => {
+    if (!aiAvailable || aiMode !== "human" || mode !== "play" || recorder || savingRecording) return;
+    simulation.reset();
+    teleop.setHumanEnabled(false);
+    cameraMode = "head";
+    controls.enabled = false;
+    aiMode = "running";
+    aiDecisionCount = 0;
+    aiFrameId = 0;
+    aiLastLatencyMs = null;
+    aiUi.observation.hidden = true;
+    aiSessionStartedAt = performance.now();
+    aiNextObservationAt = aiSessionStartedAt + 200;
+    recorder = new SessionRecorder(newRecordingHeader("crusoe-vlm", aiModel));
+    hud.record.textContent = "● AI recording";
+    hud.record.classList.add("recording");
+    setAiPhase("observing", "Capturing a live game frame for the Crusoe VLM.");
+  });
+  aiUi.pause.addEventListener("click", () => {
+    if (aiMode !== "running") return;
+    cancelAiDecision();
+    aiMode = "paused";
+    setAiPhase("paused", "AI actions are paused. Resume, stop, or take control.");
+  });
+  aiUi.resume.addEventListener("click", () => {
+    if (aiMode !== "paused") return;
+    aiMode = "running";
+    aiNextObservationAt = performance.now();
+    setAiPhase("observing", "Capturing a fresh game frame.");
+  });
+  aiUi.stop.addEventListener("click", () => { void finishAi("AI Player stopped. Saving the native recording."); });
+  aiUi.take.addEventListener("click", () => { void finishAi("Returning control to the human player. Saving the AI recording."); });
+
+  const observationCanvas = document.createElement("canvas");
+  observationCanvas.width = 640;
+  observationCanvas.height = 360;
+  const observationContext = observationCanvas.getContext("2d")!;
+  const requestAiDecision = async () => {
+    if (aiMode !== "running" || aiAbort || aiAction) return;
+    const frameId = ++aiFrameId;
+    const generation = aiGeneration;
+    const observedAt = new Date().toISOString();
+    const controller = new AbortController();
+    aiAbort = controller;
+    setAiPhase("thinking", `Crusoe VLM is evaluating live frame ${frameId}.`);
+    try {
+      observationContext.drawImage(renderer.domElement, 0, 0, observationCanvas.width, observationCanvas.height);
+      const frameDataUrl = observationCanvas.toDataURL("image/jpeg", 0.65);
+      const frame_jpeg_base64 = frameDataUrl.split(",", 2)[1];
+      if (!frame_jpeg_base64) throw new Error("Could not capture the live camera frame.");
+      aiUi.observation.src = frameDataUrl;
+      aiUi.observation.hidden = false;
+      const totals = tally(simulation.events);
+      const response = await fetch(`${aiApiBase}/api/ai-player/decide`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, signal: controller.signal,
+        body: JSON.stringify({ frame_id: frameId, frame_jpeg_base64, status: {
+          step: simulation.controlStep, harvested: totals.harvestedRipe, dropped: totals.dropped,
+          gripper_open: simulation.command.gripperOpen, task: TASK_GOAL,
+        } }),
+      });
+      if (!response.ok) {
+        const failure = await response.json().catch(() => ({})) as { error?: string };
+        throw new Error(failure.error || `AI Player API returned HTTP ${response.status}`);
+      }
+      const decision = await response.json() as AiDecision;
+      if (generation !== aiGeneration || aiMode !== "running") return;
+      if (!Object.prototype.hasOwnProperty.call(AI_DIRECTIONS, decision.action)
+          || !AI_DIRECTIONS[decision.action]?.includes(decision.direction)
+          || !Number.isFinite(decision.duration_s) || decision.duration_s <= 0 || decision.duration_s > 0.5
+          || decision.frame_id !== frameId || typeof decision.reason !== "string") {
+        throw new Error("Crusoe returned an unsupported action. AI control was paused.");
+      }
+      aiDecisionCount += 1;
+      aiLastLatencyMs = decision.latency_ms;
+      aiModel = decision.model;
+      recorder?.addAiDecision({ type: "ai_decision", frame_id: frameId, step: simulation.controlStep,
+        observed_at: observedAt, model: decision.model, action: decision.action, direction: decision.direction,
+        duration_s: decision.duration_s, reason: decision.reason, latency_ms: decision.latency_ms });
+      if (decision.action === "stop") {
+        void finishAi("Crusoe VLM requested stop. Saving the episode for QA.");
+        return;
+      }
+      if (decision.action === "view") {
+        cameraMode = decision.direction === "overview" ? "head" : "orbit";
+        controls.enabled = cameraMode === "orbit";
+        if (cameraMode === "orbit") {
+          const target = controls.target;
+          orbitCamera.position.copy(target).add(decision.direction === "top" ? new THREE.Vector3(0, 2.4, 0.01)
+            : decision.direction === "left" ? new THREE.Vector3(-1.2, 1.4, 0)
+              : new THREE.Vector3(1.2, 1.4, 0));
+          controls.update();
+        }
+      }
+      aiAction = decision;
+      aiActionRemaining = decision.duration_s;
+      setAiPhase("acting", `Applying ${decision.action}${decision.direction ? ` ${decision.direction}` : ""} for up to ${decision.duration_s.toFixed(2)} s.`);
+    } catch (error) {
+      if (controller.signal.aborted || generation !== aiGeneration) return;
+      aiMode = "paused";
+      aiAction = null;
+      aiActionRemaining = 0;
+      setAiPhase("paused", `${(error as Error).message} Resume to retry, or take control.`);
+    } finally {
+      if (aiAbort === controller) aiAbort = null;
+    }
+  };
+
+  void refreshAiConfig();
+  updateAiUi();
+
   let lastTime = performance.now();
   let accumulator = 0;
   let lastCartPose = simulation.cartPose();
@@ -539,7 +823,18 @@ async function main(): Promise<void> {
       accumulator += elapsed;
       let ticks = 0;
       while (accumulator >= controlPeriod && ticks < 4) {
-        teleop.applyHeldKeys(controlPeriod);
+        if (aiMode === "running" && aiAction) {
+          teleop.applyAiAction(aiAction.action, aiAction.direction, controlPeriod);
+          aiActionRemaining -= controlPeriod;
+          if (aiActionRemaining <= 0) {
+            recorder?.addAiActionResult({ type: "ai_action_result", frame_id: aiAction.frame_id,
+              step: simulation.controlStep, completed_at: new Date().toISOString(), outcome: "completed" });
+            aiAction = null;
+            aiActionRemaining = 0;
+            aiNextObservationAt = now + 150;
+            setAiPhase("observing", "Checking the result in a fresh camera frame.");
+          }
+        } else if (aiMode === "human") teleop.applyHeldKeys(controlPeriod);
         simulation.controlTick();
         if (recorder) {
           const snapshot = simulation.snapshot();
@@ -557,6 +852,11 @@ async function main(): Promise<void> {
       const target = simulation.handTargetWorld();
       targetMarker.position.set(target[0], target[1], target[2]);
       updateHud(simulation.events, simulation.time, simulation.command.gripperOpen);
+      if (aiMode === "running" && tally(simulation.events).harvestedRipe >= 1) {
+        void finishAi("A ripe tomato was harvested. Submitting the AI recording for QA.");
+      } else if (aiMode === "running" && (now - aiSessionStartedAt > 120_000 || aiDecisionCount >= 100)) {
+        void finishAi("AI Player reached its safety limit. Saving the episode for QA.");
+      }
     } else if (replay?.playing) {
       replay.accumulator += elapsed * Number(hud.replaySpeed.value);
       const advance = Math.floor(replay.accumulator * replay.recording.header.control_rate_hz);
@@ -580,7 +880,7 @@ async function main(): Promise<void> {
     placeCameras();
     if (controls.enabled) controls.update();
     renderer.render(scene, activeCamera());
-    if (wristInsetVisible && cameraMode !== "wrist") {
+    if ((wristInsetVisible || aiMode === "running" || aiMode === "paused") && cameraMode !== "wrist") {
       // Bottom-right inset, above the credit line; the wrist camera keeps the main view's aspect.
       const size = renderer.getSize(new THREE.Vector2());
       const insetWidth = Math.round(Math.min(360, size.x * 0.28));
@@ -600,6 +900,7 @@ async function main(): Promise<void> {
     } else {
       wristInsetLabel.style.display = "none";
     }
+    if (aiMode === "running" && !aiAbort && !aiAction && now >= aiNextObservationAt) void requestAiDecision();
   });
 }
 

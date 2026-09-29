@@ -8,6 +8,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #111; font: 
 .top-left h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: 0.3px; }
 .top-left h1 span { font-weight: 400; opacity: 0.7; font-size: 14px; }
 #status { opacity: 0.9; }
+#marketplace-context { color: #a9deb7; font-size: 12px; margin-bottom: 4px; }
 .top-right { top: 16px; right: 16px; display: grid; grid-template-columns: repeat(2, auto); gap: 4px 18px; }
 .stat span { display: block; font-size: 11px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.5px; }
 .stat strong { font-size: 16px; }

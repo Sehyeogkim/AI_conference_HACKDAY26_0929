@@ -24,6 +24,13 @@ const WRIST_TILT_RANGE: readonly [number, number] = [-0.3, 1.6];
 const ARM_LIMITS = { x: [-0.55, 1.0], y: [-0.85, 0.85], z: [0.5, 1.6] } as const;
 const ARM_KEYS = new Set(["KeyW", "KeyS", "KeyA", "KeyD", "KeyR", "KeyF", "KeyQ", "KeyE", "KeyZ", "KeyC"]);
 const BASE_KEYS = new Set(["KeyI", "KeyK", "KeyJ", "KeyL", "KeyU", "KeyO"]);
+const AI_MOVEMENT_KEYS: Record<string, string> = {
+  "move_arm:forward": "KeyW", "move_arm:backward": "KeyS", "move_arm:left": "KeyA", "move_arm:right": "KeyD",
+  "move_arm:up": "KeyR", "move_arm:down": "KeyF", "orient_wrist:yaw_left": "KeyQ",
+  "orient_wrist:yaw_right": "KeyE", "orient_wrist:pitch_up": "KeyZ", "orient_wrist:pitch_down": "KeyC",
+  "move_base:forward": "KeyI", "move_base:backward": "KeyK", "move_base:left": "KeyJ",
+  "move_base:right": "KeyL", "move_base:turn_left": "KeyU", "move_base:turn_right": "KeyO",
+};
 
 const clamp = (value: number, [low, high]: readonly [number, number]) => Math.min(high, Math.max(low, value));
 
@@ -33,6 +40,7 @@ export class KeyboardTeleop {
   private readonly layout: FarmLayout;
   private readonly readyPose: [number, number, number];
   private precise = false;
+  private humanEnabled = true;
   /** How far the cart may move sideways from the path's centre line. */
   private readonly baseSidewaysLimitM: number;
 
@@ -42,6 +50,7 @@ export class KeyboardTeleop {
     this.readyPose = [...simulation.command.handTargetInCart];
     this.baseSidewaysLimitM = Math.max(0.05, layout.parameters.pathWidthM / 2 - layout.cart.widthM / 2 - 0.05);
     window.addEventListener("keydown", (event) => {
+      if (!this.humanEnabled) return;
       const tag = (event.target as HTMLElement).tagName;
       if (tag === "TEXTAREA" || tag === "INPUT") return;
       this.precise = event.shiftKey;
@@ -70,10 +79,31 @@ export class KeyboardTeleop {
   }
 
   applyHeldKeys(dt: number): void {
-    if (this.held.size === 0) return;
+    if (!this.humanEnabled) return;
+    this.applyKeys(this.held, dt, this.precise ? PRECISE_FACTOR : 1);
+  }
+
+  setHumanEnabled(enabled: boolean): void {
+    this.humanEnabled = enabled;
+    this.held.clear();
+    this.precise = false;
+  }
+
+  applyAiAction(action: string, direction: string, dt: number): void {
+    if (action === "gripper") {
+      this.simulation.command.gripperOpen = direction === "open";
+      return;
+    }
+    const key = AI_MOVEMENT_KEYS[`${action}:${direction}`];
+    if (!key) return;
+    this.simulation.handGoalInCart = null;
+    this.applyKeys(new Set([key]), dt, 1);
+  }
+
+  private applyKeys(keys: ReadonlySet<string>, dt: number, factor: number): void {
+    if (keys.size === 0) return;
     const command = this.simulation.command;
-    const factor = this.precise ? PRECISE_FACTOR : 1;
-    const axis = (plus: string, minus: string) => ((this.held.has(plus) ? 1 : 0) - (this.held.has(minus) ? 1 : 0)) * factor * dt;
+    const axis = (plus: string, minus: string) => ((keys.has(plus) ? 1 : 0) - (keys.has(minus) ? 1 : 0)) * factor * dt;
 
     const target = command.handTargetInCart;
     command.handTargetInCart = [

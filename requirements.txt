@@ -1,0 +1,6 @@
+httpx
+pydantic>=2
+numpy
+h5py
+pillow
+neo4j>=5

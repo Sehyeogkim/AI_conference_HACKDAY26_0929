@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Architecture with OpenRouter, Crusoe, and Neo4j</title>
+  <desc id="desc">Proposed presentation diagram for WeFarm. Requester defines a task. The Sim/Game Builder uses OpenRouter for task interpretation and MuJoCo with RoboCasa for the player-controlled tomato harvest game. Replay checks and Crusoe model review quality. HDF5 stores raw episodes; Neo4j stores episode metadata and relationships. Data Miner delivers purchased data to the requester.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#f2f6ff"/></linearGradient>
+    <linearGradient id="builder" x2="1" y2="0"><stop stop-color="#f2f7ff"/><stop offset="1" stop-color="#fff3f6"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="150%" height="170%"><feDropShadow dx="0" dy="7" stdDeviation="11" flood-color="#183050" flood-opacity=".11"/></filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#2178ed" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <marker id="arrowNavy" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1L11 6 1 11" fill="none" stroke="#536b91" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <style>
+      text{font-family:Inter,Arial,Helvetica,sans-serif;fill:#13294b}
+      .title{font-size:53px;font-weight:800;letter-spacing:-1.7px}
+      .sub{font-size:23px;fill:#61728c}
+      .step{font-size:16px;font-weight:800;letter-spacing:1.7px;fill:#67809f}
+      .head{font-size:27px;font-weight:800;letter-spacing:-.5px}
+      .brand{font-size:19px;font-weight:800}
+      .body{font-size:19px;fill:#40536c}
+      .lowerhead{font-size:23px;font-weight:800}
+      .lowerbody{font-size:18px;fill:#48607a}
+      .arrowlabel{font-size:16px;font-weight:700;fill:#4775ae}
+      .card{filter:url(#shadow);stroke-width:2.2}
+      .line{fill:none;stroke:#2178ed;stroke-width:3.5;marker-end:url(#arrow);stroke-linecap:round;stroke-linejoin:round}
+      .back{fill:none;stroke:#536b91;stroke-width:3;marker-end:url(#arrowNavy);stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="13" fill="#2178ed"/>
+  <text x="70" y="92" class="title">ARCHITECTURE</text>
+  <text x="72" y="130" class="sub">A robot game that turns player actions into verified, searchable data</text>
+  <rect x="1320" y="57" width="210" height="42" rx="21" fill="#e4efff"/>
+  <text x="1425" y="84" text-anchor="middle" class="step" fill="#236ce1">PROPOSED FLOW</text>
+
+  <text x="74" y="208" class="step">01 · REQUEST</text>
+  <text x="374" y="208" class="step">02 · BUILD &amp; PLAY</text>
+  <text x="974" y="208" class="step">03 · VERIFY</text>
+  <text x="1274" y="208" class="step">04 · CATALOG</text>
+
+  <rect class="card" x="70" y="236" width="260" height="234" rx="23" fill="#fffaf1" stroke="#f4b64c"/>
+  <circle cx="113" cy="285" r="17" fill="#f2a51f"/>
+  <path d="M84 329c0-17 13-27 29-27s29 10 29 27" fill="#f2a51f"/>
+  <text x="90" y="381" class="head">REQUESTER</text>
+  <text x="90" y="418" class="body">Robot task +</text>
+  <text x="90" y="445" class="body">data requirements</text>
+
+  <rect class="card" x="370" y="236" width="560" height="234" rx="23" fill="url(#builder)" stroke="#6ca7f5"/>
+  <circle cx="418" cy="291" r="28" fill="#2378e9"/>
+  <path d="M408 293l9-11 11 11-11 10z" fill="white"/>
+  <text x="390" y="358" class="head">SIM/GAME BUILDER</text>
+  <rect x="390" y="377" width="195" height="36" rx="18" fill="#dceaff"/>
+  <text x="487" y="401" text-anchor="middle" class="brand" fill="#1768db">OpenRouter API</text>
+  <text x="390" y="444" class="body">Defines game task</text>
+
+  <rect x="698" y="266" width="58" height="42" rx="18" fill="#ef4f7a"/>
+  <circle cx="714" cy="287" r="5" fill="white"/><circle cx="740" cy="287" r="5" fill="white"/>
+  <rect x="690" y="377" width="205" height="36" rx="18" fill="#ffe2ea"/>
+  <text x="792" y="401" text-anchor="middle" class="brand" fill="#c83567">MuJoCo · RoboCasa</text>
+  <text x="690" y="444" class="body">Tomato harvest</text>
+
+  <rect class="card" x="970" y="236" width="260" height="234" rx="23" fill="#f7f3ff" stroke="#af8ce8"/>
+  <path d="M1017 267l24 9v17c0 20-13 32-24 37-11-5-24-17-24-37v-17z" fill="#8452d8"/>
+  <path d="M1005 295l9 9 17-20" fill="none" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="990" y="358" class="head">QUALITY CHECK</text>
+  <rect x="990" y="377" width="209" height="36" rx="18" fill="#ece1ff"/>
+  <text x="1094" y="401" text-anchor="middle" class="brand" fill="#7440c6">Crusoe Inference</text>
+  <text x="990" y="444" class="body">Replay + AI review</text>
+
+  <rect class="card" x="1270" y="236" width="260" height="234" rx="23" fill="#effbf7" stroke="#62c59d"/>
+  <circle cx="1317" cy="278" r="14" fill="#12a978"/><circle cx="1361" cy="278" r="14" fill="#12a978"/><circle cx="1339" cy="318" r="14" fill="#12a978"/>
+  <path d="M1329 284l20 0m-26 7l10 18m21-18l-10 18" stroke="#12a978" stroke-width="6"/>
+  <text x="1290" y="358" class="head">EPISODE DB</text>
+  <rect x="1290" y="377" width="194" height="36" rx="18" fill="#d6f4e8"/>
+  <text x="1387" y="401" text-anchor="middle" class="brand" fill="#098d66">Neo4j AuraDB</text>
+  <text x="1290" y="444" class="body">Metadata + file links</text>
+
+  <path class="line" d="M337 352h24"/>
+  <path class="line" d="M937 352h24"/>
+  <path class="line" d="M1237 352h24"/>
+  <path d="M359 352l-10-6v12z M959 352l-10-6v12z M1259 352l-10-6v12z" fill="#2178ed"/>
+
+  <rect class="card" x="670" y="552" width="260" height="112" rx="21" fill="#fffaf1" stroke="#f4b64c"/>
+  <circle cx="707" cy="587" r="12" fill="#f2a51f"/>
+  <path d="M686 616c0-13 9-20 21-20s21 7 21 20" fill="#f2a51f"/>
+  <text x="746" y="592" class="lowerhead">PLAYER</text>
+  <text x="690" y="639" class="lowerbody">Controls the robot</text>
+  <path class="line" d="M800 541v-62"/>
+  <path d="M800 480l-6 11h12z" fill="#2178ed"/>
+
+  <rect class="card" x="970" y="552" width="260" height="112" rx="21" fill="#f6f8fc" stroke="#9db2cf"/>
+  <path d="M1004 577h31l11 11v45h-42z" fill="#7289ac"/>
+  <text x="1070" y="591" class="lowerhead">HDF5 FILES</text>
+  <text x="1070" y="639" class="lowerbody">Recorded episodes</text>
+  <path class="line" d="M1100 479v63"/>
+  <path d="M1100 541l-6-11h12z" fill="#2178ed"/>
+
+  <rect class="card" x="1270" y="552" width="260" height="112" rx="21" fill="#eff5ff" stroke="#78a5ec"/>
+  <circle cx="1308" cy="594" r="21" fill="none" stroke="#2378e9" stroke-width="6"/>
+  <path d="M1323 608l15 15" stroke="#2378e9" stroke-width="6" stroke-linecap="round"/>
+  <text x="1351" y="591" class="lowerhead">DATA MINER</text>
+  <text x="1290" y="639" class="lowerbody">Find + deliver purchases</text>
+  <path class="line" d="M1400 479v63"/>
+  <path class="line" d="M1238 608h23"/>
+  <path d="M1400 541l-6-11h12z M1260 608l-10-6v12z" fill="#2178ed"/>
+
+  <path class="back" d="M1400 674v89H200V480"/>
+  <path d="M200 480l-6 11h12z" fill="#536b91"/>
+  <text x="800" y="748" text-anchor="middle" class="lowerbody">Purchased, QA-approved episodes return to the requester</text>
+  <text x="80" y="850" class="step" fill="#59708b">TARGET DESIGN  ·  OpenRouter interprets  /  Crusoe evaluates  /  Neo4j organizes</text>
+</svg>

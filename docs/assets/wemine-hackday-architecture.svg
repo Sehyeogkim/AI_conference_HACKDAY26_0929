@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">WEMINE tomato harvesting architecture</title>
+  <desc id="desc">A requester defines a harvest task in the web orchestrator, which publishes a Three.js game in the marketplace. A separate player controls a wheeled two-arm robot. Game episodes pass through deterministic QA, Crusoe explanation, and a data miner before the requester buys and downloads selected data. Stripe test checkout funds the credit ledger.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#64748b"/></marker>
+    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#2563eb"/></marker>
+    <style>
+      text{font-family:Inter,Arial,sans-serif;fill:#142333} .title{font-size:42px;font-weight:750;letter-spacing:-1px} .subtitle{font-size:20px;fill:#53657a}
+      .label{font-size:21px;font-weight:700} .detail{font-size:16px;fill:#4b5c6f} .tiny{font-size:14px;fill:#62758a}
+      .actor{fill:#f2f7ff;stroke:#7ba7ef;stroke-width:2} .system{fill:#f8fafc;stroke:#a5b4c5;stroke-width:2}
+      .game{fill:#effaf6;stroke:#55b28b;stroke-width:2.5} .agent{fill:#f5f1ff;stroke:#aa8ce3;stroke-width:2}
+      .money{fill:#fff9e9;stroke:#e0ba59;stroke-width:2} .planned{stroke-dasharray:8 7}
+      .flow{fill:none;stroke:#64748b;stroke-width:2.6;marker-end:url(#arrow)} .data{fill:none;stroke:#2563eb;stroke-width:3;marker-end:url(#arrowBlue)}
+      .dash{stroke-dasharray:8 7} .note{font-size:15px;fill:#52657b} .tag{font-size:13px;font-weight:700;letter-spacing:1.5px;fill:#566b83}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <rect x="0" y="0" width="1600" height="12" fill="#2563eb"/>
+  <text x="72" y="85" class="title">WEMINE · Tomato Harvesting Architecture</text>
+  <text x="72" y="122" class="subtitle">Gameplay produces episodes; QA checks them; Data Miner delivers the requested subset.</text>
+
+  <text x="73" y="183" class="tag">PEOPLE AND MARKETPLACE</text>
+  <rect x="70" y="205" width="230" height="118" rx="12" class="actor"/>
+  <text x="92" y="246" class="label">Requester</text>
+  <text x="92" y="275" class="detail">Task + data criteria</text>
+  <text x="92" y="299" class="detail">Buys accepted episodes</text>
+  <rect x="380" y="205" width="268" height="118" rx="12" class="system"/>
+  <text x="402" y="246" class="label">Web Orchestrator</text>
+  <text x="402" y="275" class="detail">Human request and review</text>
+  <text x="402" y="299" class="detail">Publishes the game</text>
+  <rect x="730" y="205" width="250" height="118" rx="12" class="system"/>
+  <text x="752" y="246" class="label">Marketplace</text>
+  <text x="752" y="275" class="detail">Game listing + episodes</text>
+  <text x="752" y="299" class="detail">Purchase and delivery</text>
+  <rect x="1062" y="205" width="215" height="118" rx="12" class="actor"/>
+  <text x="1084" y="246" class="label">Player</text>
+  <text x="1084" y="275" class="detail">Controls robot</text>
+  <text x="1084" y="299" class="detail">Submits a run</text>
+  <path class="flow" d="M300 264 H380"/>
+  <path class="flow" d="M648 264 H730"/>
+  <path class="flow" d="M980 264 H1062"/>
+
+  <text x="73" y="391" class="tag">GAMEPLAY AND DATA</text>
+  <rect x="70" y="416" width="230" height="130" rx="12" class="system planned"/>
+  <text x="92" y="458" class="label">Farm scene asset</text>
+  <text x="92" y="487" class="detail">3D environment</text>
+  <text x="92" y="511" class="detail">From teammate · planned</text>
+  <rect x="380" y="416" width="345" height="130" rx="12" class="game"/>
+  <text x="402" y="458" class="label">Three.js harvest game</text>
+  <text x="402" y="487" class="detail">Wheeled two-arm robot</text>
+  <text x="402" y="511" class="detail">Tomato interaction + controls</text>
+  <rect x="805" y="416" width="230" height="130" rx="12" class="system"/>
+  <text x="827" y="458" class="label">Episode store</text>
+  <text x="827" y="487" class="detail">Actions, states, time</text>
+  <text x="827" y="511" class="detail">Harvest events · JSON</text>
+  <rect x="1115" y="416" width="250" height="130" rx="12" class="agent"/>
+  <text x="1137" y="458" class="label">QA Agent</text>
+  <text x="1137" y="487" class="detail">Rule-based verdict</text>
+  <text x="1137" y="511" class="detail">Success + trace integrity</text>
+  <path class="flow dash" d="M300 481 H380"/>
+  <path class="data" d="M725 481 H805"/>
+  <path class="data" d="M1035 481 H1115"/>
+  <path class="flow" d="M1169 323 V382 H605 V416"/>
+
+  <rect x="1115" y="608" width="250" height="107" rx="12" class="agent planned"/>
+  <text x="1137" y="650" class="label">Crusoe Inference</text>
+  <text x="1137" y="679" class="detail">Explains fixed QA result</text>
+  <path class="flow dash" d="M1240 546 V608"/>
+  <rect x="805" y="608" width="230" height="107" rx="12" class="agent"/>
+  <text x="827" y="650" class="label">Data Miner Agent</text>
+  <text x="827" y="679" class="detail">Filters accepted runs</text>
+  <path class="data" d="M1150 546 V576 H920 V608"/>
+  <path class="data" d="M805 665 H765 V780 H335 V264 H300"/>
+  <text x="389" y="774" class="tiny">Selected episodes + QA report</text>
+
+  <text x="73" y="627" class="tag">PAYMENT AND CREDITS</text>
+  <rect x="70" y="651" width="225" height="96" rx="12" class="money"/>
+  <text x="92" y="691" class="label">Stripe Checkout</text>
+  <text x="92" y="719" class="detail">Test credit top-up</text>
+  <rect x="380" y="651" width="345" height="96" rx="12" class="money"/>
+  <text x="402" y="691" class="label">Credit ledger</text>
+  <text x="402" y="719" class="detail">Purchase + player reward</text>
+  <path class="flow" d="M295 699 H380"/>
+  <path class="flow" d="M552 651 V578 H755 V340 H855 V323"/>
+
+  <line x1="70" y1="817" x2="1530" y2="817" stroke="#dce5ef" stroke-width="2"/>
+  <text x="72" y="852" class="note">Target architecture · Dashed boxes and links are planned integrations. Browser traces are kinematic game data, not MuJoCo replay or real-robot sensor data.</text>
+</svg>

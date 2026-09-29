@@ -48,3 +48,12 @@ Keep it minimal and fast: type check, the 5-second headless pick check, and tryi
 - World frame: metres, **z up**, right-handed; +x along the path, +y to the left row. three.js is y-up: all world content sits under one root rotated −90° about x; nothing else converts.
 - Descriptive names; comments that stand on their own.
 - No secrets in the repo. The World Labs key lives outside the repository and is mounted only into the `jobs` container.
+
+## Marketplace and agent integration
+
+The requester site, QA, Data Miner, and AI Player are under `agriphilo/`. Read
+`openroture_QA.md` and `crusoe_player.md` before changing those components.
+OpenRouter evaluates measured QA evidence; Crusoe is reserved for AI Player VLM
+inference. Keep hard QA gates server-enforced, and never present an unavailable
+model or an unverified gameplay loop as live. The current browser recording
+contract is `.jsonl.gz`; `sim/web` is a legacy HDF5 demo. Product UI is English.
