@@ -36,6 +36,12 @@ export interface LoadedSplatWorld {
   splat: SplatMesh;
   /** Erases the photo's plants along the whole work cell (used with the generated plants). */
   plantEraser: SplatEdit;
+  /**
+   * Turn the plant eraser on or off. It is added to or removed from the scene (not only hidden),
+   * so when off it cannot affect the splat at all.
+   */
+  setPlantEraserActive(active: boolean): void;
+  plantEraserActive(): boolean;
   /** Swap in a sharper splat level once it has downloaded; the old one is removed afterwards. */
   upgradeSplat(splatFileBytes: Uint8Array, splatFileName: string): Promise<void>;
 }
@@ -150,7 +156,7 @@ export async function loadSplatWorld(options: {
     box.scale.set(lengthM / 2, (outerY - innerY) / 2, 1.15);
     plantEraser.addSdf(box);
   }
-  parent.add(plantEraser);
+  // Off by default: the photo's own plants are the look; see setPlantEraserActive.
 
 
   let currentSplat = splat;
@@ -160,10 +166,28 @@ export async function loadSplatWorld(options: {
     sharper.quaternion.copy(currentSplat.quaternion);
     sharper.scale.copy(currentSplat.scale);
     await sharper.initialized;
+    // Fade the sharper splat in over the current one, then drop the old one, so the scene gains
+    // detail smoothly instead of popping.
+    sharper.opacity = 0;
     parent.add(sharper);
+    const fadeMs = 1500;
+    const fadeStarted = performance.now();
+    await new Promise<void>((resolve) => {
+      const step = () => {
+        const fraction = Math.min(1, (performance.now() - fadeStarted) / fadeMs);
+        sharper.opacity = fraction * fraction * (3 - 2 * fraction);
+        if (fraction < 1) requestAnimationFrame(step);
+        else resolve();
+      };
+      requestAnimationFrame(step);
+    });
     parent.remove(currentSplat);
     currentSplat.dispose();
     currentSplat = sharper;
   };
-  return { world, splat, plantEraser, upgradeSplat };
+  const setPlantEraserActive = (active: boolean) => {
+    if (active && !plantEraser.parent) parent.add(plantEraser);
+    if (!active && plantEraser.parent) plantEraser.parent.remove(plantEraser);
+  };
+  return { world, splat, plantEraser, setPlantEraserActive, plantEraserActive: () => plantEraser.parent !== null, upgradeSplat };
 }

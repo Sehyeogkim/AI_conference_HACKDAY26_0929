@@ -13,6 +13,7 @@ import { applyScaleChoice, downloadWithProgress, loadSplatWorld, loadWorldPackag
 import { LoadingScreen, formatMegabytes } from "./render/loadingScreen.ts";
 import { dressTomatoes } from "./render/tomatoFruit.ts";
 import { dressCart } from "./render/cartAppearance.ts";
+import { createControlsGuide } from "./ui/controlsGuide.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import "./style.css";
@@ -23,6 +24,8 @@ const SIMULATOR_VERSION = "wefarm-web 0.2.0";
  * next to the physics on an Apple-silicon laptop in Chrome; `?splat=500k` suits weaker machines.
  */
 const SHARP_SPLAT_LEVEL = "full";
+/** Background of the wrist-camera inset, which draws meshes only (a muted soil tone). */
+const WRIST_INSET_BACKGROUND = new THREE.Color(0x6b5a45);
 const TASK_GOAL = "Drive along the tomato path and pick the ripe (red) tomatoes into the basket. Leave green ones on the plant.";
 const params = new URLSearchParams(location.search);
 const baseUrl = import.meta.env.BASE_URL;
@@ -90,8 +93,11 @@ async function main(): Promise<void> {
     }
   }
   const worldBaseUrl = worldSource?.baseUrl ?? "";
-  // Show a light splat quickly, then swap in a sharper one in the background (unless ?splat= pins one).
-  const splatLevel = params.get("splat") ?? (world?.files.splats["100k"] ? "100k" : "500k");
+  // First splat: from a local copy the 500k level loads in a fraction of a second and already looks
+  // good; over the network the 100k level (1.4 MB) gets a scene on screen quickly. Either way a
+  // sharper level then fades in while the operator plays (unless ?splat= pins one level).
+  const firstSplatLevel = worldSource?.origin === "remote" && world?.files.splats["100k"] ? "100k" : "500k";
+  const splatLevel = params.get("splat") ?? firstSplatLevel;
   const sharperSplatLevel = params.get("splat") ? null : SHARP_SPLAT_LEVEL;
   // Start the splat download now so it overlaps with loading physics.
   let splatDownload: Promise<Uint8Array | null> = Promise.resolve(null);
@@ -130,6 +136,7 @@ async function main(): Promise<void> {
   const layout = generateFarmLayout(layoutParameters);
   setStatus("Loading physics and the Franka Panda model…");
   loading.start("physics", "MuJoCo (WebAssembly) and robot model files…");
+  const physicsStarted = performance.now();
   const pandaBase = `${baseUrl}models/franka_emika_panda`;
   let pandaFilesTotal = 0;
   let pandaFilesLoaded = 0;
@@ -146,7 +153,8 @@ async function main(): Promise<void> {
       return names;
     },
   });
-  loading.done("physics", `${layout.tomatoes.length} tomatoes · ${simulation.model.nq} joint positions`);
+  loading.done("physics", `${layout.tomatoes.length} tomatoes · ${simulation.model.nq} joint positions · ${((performance.now() - physicsStarted) / 1000).toFixed(1)} s`);
+  console.info(`[load] physics ready in ${Math.round(performance.now() - physicsStarted)} ms`);
   const sceneHash = await sha256Hex(simulation.sceneXml);
 
   // ---------- Renderer, scene, cameras ----------
@@ -198,13 +206,24 @@ async function main(): Promise<void> {
   const wristCamera = new THREE.PerspectiveCamera(75, 1, 0.01, 100);
   const headCamera = new THREE.PerspectiveCamera(70, 1, 0.02, 200);
   const cameraModes = ["orbit", "head", "wrist"] as const;
-  /** Small picture-in-picture view from the wrist camera (key M), shown unless the main view is the wrist. */
-  let wristInsetVisible = true;
+  /**
+   * Small picture-in-picture view from the wrist camera (key M). It draws only the meshes (robot,
+   * cart, fruit): the splat renderer keeps one sort order for one camera, and drawing the splat
+   * from a second camera every frame makes the main view flicker.
+   */
+  let wristInsetVisible = false;
   const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
   controls.enableDamping = true;
   controls.maxPolarAngle = Math.PI * 0.495;
+  // A world made from one photo only looks right from roughly the photo's direction (looking down
+  // the path). Keep the orbit within 65° of that unless ?freecam is given. In three.js terms,
+  // looking down the path (+x world, -z scene) from behind is an azimuth of -90°.
+  if (!params.has("freecam")) {
+    controls.minAzimuthAngle = THREE.MathUtils.degToRad(-90 - 65);
+    controls.maxAzimuthAngle = THREE.MathUtils.degToRad(-90 + 65);
+  }
   // Start behind and above the cart, looking down the path (+x world = -z three).
   const toScene = (x: number, y: number, z: number) => new THREE.Vector3(x, z, -y);
   orbitCamera.position.copy(toScene(-1.4, -0.9, 1.9));
@@ -216,12 +235,13 @@ async function main(): Promise<void> {
   if (world && splatFileBytes) {
     setStatus("Building the photoreal greenhouse…");
     loading.progress("build", null, "decoding the splat…");
+    const buildStarted = performance.now();
     try {
       splatWorld = await loadSplatWorld({ baseUrl: worldBaseUrl, world, splatLevel, parent: worldRoot, layout, splatFileBytes });
       meshes.setGroundVisible(false);
       shadowCatcher.visible = true;
       // Default: the photo's own plants, whole; the pickable trusses hang in front of them.
-      splatWorld.plantEraser.visible = false;
+      splatWorld.setPlantEraserActive(false);
       plants.setGeneratedFoliageVisible(false);
       scene.background = new THREE.Color(0xe8ecef);
       // Light the robot, cart, and fruit with the world's own panorama, so they take on the
@@ -240,7 +260,8 @@ async function main(): Promise<void> {
           (error: unknown) => console.warn("Lighting panorama failed to load; keeping the default lights", error),
         );
       }
-      loading.done("build", "photoreal scene placed");
+      loading.done("build", `photoreal scene placed · ${((performance.now() - buildStarted) / 1000).toFixed(1)} s`);
+      console.info(`[load] splat built in ${Math.round(performance.now() - buildStarted)} ms`);
     } catch (error) {
       console.warn("World package failed to load; showing the work cell only", error);
       loading.fail("build", `could not build the scene (${(error as Error).message}): plain ground instead`);
@@ -533,8 +554,8 @@ async function main(): Promise<void> {
   hud.cameraButton.addEventListener("click", cycleCamera);
   const toggleScenery = () => {
     if (!splatWorld) return;
-    const useGeneratedPlants = !splatWorld.plantEraser.visible;
-    splatWorld.plantEraser.visible = useGeneratedPlants;
+    const useGeneratedPlants = !splatWorld.plantEraserActive();
+    splatWorld.setPlantEraserActive(useGeneratedPlants);
     plants.setGeneratedFoliageVisible(useGeneratedPlants);
     hud.scenery.textContent = useGeneratedPlants ? "Photo plants (P)" : "Generated plants (P)";
   };
@@ -832,6 +853,8 @@ async function main(): Promise<void> {
   const controlPeriod = 1 / CONTROL_RATE_HZ;
   setStatus(splatWorld ? "Ready. Click a red tomato, or move the arm with W A S D R F." : "Ready (no photoreal world found).");
   loading.finish();
+  const controlsGuide = createControlsGuide(document.querySelector<HTMLDivElement>("#controls-guide")!);
+  document.querySelector<HTMLButtonElement>("#button-controls")!.addEventListener("click", () => controlsGuide.toggle());
 
   // Sharpen the scene in the background once everything else is running.
   if (splatWorld && world && sharperSplatLevel && world.files.splats[sharperSplatLevel] && sharperSplatLevel !== splatLevel) {
@@ -926,7 +949,15 @@ async function main(): Promise<void> {
       renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
       // The hand-target ring sits right in front of the wrist camera; leave it out of this view.
       targetMarker.visible = false;
+      // The splat renderer keeps one sort order for one camera; drawing the splat from a second
+      // camera made the main view flicker on some machines (even with re-sorting switched off for
+      // the inset). So the inset draws only the meshes: robot, cart, crate, and fruit.
+      spark.visible = false;
+      const mainBackground = scene.background;
+      scene.background = WRIST_INSET_BACKGROUND;
       renderer.render(scene, wristCamera);
+      scene.background = mainBackground;
+      spark.visible = true;
       targetMarker.visible = true;
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, size.x, size.y);

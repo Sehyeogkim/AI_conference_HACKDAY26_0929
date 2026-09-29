@@ -26,8 +26,18 @@ function readOnlyFolder(urlPrefix: string, folder: string | null): Connect.NextH
       response.end("not found");
       return;
     }
-    response.setHeader("Content-Length", String(statSync(absolutePath).size));
-    response.setHeader("Cache-Control", "no-cache");
+    // World package files never change in place (a new version gets a new folder), so let the
+    // browser keep them and answer revalidation with 304 instead of re-sending tens of megabytes.
+    const stats = statSync(absolutePath);
+    const entityTag = `"${stats.size.toString(16)}-${Math.floor(stats.mtimeMs).toString(16)}"`;
+    response.setHeader("ETag", entityTag);
+    response.setHeader("Cache-Control", "public, max-age=3600");
+    if (request.headers["if-none-match"] === entityTag) {
+      response.statusCode = 304;
+      response.end();
+      return;
+    }
+    response.setHeader("Content-Length", String(stats.size));
     createReadStream(absolutePath).pipe(response);
   };
 }

@@ -19,6 +19,8 @@ metadata; the original recording remains in file storage. See the
 
 ## Run locally
 
+With Docker (Colima on macOS), one command runs the simulator and the marketplace: `docker compose up -d web marketplace`, then open <http://127.0.0.1:8765/>. The marketplace reads its keys from `../.env.secrets.marketplace` (template: `.env.secrets.marketplace.example`) and runs in demo mode by default (`WEFARM_DEMO_CACHE=1`: stored OpenRouter answers, no Neo4j, QA in the background). The steps below run the same without Docker.
+
 Requires Python 3.12+, Node.js, and `uv` or an equivalent virtual environment.
 The game checks for a local World Labs package, then downloads the public
 `crete-path/v2` greenhouse from S3 when needed. If that download fails, the
@@ -37,6 +39,8 @@ Start the game in one terminal:
 cd web
 npm run dev -- --host 127.0.0.1 --port 5180
 ```
+
+Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (the 7.3 MB splat first when loading from a local copy, or the 1.4 MB one from the cloud; the 28 MB full-detail splat then fades in while you play). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full` (pin one level; use `500k` on weaker machines), `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground); `?freecam` lifts the orbit limit (by default the orbit camera stays within 65° of looking down the path, where a single-photo world looks right).
 
 Start the WeFarm site in another terminal, from the repository root:
 

@@ -42,6 +42,7 @@
         <button id="button-record" type="button">● Record</button>
         <button id="button-reset" type="button">Reset</button>
         <label class="file-button">Replay…<input id="input-recording" type="file" accept=".gz,.jsonl,application/gzip" /></label>
+        <button id="button-controls" type="button" class="accent-button">Controls (?)</button>
         <button id="button-camera" type="button">Camera (V)</button>
         <button id="button-scenery" type="button">Show photo plants</button>
       </div>
@@ -91,7 +92,8 @@
         <p class="loading-note">Everything runs in this tab: MuJoCo physics (WebAssembly) and a photoreal World Labs scene.</p>
       </div>
     </div>
-    <div id="wrist-inset-label">Wrist camera · M to hide</div>
+    <div id="wrist-inset-label">Wrist camera (robot and fruit) · M to hide</div>
+    <div id="controls-guide" hidden></div>
     <pre id="error-box" hidden></pre>
     <footer id="world-credit"></footer>
     <script type="module" src="/src/main.ts"></script>

@@ -20,6 +20,8 @@ type MjModel = any;
 type MjData = any;
 
 export const CONTROL_RATE_HZ = 50;
+/** Each simulation compiles from its own folder in MuJoCo's in-memory file system. */
+let sceneFolderCounter = 0;
 /** Fallback stem detach force; each tomato's own `detachForceN` (by ripeness) takes precedence. */
 export const DETACH_FORCE_N = 8;
 /** Grasp assist: closing the gripper holds a tomato whose centre is this close to the fingertips. */
@@ -132,14 +134,34 @@ export class TomatoHarvestSimulation {
    */
   static async create(layout: FarmLayout, files: FileSource, options: { armController?: ArmController; mujocoOptions?: Record<string, unknown> } = {}): Promise<TomatoHarvestSimulation> {
     const mujoco: MujocoModule = await loadMujoco(options.mujocoOptions);
-    const vfs = new mujoco.MjVFS();
     const [pandaXml, assetNames] = await Promise.all([files.readPandaFile(PANDA_MODEL_FILE), files.pandaAssetList()]);
-    vfs.addBuffer(PANDA_MODEL_FILE, strengthenGripper(pandaXml));
     const assetBytes = await Promise.all(assetNames.map((name) => files.readPandaFile(`assets/${name}`)));
-    assetNames.forEach((name, index) => vfs.addBuffer(`assets/${name}`, assetBytes[index]));
     const sceneXml = buildSceneXml(layout);
-    const model = mujoco.MjModel.from_xml_string(sceneXml, vfs);
-    vfs.delete();
+    // Compile from MuJoCo's in-memory file system (Emscripten MEMFS), not MjVFS: in the 3.14.0 WASM
+    // build, MjVFS.addBuffer copies byte by byte (about 12 s for the Panda's 34 MB of meshes),
+    // while FS.writeFile is a plain memory copy (well under a second).
+    const folder = `/wefarm_scene_${(sceneFolderCounter += 1)}`;
+    const writtenPaths: string[] = [];
+    const writeFile = (relativePath: string, bytes: Uint8Array | string) => {
+      mujoco.FS.writeFile(`${folder}/${relativePath}`, bytes);
+      writtenPaths.push(`${folder}/${relativePath}`);
+    };
+    mujoco.FS.mkdir(folder);
+    mujoco.FS.mkdir(`${folder}/assets`);
+    writeFile(PANDA_MODEL_FILE, strengthenGripper(pandaXml));
+    assetNames.forEach((name, index) => writeFile(`assets/${name}`, assetBytes[index]!));
+    writeFile("scene.xml", sceneXml);
+    const emptyVfs = new mujoco.MjVFS();
+    let model: MjModel;
+    try {
+      model = mujoco.MjModel.from_xml_path(`${folder}/scene.xml`, emptyVfs);
+    } finally {
+      emptyVfs.delete();
+      // The compiled model holds its own copy; free the source files.
+      for (const path of writtenPaths) mujoco.FS.unlink(path);
+      mujoco.FS.rmdir(`${folder}/assets`);
+      mujoco.FS.rmdir(folder);
+    }
     return new TomatoHarvestSimulation(mujoco, model, layout, sceneXml, options.armController ?? new DampedLeastSquaresArmController());
   }
 
