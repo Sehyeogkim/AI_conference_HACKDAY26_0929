@@ -24,12 +24,15 @@ Rules that keep merges easy:
 
 ## Run
 
+Only Docker is needed. Day to day this is **one container** (`web`: Vite dev server with live reload, the code is mounted, edits apply instantly). The `jobs` container is only for generating new World Labs worlds and needs Sean's API key; robot work never needs it.
+
 ```sh
 docker compose up -d web                    # http://127.0.0.1:5180
 docker compose run --rm web npx tsc --noEmit -p tsconfig.json          # type check
 docker compose run --rm web node --experimental-strip-types tools/simulationCheck.ts   # 5 s headless pick check
-docker compose run --rm web node --experimental-strip-types tools/exportScene.ts      # MuJoCo scene for Python → exports/scene/
 ```
+
+Without Docker: `cd web && npm install && npm run dev -- --port 5180` (Node 22+).
 
 In the browser, `window.wefarm` exposes `{ simulation, layout, teleop }` for debugging. Errors show in a red box on the page.
 
