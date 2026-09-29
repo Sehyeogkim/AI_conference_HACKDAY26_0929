@@ -391,6 +391,17 @@ def run(arguments: argparse.Namespace) -> int:
         "collider_file_frame": collider_frame,
         "sanity_checks": sanity,
     }
+    if method == "marble_metric_scale_factor":
+        # Keep the camera-height alternative ready, so a person can switch after checking a reference object.
+        alternative_matrix = raw_to_world_matrix(rotation, camera_height_scale, ground["camera_height_raw"], up_normal)
+        alternative_path = measure_path(apply(alternative_matrix, collider_samples_raw))
+        world_json["scale_alternative_camera_height"] = {
+            "meters_per_raw_unit": round(camera_height_scale, 6),
+            "camera_height_m": arguments.camera_height_m,
+            "raw_to_world": [[round(float(value), 8) for value in row] for row in alternative_matrix],
+            "path_width_m": round(alternative_path["width_m_median"], 2),
+            "path_usable_length_m": alternative_path["usable_length_m"],
+        }
     write_json(package_directory / "world.json", world_json)
     write_json(package_directory / "review" / "measurements.json", {
         "collider_frame_scores": frame_scores, "ground_from_collider": ground, "ground_from_splats": splat_ground,
