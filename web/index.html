@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="WeFarm: harvest tomatoes with a Franka Panda on a self-driving cart in a photoreal greenhouse, simulated live in the browser." />
+    <title>WeFarm · Tomato Harvest Sim</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='12' fill='%23c8200f'/%3E%3Cpath d='M16 6l3 4-3 1-3-1z' fill='%233d7a1e'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="viewport"></div>
+    <header class="panel top-left">
+      <h1>WeFarm <span>tomato harvest sim</span></h1>
+      <div id="status">Starting…</div>
+    </header>
+    <section class="panel top-right" aria-label="Task">
+      <div class="stat"><span>Ripe harvested</span><strong id="hud-harvested">0 / 0</strong></div>
+      <div class="stat"><span>Unripe picked</span><strong id="hud-unripe">0</strong></div>
+      <div class="stat"><span>Dropped</span><strong id="hud-dropped">0</strong></div>
+      <div class="stat"><span>Time</span><strong id="hud-time">0.0 s</strong></div>
+      <div class="stat"><span>Gripper</span><strong id="hud-gripper">open</strong></div>
+      <div class="stat"><span>Camera</span><strong id="hud-camera">orbit</strong></div>
+    </section>
+    <section class="panel bottom-left" id="play-panel" aria-label="Controls">
+      <div class="buttons">
+        <button id="button-record" type="button">● Record</button>
+        <button id="button-reset" type="button">Reset</button>
+        <label class="file-button">Replay…<input id="input-recording" type="file" accept=".gz,.jsonl,application/gzip" /></label>
+        <button id="button-camera" type="button">Camera (C)</button>
+        <button id="button-scenery" type="button">Show photo plants</button>
+      </div>
+      <p class="keys"><b>Click</b> a tomato to reach above it · <b>W/S</b> fwd/back · <b>A/D</b> left/right · <b>R/F</b> up/down · <b>Q/E</b> turn · <b>Space</b> grip · <b>[ ]</b> cart stop · <b>H</b> ready pose · drag to orbit</p>
+    </section>
+    <section class="panel bottom-left" id="replay-panel" hidden aria-label="Replay and QA">
+      <div id="replay-info"></div>
+      <div class="replay-row">
+        <button id="replay-play" type="button">▶ Play</button>
+        <input id="replay-slider" type="range" min="0" max="0" value="0" />
+        <select id="replay-speed" aria-label="Playback speed"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select>
+      </div>
+      <ol id="replay-events"></ol>
+      <div class="qa">
+        <textarea id="qa-notes" rows="2" placeholder="QA notes (what went right or wrong)"></textarea>
+        <button id="qa-pass" type="button">✓ Pass</button>
+        <button id="qa-fail" type="button">✗ Fail</button>
+        <button id="replay-exit" type="button">Back to live</button>
+      </div>
+    </section>
+    <pre id="error-box" hidden></pre>
+    <footer id="world-credit"></footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

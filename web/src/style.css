@@ -1,0 +1,31 @@
+:root { color-scheme: dark; --panel: rgba(14, 20, 16, 0.78); --accent: #e0442a; --ok: #39c46e; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #111; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; color: #eef2ec; }
+#viewport { position: fixed; inset: 0; }
+#viewport canvas { width: 100%; height: 100%; display: block; }
+.panel { position: fixed; background: var(--panel); border-radius: 10px; padding: 10px 14px; backdrop-filter: blur(6px); max-width: calc(100vw - 32px); }
+.top-left { top: 16px; left: 16px; max-width: 420px; }
+.top-left h1 { margin: 0 0 4px; font-size: 20px; letter-spacing: 0.3px; }
+.top-left h1 span { font-weight: 400; opacity: 0.7; font-size: 14px; }
+#status { opacity: 0.9; }
+.top-right { top: 16px; right: 16px; display: grid; grid-template-columns: repeat(2, auto); gap: 4px 18px; }
+.stat span { display: block; font-size: 11px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat strong { font-size: 16px; }
+.bottom-left { bottom: 34px; left: 16px; width: min(720px, calc(100vw - 32px)); }
+.buttons, .replay-row, .qa { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+button, .file-button, select { background: #2c3a30; color: inherit; border: 1px solid #4a5c4f; border-radius: 6px; padding: 6px 12px; font: inherit; cursor: pointer; }
+button:hover, .file-button:hover { background: #3a4c3f; }
+button:disabled { opacity: 0.4; cursor: default; }
+button.recording { background: var(--accent); border-color: var(--accent); }
+.file-button input { display: none; }
+.keys { margin: 8px 0 0; font-size: 12.5px; opacity: 0.85; }
+#replay-slider { flex: 1; min-width: 160px; }
+#replay-events { max-height: 120px; overflow-y: auto; margin: 8px 0; padding-left: 20px; font-size: 12.5px; }
+#replay-events button { padding: 1px 6px; font-size: 12px; }
+#qa-notes { flex: 1 1 100%; background: #1c241e; color: inherit; border: 1px solid #4a5c4f; border-radius: 6px; padding: 6px; font: inherit; }
+#qa-pass { border-color: var(--ok); }
+#qa-fail { border-color: var(--accent); }
+#world-credit { position: fixed; bottom: 6px; left: 16px; right: 16px; font-size: 11px; opacity: 0.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#world-credit a { color: inherit; }
+@media (max-width: 700px) { .top-right { top: auto; bottom: 200px; } }
+#error-box { position: fixed; top: 110px; left: 16px; right: 16px; max-height: 40vh; overflow: auto; margin: 0; padding: 10px; background: rgba(120, 10, 10, 0.92); color: #fff; font: 12px/1.35 ui-monospace, monospace; border-radius: 8px; white-space: pre-wrap; z-index: 10; }
