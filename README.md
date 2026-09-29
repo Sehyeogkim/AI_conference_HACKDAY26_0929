@@ -2,78 +2,69 @@
 
 **Play the harvest. Capture robot data.**
 
-WeFarm connects a requester marketplace to the teammate's browser MuJoCo
-tomato-harvesting simulator. A requester uploads a farm image and a data brief;
-WeFarm stores both, uses OpenRouter to extract a constrained task spec when
-configured, and publishes a playable game. The image-to-3D environment is an
-**assumed teammate handoff** for this hackathon. This service does not generate
-a new 3D farm from the uploaded image.
+![WeFarm concept cover: requester, game, player, and QA](docs/assets/wefarm-readme-cover.png)
 
-Players drive a one-arm Franka Panda cart through procedural tomato rows. The
-game uploads its native `.jsonl.gz` recording to WeFarm. Structural checks,
-server-side MuJoCo re-simulation, and an evidence-only OpenRouter QA decision
-gate test-credit rewards and marketplace purchases. Crusoe is assigned to
-AI Player VLM inference. Neo4j indexes task, episode, QA, and purchase
-metadata; the original recording remains in file storage. See the
-[architecture and limits](final_architecutre.md).
+![WeFarm architecture concept](docs/assets/wefarm-readme-architecture-concept.png)
 
-## Run locally
+**What runs today:** the two images are concept visuals. The browser game has **one Franka Panda arm on a wheeled cart** and records **`.jsonl.gz`**, not HDF5. An uploaded farm photo is stored with the request; the demo opens a prepared World Labs greenhouse and a procedural MuJoCo work cell. OpenRouter interprets requests and reviews QA evidence, while Crusoe is the optional AI Player VLM. Neo4j indexes metadata when configured; recording files stay in local storage.
 
-With Docker (Colima on macOS), one command runs the simulator and the marketplace: `docker compose up -d web marketplace`, then open <http://127.0.0.1:8765/>. The marketplace reads its keys from `../.env.secrets.marketplace` (template: `.env.secrets.marketplace.example`) and runs in demo mode by default (`WEFARM_DEMO_CACHE=1`: stored OpenRouter answers, no Neo4j, QA in the background). The steps below run the same without Docker.
+## Try it on localhost
 
-Requires Python 3.12+, Node.js, and `uv` or an equivalent virtual environment.
-The game checks for a local World Labs package, then downloads the public
-`crete-path/v2` greenhouse from S3 when needed. If that download fails, the
-procedural work cell remains playable. The uploaded request image does not
-create a new 3D world.
+This path needs **no API keys**. Use a macOS or Linux terminal with Python 3.12+, Node.js 22+, npm, and `uv`.
 
 ```bash
+git clone https://github.com/Sehyeogkim/AI_conference_HACKDAY26_0929.git
+cd AI_conference_HACKDAY26_0929
 uv venv .venv
 uv pip install --python .venv/bin/python -r requirements.txt
 npm ci --prefix web
 ```
 
-Start the game in one terminal:
+If `uv` is unavailable, replace its two lines with `python3 -m venv .venv` and `.venv/bin/python -m pip install -r requirements.txt`.
+
+Start the **game** in terminal 1:
 
 ```bash
 cd web
 npm run dev -- --host 127.0.0.1 --port 5180
 ```
 
-Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (the 7.3 MB splat first when loading from a local copy, or the 1.4 MB one from the cloud; the 28 MB full-detail splat then fades in while you play). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full` (pin one level; use `500k` on weaker machines), `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground); `?freecam` lifts the orbit limit (by default the orbit camera stays within 65° of looking down the path, where a single-photo world looks right).
-
-Start the WeFarm site in another terminal, from the repository root:
+Start the **marketplace** from the repository root in terminal 2:
 
 ```bash
-.venv/bin/python -m agriphilo.web --host 127.0.0.1 --port 8765 --demo
+WEFARM_DEMO_CACHE=1 .venv/bin/python -m agriphilo.web --host 127.0.0.1 --port 8765 --demo
 ```
 
-Open [Requester](http://127.0.0.1:8765/requester) to upload an image and data
-request. The new `wf-*` listing appears in Marketplace. Open
-[Player](http://127.0.0.1:8765/player), launch that listing, click **Record**,
-harvest a ripe tomato into the basket, and click **Stop & submit**. The recording
-and QA state appear under that listing and the player page. Only QA-approved
-episodes can be purchased and downloaded through Data Miner.
+Open **[WeFarm](http://127.0.0.1:8765/)**. Choose Requester or Player on the landing page; use **Switch role** if that browser already has a demo identity. The simulator is also available directly at [localhost:5180](http://127.0.0.1:5180/).
 
-Set `OPENROUTER_API_KEY` for requester interpretation and OpenRouter QA.
-For AI Mode, `CRUSOE_API_KEY` uses Crusoe Serverless vision inference by default;
-set `CRUSOE_VLM_ENDPOINT`, `CRUSOE_VLM_MODEL`, and `CRUSOE_VLM_API_KEY` to use
-a dedicated Crusoe model server instead. Set `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` for graph
-indexing. `STRIPE_SECRET_KEY` enables Stripe **test-mode** Checkout; test
-credits are not cash payouts. Without OpenRouter, the fixed task template is
-used for requester interpretation, while submitted episodes cannot earn QA
-approval from an unavailable model. Without a configured Crusoe VLM, AI Mode
-is unavailable and human play remains available. Neo4j connection status is
-separate from local recording storage.
+| Demo step | What to do |
+| --- | --- |
+| 1. Publish | As **Requester**, click **New farm request → Use example → Publish game**. The example photo and brief are bundled in the repository. |
+| 2. Play | As **Player**, open the new marketplace listing and click **Play**. In the game, click **Record**, harvest a ripe tomato, then click **Stop & submit**. |
+| 3. Inspect | Return to the Requester marketplace, open the listing, and inspect **Submitted episodes**, the QA state, and the **Watch** link. The Player page also shows the submitted run. |
+| 4. Watch a sample | Open [the bundled sample replay](http://127.0.0.1:8765/watch/sample) if you want to see a completed recording before playing. It is a sample, not a new marketplace submission. |
 
-The OpenRouter QA code and Crusoe AI Player backend have local tests; the AI Mode
-browser code typechecks and builds. One
-synthetic OpenRouter QA request returned a valid evidence-based response, but
-end-to-end game submission and Crusoe VLM play have not been verified. A
-configured endpoint or key alone does not establish live inference. See the
-[QA contract](openroture_QA.md) and [AI Player design](crusoe_player.md).
+The first game load may download the public `crete-path/v2` greenhouse. If that asset is unavailable, the procedural work cell remains playable; `http://127.0.0.1:5180/?world=none` opens it directly. The [simulator guide](docs/simulator.md) has controls and a first-harvest recipe.
 
-The older RoboCasa/HDF5 coffee-game code remains in the repository as a legacy
-path and is not the WeFarm tomato-game data contract.
+### Docker option
 
-The teammate simulator controls, World Labs source, and asset credits are documented in [Simulator details](docs/simulator.md).
+If Docker is available, run `docker compose up -d web marketplace` and open [localhost:8765](http://127.0.0.1:8765/). The optional marketplace key file is `../.env.secrets.marketplace`; start from [.env.secrets.marketplace.example](.env.secrets.marketplace.example) and keep the filled copy outside this repository. Docker uses cached demo responses by default.
+
+## How a recording becomes data
+
+1. A requester submits a farm image and data brief. WeFarm publishes a task and marketplace listing using a prepared simulator scene. OpenRouter can interpret the brief; without it, a fixed task template is used.
+2. A human controls the browser MuJoCo robot, or the optional Crusoe AI Mode sends separate head and wrist camera images to its VLM for bounded actions. The game records states, actions, timing, and harvest events in `.jsonl.gz`.
+3. Server-side structural checks and MuJoCo replay enforce measurable gates. OpenRouter evaluates the supplied evidence; its response cannot override a failed gate.
+4. An **approved live QA** episode can be indexed as metadata in Neo4j, selected by Data Miner, purchased with test credits, and downloaded by the requester. The recording file remains in local storage.
+
+**Demo mode boundary:** `WEFARM_DEMO_CACHE=1` replays stored OpenRouter text so the UI works without a key. Cached QA cannot approve a new episode: it stays **pending review** or fails a hard gate, so it cannot be sold or downloaded. To test live QA, configure `OPENROUTER_API_KEY` and start the marketplace with `WEFARM_DEMO_CACHE=0`. Neo4j is optional and independent of the cache setting; without it, the local episode index still works.
+
+Crusoe AI Mode needs `CRUSOE_API_KEY` for Serverless vision inference, or `CRUSOE_VLM_ENDPOINT`, `CRUSOE_VLM_MODEL`, and `CRUSOE_VLM_API_KEY` for a dedicated compatible server. `NEO4J_URI`, `NEO4J_USERNAME`, and `NEO4J_PASSWORD` enable graph indexing. `STRIPE_SECRET_KEY` enables **Stripe test-mode** Checkout; credits are test credits, not cash payouts. Keep all keys out of Git.
+
+## Scope and evidence
+
+- The game runs MuJoCo in the browser and renders with three.js. The visible greenhouse is a prepared World Labs Marble scene; the request image does **not** generate a new 3D farm in this repository.
+- Local Python tests, TypeScript checks, Vite build, and a headless MuJoCo harvest smoke test have passed. A live Crusoe call returned a bounded action from separate head and wrist images; a complete autonomous harvest has not been verified.
+- The `.jsonl.gz` tomato game is the active path. The RoboCasa/HDF5 coffee demo under `sim/web` is legacy and uses a different data contract.
+
+More detail: [architecture and limits](final_architecutre.md) · [QA contract](openroture_QA.md) · [AI Player](crusoe_player.md) · [simulator and asset credits](docs/simulator.md).
