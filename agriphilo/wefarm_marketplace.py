@@ -511,7 +511,8 @@ class WeFarmMarketplace:
             graph = GraphStore.from_env()
             try:
                 found = graph.query_approved_episodes(game_id, filters)
-                if found is not None:
+                # An empty graph answer usually means the episode was never indexed; use the local index.
+                if found:
                     graph_ids = set(found)
                     graph_source = "neo4j"
             finally:

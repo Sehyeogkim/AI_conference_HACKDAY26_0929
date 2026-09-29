@@ -465,6 +465,8 @@ def main() -> None:
         explain_qa(v, "pass" if v.get("pass") else "fail", v.get("reasons", [])))
     Handler.wefarm = WeFarmMarketplace(Handler.games.ledger, root=Path(os.environ.get("WEFARM_DATA_ROOT", str(WEFARM_DEFAULT_ROOT))))
     Handler.demo = True
+    # Demo requester wallet starts with test credits (idempotent key: added once per ledger).
+    Handler.games.ledger.topup(Handler.games.wallet()["customer_id"], 1000, "demo-starting-credits")
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"WeFarm on http://localhost:{args.port} (teammate MuJoCo game, JSONL recordings, QA gated)")
     try:

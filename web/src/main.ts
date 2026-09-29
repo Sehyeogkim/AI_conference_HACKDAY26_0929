@@ -303,6 +303,7 @@ async function main(): Promise<void> {
     take: document.querySelector<HTMLButtonElement>("#ai-take")!,
   };
   const marketplaceContext = document.querySelector<HTMLDivElement>("#marketplace-context")!;
+  const aiPanel = document.querySelector<HTMLElement>("#ai-panel")!;
   aiUi.stop.textContent = submissionUrl && marketplaceGameId && marketplacePlayerId ? "Stop & submit" : "Stop & save";
   if (marketplaceGameId && marketplacePlayerId) {
     marketplaceContext.hidden = false;
@@ -376,6 +377,8 @@ async function main(): Promise<void> {
       thinking: "Thinking", acting: "Acting", paused: "Paused", stopped: "Stopped", completed: "Completed", error: "Unavailable",
     };
     aiUi.state.textContent = labels[aiPhase];
+    // Show the AI panel only when a Crusoe model is configured (or a run is active), and never during replay.
+    aiPanel.hidden = mode === "replay" || (!aiAvailable && aiMode === "human");
     aiUi.message.textContent = aiMessage;
     aiUi.model.textContent = aiModel || "—";
     aiUi.action.textContent = aiAction ? `${aiAction.action}${aiAction.direction ? ` · ${aiAction.direction}` : ""}` : "—";
@@ -448,7 +451,7 @@ async function main(): Promise<void> {
       const blob = await finished.toGzipBlob({ type: "footer", steps: finished.steps, duration_s: Number((finished.steps / CONTROL_RATE_HZ).toFixed(2)), harvested_ripe: totals.harvestedRipe, harvested_unripe: totals.harvestedUnripe, dropped: totals.dropped });
       const filename = `wefarm-session-${header.started_at.replace(/[:.]/g, "-")}.jsonl.gz`;
       if (submissionUrl && marketplaceGameId && marketplacePlayerId) {
-        setStatus(`Uploading ${finished.steps} recorded steps to the marketplace…`);
+        setStatus(`Submitting ${finished.steps} recorded steps. QA is replaying the physics and reviewing the episode (about 30 s)…`);
         try {
           const endpoint = new URL(submissionUrl, location.href);
           if (endpoint.protocol !== "http:" && endpoint.protocol !== "https:") throw new Error("Unsupported upload URL");
