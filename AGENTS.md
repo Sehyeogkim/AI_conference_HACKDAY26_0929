@@ -2,6 +2,8 @@
 
 Read this first, then `docs/README.md`. `CLAUDE.md` points here.
 
+**This file is shared by everyone on the project** (Sean, his teammate, and all of their coding agents). Anyone may edit it: add rules, fix what is wrong, adjust zones as the work changes. Keep edits small and in place so they merge cleanly, and mention a change to the zones or rules in a handoff note (`docs/handoffs/`) so the other side notices.
+
 WeFarm is a browser simulator for robot harvesting: a photoreal greenhouse (World Labs Marble splat) plus a generated work cell (plants, tomatoes) and a harvest cart with a Franka Panda, simulated live by MuJoCo (WebAssembly) and drawn with three.js. People teleoperate it; sessions are recorded and replayed for QA; recordings are meant to become training data.
 
 ## Two workstreams, two ownership zones
