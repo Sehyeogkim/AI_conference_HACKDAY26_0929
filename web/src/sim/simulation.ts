@@ -8,7 +8,7 @@
 // constraint force passes a threshold the weld is switched off and the tomato comes free.
 import loadMujoco from "@mujoco/mujoco";
 import type { FarmLayout } from "../farm/farmLayout.ts";
-import { ARM_PREFIX, CART_ACTUATOR, CART_JOINT, PANDA_MODEL_FILE, buildSceneXml, tomatoWeldName } from "./sceneXml.ts";
+import { ARM_PREFIX, CART_ACTUATORS, CART_JOINTS, PANDA_MODEL_FILE, buildSceneXml, tomatoGripName, tomatoWeldName } from "./sceneXml.ts";
 
 // The bindings' TypeScript types are very large; the simulation uses a small, explicit surface.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,6 +20,10 @@ type MjData = any;
 
 export const CONTROL_RATE_HZ = 50;
 export const DETACH_FORCE_N = 8;
+/** Grasp assist: closing the gripper holds a tomato whose centre is this close to the fingertips. */
+export const GRASP_ASSIST_RADIUS_M = 0.035;
+/** MuJoCo stores this many numbers per equality constraint in eq_data (mjNEQDATA). */
+const EQUALITY_DATA_SIZE = 11;
 /** Hand pointing straight down; gripper centre this far beyond the hand body's origin. */
 const GRIPPER_CENTRE_OFFSET_M = 0.103;
 const ARM_JOINT_COUNT = 7;
@@ -27,12 +31,14 @@ const ARM_JOINT_COUNT = 7;
 const ARM_REST_POSTURE = [0, -0.3, 0, -2.2, 0, 1.9, 0.785];
 
 export interface OperatorCommand {
-  /** Cart origin target along the path (metres). */
-  cartTargetX: number;
-  /** Gripper centre target relative to the cart origin (metres, world axes). */
+  /** Cart base target in the world: x along the path, y across it (metres), heading (radians). */
+  baseTarget: [number, number, number];
+  /** Gripper centre target in the cart's own frame (metres: forward, left, up from the cart origin). */
   handTargetInCart: [number, number, number];
-  /** Rotation of the gripper about the vertical axis (radians). */
+  /** Wrist rotation about the vertical axis, relative to the cart's heading (radians). */
   gripperYaw: number;
+  /** Wrist tilt: 0 = gripper pointing straight down, π/2 = pointing out horizontally (radians). */
+  gripperPitch: number;
   gripperOpen: boolean;
 }
 
@@ -41,6 +47,8 @@ export const HAND_TARGET_SPEED_M_PER_S = 0.4;
 
 export type SimulationEvent =
   | { kind: "detach"; time: number; tomato: number; forceN: number }
+  | { kind: "grasp"; time: number; tomato: number }
+  | { kind: "release"; time: number; tomato: number }
   | { kind: "harvested"; time: number; tomato: number; ripeness: string }
   | { kind: "dropped"; time: number; tomato: number };
 
@@ -72,10 +80,14 @@ export class TomatoHarvestSimulation {
   private readonly armActuatorIds: number[];
   private readonly armJointRanges: Array<[number, number]>;
   private readonly gripperActuatorId: number;
-  private readonly cartActuatorId: number;
-  private readonly cartQposAddress: number;
+  private readonly cartActuatorIds: number[];
+  private readonly cartQposAddresses: number[];
   private readonly handBodyId: number;
   private readonly weldIds: number[];
+  private readonly gripIds: number[];
+  /** Tomato currently held by the grasp assist, if any. */
+  private heldTomato: number | null = null;
+  private previousGripperOpen = true;
   private readonly tomatoBodyIds: number[];
   private readonly tomatoState: Array<"attached" | "free" | "harvested">;
   private readonly jacobianPosition: { GetView(): Float64Array; delete(): void };
@@ -101,17 +113,18 @@ export class TomatoHarvestSimulation {
     this.armJointRanges = jointIds.map((jointId) => [model.jnt_range[jointId * 2], model.jnt_range[jointId * 2 + 1]]);
     this.armActuatorIds = Array.from({ length: ARM_JOINT_COUNT }, (_, index) => id(obj.mjOBJ_ACTUATOR.value, `${ARM_PREFIX}actuator${index + 1}`));
     this.gripperActuatorId = id(obj.mjOBJ_ACTUATOR.value, `${ARM_PREFIX}actuator8`);
-    this.cartActuatorId = id(obj.mjOBJ_ACTUATOR.value, CART_ACTUATOR);
-    this.cartQposAddress = model.jnt_qposadr[id(obj.mjOBJ_JOINT.value, CART_JOINT)];
+    this.cartActuatorIds = CART_ACTUATORS.map((name) => id(obj.mjOBJ_ACTUATOR.value, name));
+    this.cartQposAddresses = CART_JOINTS.map((name) => model.jnt_qposadr[id(obj.mjOBJ_JOINT.value, name)]);
     this.handBodyId = id(obj.mjOBJ_BODY.value, `${ARM_PREFIX}hand`);
     this.weldIds = layout.tomatoes.map((tomato) => id(obj.mjOBJ_EQUALITY.value, tomatoWeldName(tomato.index)));
+    this.gripIds = layout.tomatoes.map((tomato) => id(obj.mjOBJ_EQUALITY.value, tomatoGripName(tomato.index)));
     this.tomatoBodyIds = layout.tomatoes.map((tomato) => id(obj.mjOBJ_BODY.value, tomato.name));
     this.tomatoState = layout.tomatoes.map(() => "attached");
     this.jacobianPosition = new mujoco.DoubleBuffer(3 * model.nv);
     this.jacobianRotation = new mujoco.DoubleBuffer(3 * model.nv);
 
     const startX = layout.cart.stationsX[0] ?? 0;
-    this.command = { cartTargetX: startX, handTargetInCart: [0.55, 0, 1.15], gripperYaw: 0, gripperOpen: true };
+    this.command = { baseTarget: [startX, 0, 0], handTargetInCart: [0.55, 0, 1.15], gripperYaw: 0, gripperPitch: 0, gripperOpen: true };
     this.reset();
   }
 
@@ -136,23 +149,49 @@ export class TomatoHarvestSimulation {
     this.mujoco.mj_resetData(this.model, this.data);
     const qpos = this.data.qpos;
     const startX = this.layout.cart.stationsX[0] ?? 0;
-    qpos[this.cartQposAddress] = startX;
+    this.cartQposAddresses.forEach((address, index) => (qpos[address] = index === 0 ? startX : 0));
     ARM_REST_POSTURE.forEach((angle, index) => (qpos[this.armQposAddresses[index]!] = angle));
-    this.data.ctrl[this.cartActuatorId] = startX;
+    this.cartActuatorIds.forEach((actuator, index) => (this.data.ctrl[actuator] = index === 0 ? startX : 0));
     ARM_REST_POSTURE.forEach((angle, index) => (this.data.ctrl[this.armActuatorIds[index]!] = angle));
     this.data.ctrl[this.gripperActuatorId] = 255;
-    this.writeEqualityActive(new Array(this.model.neq).fill(1));
+    const initiallyActive = new Array(this.model.neq).fill(1);
+    for (const gripId of this.gripIds) initiallyActive[gripId] = 0;
+    this.writeEqualityActive(initiallyActive);
+    this.heldTomato = null;
+    this.previousGripperOpen = true;
     this.tomatoState.fill("attached");
     this.events.length = 0;
     this.controlStep = 0;
     this.mujoco.mj_forward(this.model, this.data);
     const hand = this.gripperCentreWorld();
-    this.command = { cartTargetX: startX, handTargetInCart: [hand[0] - startX, hand[1], hand[2]], gripperYaw: 0, gripperOpen: true };
+    this.command = { baseTarget: [startX, 0, 0], handTargetInCart: [hand[0] - startX, hand[1], hand[2]], gripperYaw: 0, gripperPitch: 0, gripperOpen: true };
     this.handGoalInCart = null;
   }
 
   cartX(): number {
-    return this.data.qpos[this.cartQposAddress];
+    return this.data.qpos[this.cartQposAddresses[0]!];
+  }
+
+  /** Current cart pose in the world: [x, y, heading]. */
+  cartPose(): [number, number, number] {
+    const qpos = this.data.qpos;
+    return [qpos[this.cartQposAddresses[0]!], qpos[this.cartQposAddresses[1]!], qpos[this.cartQposAddresses[2]!]];
+  }
+
+  /** Convert a point in the cart's frame to the world, for a given cart pose. */
+  static cartToWorld(pose: readonly number[], local: readonly number[]): [number, number, number] {
+    const cos = Math.cos(pose[2]!);
+    const sin = Math.sin(pose[2]!);
+    return [pose[0]! + cos * local[0]! - sin * local[1]!, pose[1]! + sin * local[0]! + cos * local[1]!, local[2]!];
+  }
+
+  /** Convert a world point to the cart's frame, for a given cart pose. */
+  static worldToCart(pose: readonly number[], world: readonly number[]): [number, number, number] {
+    const cos = Math.cos(pose[2]!);
+    const sin = Math.sin(pose[2]!);
+    const dx = world[0]! - pose[0]!;
+    const dy = world[1]! - pose[1]!;
+    return [cos * dx + sin * dy, -sin * dx + cos * dy, world[2]!];
   }
 
   tomatoStatus(index: number): "attached" | "free" | "harvested" {
@@ -173,8 +212,7 @@ export class TomatoHarvestSimulation {
   }
 
   handTargetWorld(): [number, number, number] {
-    const target = this.command.handTargetInCart;
-    return [target[0] + this.cartX(), target[1], target[2]];
+    return TomatoHarvestSimulation.cartToWorld(this.cartPose(), this.command.handTargetInCart);
   }
 
   /** Joint targets sent to the arm, gripper, and cart actuators (recorded as the low-level action). */
@@ -203,8 +241,9 @@ export class TomatoHarvestSimulation {
       this.command.handTargetInCart = [target[0] + delta[0]! * fraction, target[1] + delta[1]! * fraction, target[2] + delta[2]! * fraction];
       if (fraction === 1) this.handGoalInCart = null;
     }
+    this.updateGraspAssist();
     const ctrl = this.data.ctrl;
-    ctrl[this.cartActuatorId] = this.command.cartTargetX;
+    this.cartActuatorIds.forEach((actuator, index) => (ctrl[actuator] = this.command.baseTarget[index]!));
     ctrl[this.gripperActuatorId] = this.command.gripperOpen ? 255 : 0;
     const jointTargets = this.solveArmIk();
     jointTargets.forEach((angle, index) => (ctrl[this.armActuatorIds[index]!] = angle));
@@ -229,10 +268,13 @@ export class TomatoHarvestSimulation {
     const maximumStepM = 0.04;
     if (positionErrorNorm > maximumStepM) for (let axis = 0; axis < 3; axis += 1) positionError[axis]! *= maximumStepM / positionErrorNorm;
 
-    // Desired hand axes: z down; x along the yaw direction; y = z × x.
-    const yaw = this.command.gripperYaw;
-    const desiredX = [Math.cos(yaw), Math.sin(yaw), 0];
-    const desiredZ = [0, 0, -1];
+    // Desired hand axes: the gripper (hand z) points down, tilted by the pitch towards the wrist's
+    // yaw direction (world yaw = cart heading + wrist yaw); hand x is perpendicular; y = z × x.
+    const yaw = this.command.gripperYaw + this.cartPose()[2];
+    const pitch = this.command.gripperPitch;
+    const [cosPitch, sinPitch] = [Math.cos(pitch), Math.sin(pitch)];
+    const desiredX = [cosPitch * Math.cos(yaw), cosPitch * Math.sin(yaw), sinPitch];
+    const desiredZ = [sinPitch * Math.cos(yaw), sinPitch * Math.sin(yaw), -cosPitch];
     const desiredY = [desiredZ[1]! * desiredX[2]! - desiredZ[2]! * desiredX[1]!, desiredZ[2]! * desiredX[0]! - desiredZ[0]! * desiredX[2]!, desiredZ[0]! * desiredX[1]! - desiredZ[1]! * desiredX[0]!];
     const matrix = data.xmat;
     const offset = this.handBodyId * 9;
@@ -272,6 +314,53 @@ export class TomatoHarvestSimulation {
     });
   }
 
+  /**
+   * Grasp assist. When the gripper closes, the nearest tomato within reach of the fingertips is
+   * held in the hand where it is (a hand–tomato point constraint anchored at its current offset).
+   * Opening the gripper releases it. The stem still has to be pulled free by force.
+   */
+  private updateGraspAssist(): void {
+    const open = this.command.gripperOpen;
+    if (open && this.heldTomato !== null) {
+      this.setEqualityActive(this.gripIds[this.heldTomato]!, false);
+      this.events.push({ kind: "release", time: this.data.time, tomato: this.heldTomato });
+      this.heldTomato = null;
+    }
+    if (!open && this.previousGripperOpen && this.heldTomato === null) {
+      const gripper = this.gripperCentreWorld();
+      const positions = this.data.xpos;
+      let nearest: number | null = null;
+      let nearestDistance = GRASP_ASSIST_RADIUS_M;
+      this.tomatoBodyIds.forEach((bodyId, index) => {
+        if (this.tomatoState[index] === "harvested") return;
+        const distance = Math.hypot(positions[bodyId * 3] - gripper[0], positions[bodyId * 3 + 1] - gripper[1], positions[bodyId * 3 + 2] - gripper[2]);
+        if (distance < nearestDistance) {
+          nearest = index;
+          nearestDistance = distance;
+        }
+      });
+      if (nearest !== null) {
+        const index: number = nearest;
+        const bodyId = this.tomatoBodyIds[index]!;
+        const hand = this.handBodyId;
+        const rotation = this.data.xmat;
+        const offset = [0, 1, 2].map((axis) => positions[bodyId * 3 + axis] - positions[hand * 3 + axis]);
+        // Tomato centre in the hand's frame: Rᵀ (p_tomato − p_hand).
+        const local = [0, 1, 2].map((column) => rotation[hand * 9 + column] * offset[0]! + rotation[hand * 9 + 3 + column] * offset[1]! + rotation[hand * 9 + 6 + column] * offset[2]!);
+        const equalityData = this.model.eq_data;
+        const base = this.gripIds[index]! * EQUALITY_DATA_SIZE;
+        for (let axis = 0; axis < 3; axis += 1) {
+          equalityData[base + axis] = 0;
+          equalityData[base + 3 + axis] = local[axis]!;
+        }
+        this.setEqualityActive(this.gripIds[index]!, true);
+        this.heldTomato = index;
+        this.events.push({ kind: "grasp", time: this.data.time, tomato: index });
+      }
+    }
+    this.previousGripperOpen = open;
+  }
+
   /** Switch off a tomato's stem weld once the pull on it passes the threshold. */
   private checkStemWelds(): void {
     const { data, model } = this;
@@ -305,13 +394,14 @@ export class TomatoHarvestSimulation {
   /** A free tomato resting inside the basket counts as harvested; one on the ground as dropped. */
   private updateHarvest(): void {
     const basket = this.layout.cart.basket;
-    const cartX = this.cartX();
+    const pose = this.cartPose();
     const positions = this.data.xpos;
     this.tomatoBodyIds.forEach((bodyId, index) => {
       if (this.tomatoState[index] !== "free") return;
-      const x = positions[bodyId * 3] - cartX - basket.centre[0];
-      const y = positions[bodyId * 3 + 1];
-      const z = positions[bodyId * 3 + 2];
+      const local = TomatoHarvestSimulation.worldToCart(pose, [positions[bodyId * 3], positions[bodyId * 3 + 1], positions[bodyId * 3 + 2]]);
+      const x = local[0] - basket.centre[0];
+      const y = local[1] - basket.centre[1];
+      const z = local[2];
       const inBasket = Math.abs(x) < basket.innerLengthM / 2 && Math.abs(y) < basket.innerWidthM / 2 && z < basket.centre[2] + basket.heightM && z > basket.centre[2];
       if (inBasket) {
         this.tomatoState[index] = "harvested";

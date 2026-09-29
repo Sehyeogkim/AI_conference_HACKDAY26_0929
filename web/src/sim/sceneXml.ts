@@ -6,14 +6,20 @@
 import type { FarmLayout } from "../farm/farmLayout.ts";
 
 export const PANDA_MODEL_FILE = "panda.xml";
-export const CART_JOINT = "cart_x";
-export const CART_ACTUATOR = "cart_drive";
+/** The cart base moves on three joints (forward, sideways, turn), each with a position servo. */
+export const CART_JOINTS = ["cart_x", "cart_y", "cart_yaw"] as const;
+export const CART_ACTUATORS = ["cart_drive_x", "cart_drive_y", "cart_turn"] as const;
 export const ARM_PREFIX = "arm0/";
 
 const format = (values: readonly number[]) => values.map((value) => Number(value.toFixed(5))).join(" ");
 
 export function tomatoWeldName(index: number): string {
   return `stem_${index}`;
+}
+
+/** Grasp-assist constraint holding a tomato in the hand (off until the gripper closes on it). */
+export function tomatoGripName(index: number): string {
+  return `grip_${index}`;
 }
 
 export function buildSceneXml(layout: FarmLayout): string {
@@ -59,7 +65,13 @@ export function buildSceneXml(layout: FarmLayout): string {
     )
     .join("\n");
 
-  const welds = layout.tomatoes.map((tomato) => `    <connect name="${tomatoWeldName(tomato.index)}" body1="${tomato.name}" anchor="0 0 0" solref="0.02 1"/>`).join("\n");
+  const welds = layout.tomatoes
+    .map(
+      (tomato) =>
+        `    <connect name="${tomatoWeldName(tomato.index)}" body1="${tomato.name}" anchor="0 0 0" solref="0.02 1"/>
+    <connect name="${tomatoGripName(tomato.index)}" body1="${tomato.name}" body2="${ARM_PREFIX}hand" anchor="0 0 0" solref="0.01 1" active="false"/>`,
+    )
+    .join("\n");
 
   return `<mujoco model="wefarm_tomato_path">
   <compiler angle="radian" meshdir="." autolimits="true"/>
@@ -71,7 +83,9 @@ export function buildSceneXml(layout: FarmLayout): string {
   <worldbody>
     <geom name="ground" type="plane" size="0 0 0.05" rgba="0.45 0.36 0.26 1"/>
     <body name="cart" pos="0 0 0">
-      <joint name="${CART_JOINT}" type="slide" axis="1 0 0" damping="400" armature="5"/>
+      <joint name="cart_x" type="slide" axis="1 0 0" damping="400" armature="5"/>
+      <joint name="cart_y" type="slide" axis="0 1 0" damping="400" armature="5"/>
+      <joint name="cart_yaw" type="hinge" axis="0 0 1" damping="200" armature="5"/>
       <geom name="cart_deck" type="box" size="${format([cart.lengthM / 2, cart.widthM / 2, cart.deckThicknessM / 2])}" pos="${format([0, 0, cart.deckHeightM])}" rgba="0.16 0.42 0.26 1" mass="60"/>
       <geom name="cart_frame" type="box" size="${format([cart.lengthM / 2 - 0.05, cart.widthM / 2 - 0.04, 0.1])}" pos="${format([0, 0, cart.deckHeightM - 0.13])}" rgba="0.2 0.2 0.22 1" mass="20" contype="0" conaffinity="0"/>
 ${wheels}
@@ -88,7 +102,9 @@ ${tomatoBodies}
 ${welds}
   </equality>
   <actuator>
-    <position name="${CART_ACTUATOR}" joint="${CART_JOINT}" kp="4000" kv="1500" ctrlrange="-5 50" forcerange="-3000 3000"/>
+    <position name="cart_drive_x" joint="cart_x" kp="4000" kv="1500" ctrlrange="-5 50" forcerange="-3000 3000"/>
+    <position name="cart_drive_y" joint="cart_y" kp="4000" kv="1500" ctrlrange="-2 2" forcerange="-3000 3000"/>
+    <position name="cart_turn" joint="cart_yaw" kp="3000" kv="900" ctrlrange="-3.2 3.2" forcerange="-2000 2000"/>
   </actuator>
 </mujoco>
 `;

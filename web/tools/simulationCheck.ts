@@ -30,15 +30,15 @@ const runFor = (seconds: number, label: string) => {
   const error = Math.hypot(hand[0] - target[0], hand[1] - target[1], hand[2] - target[2]);
   console.log(label.padEnd(16), "t", simulation.time.toFixed(2), "cart", simulation.cartX().toFixed(3), "hand", hand.map((v) => v.toFixed(3)).join(","), "err", error.toFixed(3), "tomato", simulation.tomatoStatus(tomato.index));
 };
-const setHandWorld = (x: number, y: number, z: number) => (simulation.handGoalInCart = [x - simulation.command.cartTargetX, y, z]);
+const setHandWorld = (x: number, y: number, z: number) => (simulation.handGoalInCart = [x - simulation.command.baseTarget[0], y, z]);
 
 runFor(1, "settle");
-simulation.command.cartTargetX = station;
+simulation.command.baseTarget = [station, 0, 0];
 runFor(2, "drive");
 setHandWorld(tomato.position[0], tomato.position[1] - 0.08, tomato.position[2] + 0.12);
 simulation.command.gripperYaw = 0;
 runFor(3, "above-front");
-setHandWorld(tomato.position[0], tomato.position[1], tomato.position[2] + 0.0);
+setHandWorld(tomato.position[0] + Number(process.env.GRASP_DX ?? 0), tomato.position[1] + Number(process.env.GRASP_DY ?? 0), tomato.position[2] + Number(process.env.GRASP_DZ ?? 0));
 runFor(2, "lower");
 simulation.command.gripperOpen = false;
 runFor(1, "close");

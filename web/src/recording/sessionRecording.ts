@@ -71,9 +71,10 @@ export class SessionRecorder {
       i: step.i,
       t: round(step.t, 4),
       command: {
-        cartTargetX: round(step.command.cartTargetX),
+        baseTarget: step.command.baseTarget.map((value) => round(value)) as [number, number, number],
         handTargetInCart: step.command.handTargetInCart.map((value) => round(value)) as [number, number, number],
         gripperYaw: round(step.command.gripperYaw),
+        gripperPitch: round(step.command.gripperPitch),
         gripperOpen: step.command.gripperOpen,
       },
       ctrl: step.ctrl.map((value) => round(value)),

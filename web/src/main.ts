@@ -193,6 +193,8 @@ async function main(): Promise<void> {
   let recorder: SessionRecorder | null = null;
   let replay: { recording: Recording; frame: number; playing: boolean; accumulator: number } | null = null;
   const teleop = new KeyboardTeleop(simulation, layout);
+  // Debug handle for the browser console (inspect the simulation, script a pick).
+  Object.assign(window, { wefarm: { simulation, layout, teleop } });
 
   const newRecordingHeader = () => ({
     type: "header" as const,
@@ -260,7 +262,7 @@ async function main(): Promise<void> {
   hud.scenery.disabled = !splatWorld;
   window.addEventListener("keydown", (event) => {
     if ((event.target as HTMLElement).tagName === "TEXTAREA") return;
-    if (event.code === "KeyC") cycleCamera();
+    if (event.code === "KeyV") cycleCamera();
     if (event.code === "KeyP") toggleScenery();
   });
 
@@ -275,8 +277,8 @@ async function main(): Promise<void> {
     hud.replaySlider.value = String(replay.frame);
     const eventsSoFar = replay.recording.events.filter((event) => event.time <= step.t + 1e-6);
     updateHud(eventsSoFar, step.t, step.command.gripperOpen);
-    const target = step.command.handTargetInCart;
-    targetMarker.position.set(target[0] + step.qpos[0]!, target[1], target[2]);
+    const target = TomatoHarvestSimulation.cartToWorld(step.qpos.slice(0, 3), step.command.handTargetInCart);
+    targetMarker.position.set(target[0], target[1], target[2]);
   };
   hud.load.addEventListener("change", async () => {
     const file = hud.load.files?.[0];
@@ -382,16 +384,16 @@ async function main(): Promise<void> {
     wristCamera.matrix.copy(zUpToScene).multiply(handMatrix).multiply(cameraInHand);
     wristCamera.matrixWorldNeedsUpdate = true;
     // Head camera: above the cart's rear, looking forward and down at the work area.
-    const cartX = simulation.cartX();
-    headCamera.position.copy(toScene(cartX - 0.55, 0, 1.75));
-    headCamera.lookAt(toScene(cartX + 0.6, 0, 0.75));
+    const pose = simulation.cartPose();
+    headCamera.position.copy(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [-0.55, 0, 1.75])));
+    headCamera.lookAt(toScene(...TomatoHarvestSimulation.cartToWorld(pose, [0.6, 0, 0.75])));
   };
 
   let lastTime = performance.now();
   let accumulator = 0;
-  let lastCartX = simulation.cartX();
+  let lastCartPose = simulation.cartPose();
   const controlPeriod = 1 / CONTROL_RATE_HZ;
-  setStatus(splatWorld ? "Ready. Click a red tomato, or drive the hand with W A S D R F." : "Ready (no photoreal world found).");
+  setStatus(splatWorld ? "Ready. Click a red tomato, or move the arm with W A S D R F." : "Ready (no photoreal world found).");
 
   renderer.setAnimationLoop(() => {
     const now = performance.now();
@@ -406,7 +408,7 @@ async function main(): Promise<void> {
         if (recorder) {
           const snapshot = simulation.snapshot();
           recorder.addStep(
-            { i: simulation.controlStep - 1, t: simulation.time, command: { ...simulation.command, handTargetInCart: [...simulation.command.handTargetInCart] }, ctrl: simulation.actuatorTargets(), qpos: snapshot.qpos, attached: snapshot.attached },
+            { i: simulation.controlStep - 1, t: simulation.time, command: { ...simulation.command, baseTarget: [...simulation.command.baseTarget], handTargetInCart: [...simulation.command.handTargetInCart] }, ctrl: simulation.actuatorTargets(), qpos: snapshot.qpos, attached: snapshot.attached },
             simulation.events,
             simulation.controlStep % CONTROL_RATE_HZ === 0 ? () => simulation.fullState() : null,
           );
@@ -431,11 +433,12 @@ async function main(): Promise<void> {
     hud.replayPlay.textContent = replay?.playing ? "❚❚ Pause" : "▶ Play";
     meshes.update(simulation.data);
     // The orbit camera follows the cart as it drives.
-    const cartX = simulation.cartX();
-    const shift = toScene(cartX - lastCartX, 0, 0);
+    const cartPose = simulation.cartPose();
+    const cartX = cartPose[0];
+    const shift = toScene(cartPose[0] - lastCartPose[0], cartPose[1] - lastCartPose[1], 0);
     orbitCamera.position.add(shift);
     controls.target.add(shift);
-    lastCartX = cartX;
+    lastCartPose = cartPose;
     sun.position.copy(toScene(cartX + 2, -3, 6));
     sun.target.position.copy(toScene(cartX + 0.5, 0, 0.5));
     placeCameras();
