@@ -182,7 +182,7 @@ async function main(): Promise<void> {
    * cart, fruit): the splat renderer keeps one sort order for one camera, and drawing the splat
    * from a second camera every frame makes the main view flicker.
    */
-  let wristInsetVisible = false;
+  let wristInsetVisible = true;
   const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
@@ -610,12 +610,12 @@ async function main(): Promise<void> {
       renderer.setScissor(insetX, insetY, insetWidth, insetHeight);
       // The hand-target ring sits right in front of the wrist camera; leave it out of this view.
       targetMarker.visible = false;
-      spark.visible = false;
-      const mainBackground = scene.background;
-      scene.background = new THREE.Color(0x6f7f6a);
+      // Draw the splat in the inset with the sort order made for the main camera: with autoUpdate
+      // off, this render does not re-sort for the wrist camera, so the main view never gets an
+      // order meant for another camera (which is what made it flicker).
+      spark.autoUpdate = false;
       renderer.render(scene, wristCamera);
-      scene.background = mainBackground;
-      spark.visible = true;
+      spark.autoUpdate = true;
       targetMarker.visible = true;
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, size.x, size.y);
