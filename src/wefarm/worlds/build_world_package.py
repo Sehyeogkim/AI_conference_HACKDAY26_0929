@@ -338,6 +338,11 @@ def run(arguments: argparse.Namespace) -> int:
     shutil.copyfile(marble_directory / "collider_mesh.glb", package_directory / "collider.glb")
     if (marble_directory / "panorama.png").exists():
         shutil.copyfile(marble_directory / "panorama.png", package_directory / "pano.png")
+        # A small equirectangular JPEG for image-based lighting of meshes in the browser.
+        (package_directory / "lighting").mkdir(parents=True, exist_ok=True)
+        with Image.open(package_directory / "pano.png") as panorama:
+            panorama.convert("RGB").resize((1024, 512), Image.LANCZOS).save(
+                package_directory / "lighting" / "pano-1024.jpg", "JPEG", quality=90)
 
     height_map_image(collider_world, package_directory / "review" / "collider-height-top-down.png")
     camera_view_image(splat_positions_raw, spz.colours_rgb(), splat_opacities,
@@ -350,14 +355,16 @@ def run(arguments: argparse.Namespace) -> int:
         "marble_world_id": arguments.marble_world_id,
         "model": marble_world.get("model"),
         "input": {
-            "description": "Single photo looking along a dirt path between cherry-tomato plants, Sitia, Crete",
+            "description": source.get("description",
+                                      "Single photo looking along a dirt path between cherry-tomato plants, Sitia, Crete"),
             "page_url": source["page_url"],
             "author": source["author"],
             "license": source["license"],
             "license_url": source["license_url"],
             "checked_on": source["checked_on"],
             "text_prompt_hint": arguments.text_prompt_note,
-            "world_license_note": "Derived from a CC BY-SA 4.0 photo: share derived worlds under CC BY-SA 4.0 with credit.",
+            "world_license_note": source.get("world_license_note",
+                                             "Derived from a CC BY-SA 4.0 photo: share derived worlds under CC BY-SA 4.0 with credit."),
         },
         "frames": {
             "raw": "Marble export frame (OpenCV camera frame of the capture camera): +x right, +y down, +z forward; raw units; camera at the origin",
@@ -387,7 +394,8 @@ def run(arguments: argparse.Namespace) -> int:
         },
         "files": {"splats": splat_files, "collider": "collider.glb",
                   "pano": "pano.png" if (package_directory / "pano.png").exists() else None,
-                  "review": ["review/collider-height-top-down.png", "review/splats-from-capture-camera.png"]},
+                  "review": ["review/collider-height-top-down.png", "review/splats-from-capture-camera.png"],
+                  "lighting_pano": "lighting/pano-1024.jpg" if (package_directory / "lighting" / "pano-1024.jpg").exists() else None},
         "collider_file_frame": collider_frame,
         "sanity_checks": sanity,
     }
