@@ -24,6 +24,8 @@ const SIMULATOR_VERSION = "wefarm-web 0.2.0";
  * next to the physics on an Apple-silicon laptop in Chrome; `?splat=500k` suits weaker machines.
  */
 const SHARP_SPLAT_LEVEL = "full";
+/** Render layer of the splat renderer; cameras that should show the photo world enable it. */
+const SPLAT_RENDER_LAYER = 1;
 /** Background of the wrist-camera inset, which draws meshes only (a muted soil tone). */
 const WRIST_INSET_BACKGROUND = new THREE.Color(0x6b5a45);
 const TASK_GOAL = "Drive along the tomato path and pick the ripe (red) tomatoes into the basket. Leave green ones on the plant.";
@@ -142,6 +144,9 @@ async function main(): Promise<void> {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xcfd8dc);
   const spark = new SparkRenderer({ renderer });
+  // The splat renderer lives on its own render layer, so a camera can leave it out simply by not
+  // enabling that layer (used by the wrist inset), without hiding and re-showing it every frame.
+  spark.layers.set(SPLAT_RENDER_LAYER);
   scene.add(spark);
   // World content is z-up (MuJoCo, ROS, USD); three.js is y-up. One rotated root converts.
   const worldRoot = new THREE.Group();
@@ -179,13 +184,14 @@ async function main(): Promise<void> {
   const orbitCamera = new THREE.PerspectiveCamera(60, 1, 0.02, 200);
   const wristCamera = new THREE.PerspectiveCamera(75, 1, 0.01, 100);
   const headCamera = new THREE.PerspectiveCamera(70, 1, 0.02, 200);
+  for (const camera of [orbitCamera, wristCamera, headCamera]) camera.layers.enable(SPLAT_RENDER_LAYER);
   const cameraModes = ["orbit", "head", "wrist"] as const;
   /**
    * Small picture-in-picture view from the wrist camera (key M). It draws only the meshes (robot,
    * cart, fruit): the splat renderer keeps one sort order for one camera, and drawing the splat
    * from a second camera every frame makes the main view flicker.
    */
-  let wristInsetVisible = true;
+  let wristInsetVisible = false;
   const wristInsetLabel = document.querySelector<HTMLDivElement>("#wrist-inset-label")!;
   let cameraMode: (typeof cameraModes)[number] = "orbit";
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
@@ -618,12 +624,16 @@ async function main(): Promise<void> {
       // The splat renderer keeps one sort order for one camera; drawing the splat from a second
       // camera made the main view flicker on some machines (even with re-sorting switched off for
       // the inset). So the inset draws only the meshes: robot, cart, crate, and fruit.
-      spark.visible = false;
+      // Leave the splat layer out of this pass (the scene itself is not modified), and reuse the
+      // shadow map from the main pass instead of recomputing it.
+      wristCamera.layers.disable(SPLAT_RENDER_LAYER);
+      renderer.shadowMap.autoUpdate = false;
       const mainBackground = scene.background;
       scene.background = WRIST_INSET_BACKGROUND;
       renderer.render(scene, wristCamera);
       scene.background = mainBackground;
-      spark.visible = true;
+      renderer.shadowMap.autoUpdate = true;
+      wristCamera.layers.enable(SPLAT_RENDER_LAYER);
       targetMarker.visible = true;
       renderer.setScissorTest(false);
       renderer.setViewport(0, 0, size.x, size.y);
