@@ -399,8 +399,9 @@ def run(arguments: argparse.Namespace) -> int:
         "collider_file_frame": collider_frame,
         "sanity_checks": sanity,
     }
-    if method == "marble_metric_scale_factor":
+    if method == "marble_metric_scale_factor" and disagreement > 0.15:
         # Keep the camera-height alternative ready, so a person can switch after checking a reference object.
+        # Written only when the two scales disagree by more than 15%, because the browser page prefers it.
         alternative_matrix = raw_to_world_matrix(rotation, camera_height_scale, ground["camera_height_raw"], up_normal)
         alternative_path = measure_path(apply(alternative_matrix, collider_samples_raw))
         world_json["scale_alternative_camera_height"] = {
