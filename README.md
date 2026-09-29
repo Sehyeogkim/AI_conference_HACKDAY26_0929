@@ -16,7 +16,7 @@ Needs Docker (Colima on macOS).
 docker compose up -d web          # Vite dev server on http://127.0.0.1:5180
 ```
 
-Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (a 1.4 MB splat first, so the scene appears quickly; a sharper 28 MB one then swaps in while you play). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full` (pin one level; use `500k` on weaker machines), `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground).
+Open <http://127.0.0.1:5180>. A loading screen shows each step with live progress. The page looks for the world package (the photoreal greenhouse) in a local copy at `data/worlds/crete-path/v2` first; if there is none, it downloads the public copy from `https://wefarm-aiconf-2026-assets.s3.us-west-2.amazonaws.com/worlds/crete-path/v2/` (a 1.4 MB splat first, so the scene appears quickly; a sharper 28 MB one then swaps in while you play). A fresh checkout therefore needs no manual download. URL options: `?seed=7` (farm layout), `?splat=100k|500k|full` (pin one level; use `500k` on weaker machines), `?world=<id>/<version>` (e.g. `crete-path/v2`), `?world=<url>` (an exact package folder), or `?world=none` (plain ground); `?freecam` lifts the orbit limit (by default the orbit camera stays within 65° of looking down the path, where a single-photo world looks right).
 
 ## Controls
 

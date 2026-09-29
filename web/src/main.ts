@@ -185,6 +185,13 @@ async function main(): Promise<void> {
   const controls = new OrbitControls(orbitCamera, renderer.domElement);
   controls.enableDamping = true;
   controls.maxPolarAngle = Math.PI * 0.495;
+  // A world made from one photo only looks right from roughly the photo's direction (looking down
+  // the path). Keep the orbit within 65° of that unless ?freecam is given. In three.js terms,
+  // looking down the path (+x world, -z scene) from behind is an azimuth of -90°.
+  if (!params.has("freecam")) {
+    controls.minAzimuthAngle = THREE.MathUtils.degToRad(-90 - 65);
+    controls.maxAzimuthAngle = THREE.MathUtils.degToRad(-90 + 65);
+  }
   // Start behind and above the cart, looking down the path (+x world = -z three).
   const toScene = (x: number, y: number, z: number) => new THREE.Vector3(x, z, -y);
   orbitCamera.position.copy(toScene(-1.4, -0.9, 1.9));
