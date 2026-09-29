@@ -273,7 +273,9 @@ class WeFarmMarketplace:
             "order_id": game_id, "title": str(spec.get("title") or "Harvest ripe tomatoes")[:120],
             "task": "tomato-path-harvest", "task_steps": ["Drive through the tomato rows", "Pick ripe tomatoes", "Place them in the basket"],
             "robot": "Franka Panda on a movable cart", "scene": "MuJoCo · procedural tomato farm",
-            "scene_image_url": None, "requester": request["requester_id"],
+            "scene_image_url": f"/api/marketplace/{game_id}/image", "requester": request["requester_id"],
+            "world_preview_url": "/static/demo/crete-world-render.jpg",
+            "world": {"world_id": "crete-path", "version": 2, "model": "World Labs Marble 1.1"},
             "status": request["status"], "reward_per_episode": REWARD, "episode_price": PRICE,
             "episodes_wanted": int(spec.get("requested_episodes") or 1), "episodes_submitted": len(episodes),
             "episodes_passed": len(passed), "episodes_available": sum(not e["purchased"] for e in passed),
@@ -293,6 +295,58 @@ class WeFarmMarketplace:
                     "request": {"text": request["request"], "image_name": request["image_name"],
                                 "orchestrator_source": request["orchestrator_source"],
                                 "image_analyzed": request["image_analyzed"]}}
+
+    def image(self, game_id: str) -> tuple[Path, str] | None:
+        """The requester's uploaded farm image and its media type."""
+        with self.lock:
+            request = self._request(game_id)
+        path = Path(request["image_path"])
+        return (path, request["image_mime"]) if path.is_file() else None
+
+    def replay_path(self, game_id: str, episode_id: str) -> Path | None:
+        """Any stored episode of this game, for watching (downloads stay purchase-gated)."""
+        with self.lock:
+            record = next((e for e in self.episodes if e["game_id"] == game_id and e["episode_id"] == episode_id), None)
+        if record is None:
+            return None
+        path = self.root / "episodes" / game_id / record["file"]
+        return path if path.is_file() else None
+
+    # Free play: recordings made in the simulator without a marketplace game. They are stored on
+    # the server (not downloaded in the browser) so they can be replayed later; they earn nothing.
+    def _free_play_folder(self) -> Path:
+        folder = self.root / "free-play"
+        folder.mkdir(parents=True, exist_ok=True)
+        return folder
+
+    def save_free_play(self, session_id: str, blob: bytes) -> dict:
+        if not isinstance(session_id, str) or not re.fullmatch(r"[0-9a-f-]{36}", session_id):
+            raise ValueError("invalid session ID")
+        lines = _recording_lines(blob)
+        header, footer = lines[0], lines[-1]
+        if header.get("type") != "header" or header.get("session_id") != session_id:
+            raise ValueError("recording header does not match the session ID")
+        folder = self._free_play_folder()
+        (folder / f"{session_id}.jsonl.gz").write_bytes(blob)
+        summary = {"session_id": session_id, "saved_at": time.time(), "started_at": header.get("started_at"),
+                   "steps": footer.get("steps"), "duration_s": footer.get("duration_s"),
+                   "harvested_ripe": footer.get("harvested_ripe"), "dropped": footer.get("dropped"),
+                   "operator_device": (header.get("operator") or {}).get("device")}
+        _save_json(folder / f"{session_id}.json", summary)
+        return summary
+
+    def free_play_path(self, session_id: str) -> Path | None:
+        path = self._free_play_folder() / f"{session_id}.jsonl.gz"
+        return path if re.fullmatch(r"[0-9a-f-]{36}", session_id) and path.is_file() else None
+
+    def free_play_sessions(self) -> list[dict]:
+        items = []
+        for path in self._free_play_folder().glob("*.json"):
+            try:
+                items.append(json.loads(path.read_text()))
+            except ValueError:
+                continue
+        return sorted(items, key=lambda item: -item.get("saved_at", 0))
 
     def player_episodes(self, player_id: str) -> list[dict]:
         with self.lock:

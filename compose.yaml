@@ -40,3 +40,23 @@ services:
     ports:
       - "127.0.0.1:${WEB_DEV_PORT:-5180}:5173"
     command: ["npm", "run", "dev"]
+
+  # Marketplace web app (requester, player, QA, Data Miner) on the host's loopback interface only.
+  # Only this service gets the marketplace keys (OpenRouter, Crusoe, Neo4j); the file is optional.
+  marketplace:
+    build:
+      context: .
+      dockerfile: docker/marketplace.Dockerfile
+    working_dir: /app
+    env_file:
+      - path: ${WEFARM_WORKSPACE:-..}/.env.secrets.marketplace
+        required: false
+    environment:
+      WEFARM_GAME_URL: http://127.0.0.1:${WEB_DEV_PORT:-5180}/
+      WEFARM_DATA_ROOT: /app/runs/wefarm
+    volumes:
+      - .:/app
+      - /app/web/node_modules
+    ports:
+      - "127.0.0.1:${MARKETPLACE_PORT:-8765}:8765"
+    command: ["python", "-m", "agriphilo.web", "--host", "0.0.0.0", "--port", "8765", "--demo"]

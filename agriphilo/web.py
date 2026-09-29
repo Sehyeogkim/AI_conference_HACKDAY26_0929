@@ -30,13 +30,21 @@ PAGES = {
     "/static/app.js": ("app.js", "application/javascript"),
     "/static/tomato-preview.jpg": ("tomato-preview.jpg", "image/jpeg"),
     "/static/example-tomato-farm.png": ("example-tomato-farm.png", "image/png"),
+    "/static/demo/crete-farm-photo.jpg": ("demo/crete-farm-photo.jpg", "image/jpeg"),
+    "/static/demo/crete-world-render.jpg": ("demo/crete-world-render.jpg", "image/jpeg"),
+    "/static/demo/crete-world-panorama.jpg": ("demo/crete-world-panorama.jpg", "image/jpeg"),
 }
 PLAYER_ROUTE = re.compile(r"/api/players/([a-z0-9._-]{1,120})")
 GAME_ROUTE = re.compile(r"/api/games/([0-9a-f]{12})(?:/(approve|close))?")
 ORDER_ROUTE = re.compile(r"/api/orders/([0-9a-f-]{36})(?:/(answer|approve|purchase|close|reopen|retry|files/[\w.]+))?")
-WEFARM_ROUTE = re.compile(r"/api/marketplace/(wf-[0-9a-f]{12})(?:/(purchase|mine|episodes/[a-zA-Z0-9._-]+/file))?")
+WEFARM_ROUTE = re.compile(r"/api/marketplace/(wf-[0-9a-f]{12})(?:/(purchase|mine|image|episodes/[a-zA-Z0-9._-]+/(?:file|replay)))?")
 WEFARM_GAME_ROUTE = re.compile(r"/games/wefarm/(wf-[0-9a-f]{12})")
-FRIEND_ORIGIN = re.compile(r"http://(?:127\.0\.0\.1|localhost):(?:5173|5180)\Z")
+# Watch a recording: redirects to the simulator in replay mode, pointed at the stored file.
+WATCH_EPISODE_ROUTE = re.compile(r"/watch/wefarm/(wf-[0-9a-f]{12})/([a-zA-Z0-9._-]+)")
+WATCH_FREE_PLAY_ROUTE = re.compile(r"/watch/free-play/([0-9a-f-]{36})")
+FREE_PLAY_FILE_ROUTE = re.compile(r"/api/wefarm/free-play/([0-9a-f-]{36})")
+# The simulator runs on its own dev server; any loopback port may call the marketplace API.
+FRIEND_ORIGIN = re.compile(r"http://(?:127\.0\.0\.1|localhost):\d{2,5}\Z")
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -64,11 +72,11 @@ class Handler(BaseHTTPRequestHandler):
         if origin and (FRIEND_ORIGIN.fullmatch(origin) or origin == os.environ.get("WEFARM_ALLOWED_ORIGIN")):
             self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Vary", "Origin")
-            self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type, X-WeFarm-Game-Id, X-WeFarm-Player-Id, X-WeFarm-Session-Id")
 
     def do_OPTIONS(self):
-        if urlsplit(self.path).path in {"/api/wefarm/episodes", "/api/ai-player/decide"}:
+        if urlsplit(self.path).path in {"/api/wefarm/episodes", "/api/wefarm/free-play", "/api/ai-player/decide"}:
             return self._send(204, b"", "text/plain")
         return self._json(404, {"error": "not found"})
 
@@ -81,6 +89,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(path.stat().st_size))
         if download:
             self.send_header("Content-Disposition", f'attachment; filename="{path.name}"')
+        self._cors()
         self.end_headers()
         with open(path, "rb") as f:
             while True:
@@ -99,9 +108,40 @@ class Handler(BaseHTTPRequestHandler):
         except KeyError:
             return False, None
 
+    def _simulator_url(self, params: dict) -> str:
+        game_url = os.environ.get("WEFARM_GAME_URL", "http://127.0.0.1:5180/")
+        return game_url + ("&" if "?" in game_url else "?") + urlencode(params)
+
+    def _redirect(self, location: str) -> None:
+        self.send_response(302)
+        self.send_header("Location", location)
+        self.end_headers()
+
     def do_GET(self):
         parsed = urlsplit(self.path)
         path = parsed.path
+        host = self.headers.get("Host", f"127.0.0.1:{self.server.server_port}")
+        watch = WATCH_EPISODE_ROUTE.fullmatch(path)
+        if watch:
+            game_id, episode_id = watch.groups()
+            if self.wefarm.replay_path(game_id, episode_id) is None:
+                return self._json(404, {"error": "unknown episode"})
+            return self._redirect(self._simulator_url(
+                {"replay": f"http://{host}/api/marketplace/{game_id}/episodes/{episode_id}/replay", "replay_label": episode_id}))
+        watch = WATCH_FREE_PLAY_ROUTE.fullmatch(path)
+        if watch:
+            if self.wefarm.free_play_path(watch.group(1)) is None:
+                return self._json(404, {"error": "unknown recording"})
+            return self._redirect(self._simulator_url(
+                {"replay": f"http://{host}/api/wefarm/free-play/{watch.group(1)}", "replay_label": "free play"}))
+        if path == "/api/wefarm/free-play":
+            return self._json(200, {"items": self.wefarm.free_play_sessions()})
+        free_play = FREE_PLAY_FILE_ROUTE.fullmatch(path)
+        if free_play:
+            fp = self.wefarm.free_play_path(free_play.group(1))
+            if fp is None:
+                return self._json(404, {"error": "unknown recording"})
+            return self._file(fp, "application/gzip", download=False)
         game_route = WEFARM_GAME_ROUTE.fullmatch(path)
         if game_route:
             game_id = game_route.group(1)
@@ -150,6 +190,17 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 if action is None:
                     return self._json(200, self.wefarm.summary(game_id))
+                if action == "image":
+                    image = self.wefarm.image(game_id)
+                    if image is None:
+                        return self._json(404, {"error": "no image"})
+                    return self._file(image[0], image[1], download=False)
+                if action.endswith("/replay"):
+                    # Watching is a preview: any stored episode can be replayed; downloads stay purchase-gated.
+                    fp = self.wefarm.replay_path(game_id, action.split("/")[1])
+                    if fp is None:
+                        return self._json(404, {"error": "unknown episode"})
+                    return self._file(fp, "application/gzip", download=False)
                 if action.startswith("episodes/"):
                     episode_id = action.split("/")[1]
                     fp = self.wefarm.file_path(game_id, episode_id)
@@ -248,6 +299,14 @@ class Handler(BaseHTTPRequestHandler):
                                     "duration_s": decision.duration_s, "reason": decision.reason,
                                     "model": vlm.model, "latency_ms": round((time.perf_counter() - started) * 1000),
                                     "frame_id": frame_id})
+        if path == "/api/wefarm/free-play":
+            if not 1 <= length <= MAX_RECORDING_BYTES:
+                return self._json(413, {"error": "recording must be between 1 byte and 20 MB"})
+            try:
+                record = self.wefarm.save_free_play(self.headers.get("X-WeFarm-Session-Id", ""), self.rfile.read(length))
+            except ValueError as err:
+                return self._json(400, {"error": str(err)})
+            return self._json(201, {**record, "watch_url": f"http://{self.headers.get('Host', '127.0.0.1:8765')}/watch/free-play/{record['session_id']}"})
         if path == "/api/wefarm/episodes":
             if not 1 <= length <= MAX_RECORDING_BYTES:
                 return self._json(413, {"error": "recording must be between 1 byte and 20 MB"})

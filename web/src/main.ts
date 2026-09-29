@@ -473,9 +473,25 @@ async function main(): Promise<void> {
           if (aiRecording) setAiPhase("error", `Marketplace upload failed. A local recording was downloaded for recovery.`);
         }
       } else {
-        downloadBlob(blob, filename);
-        setStatus(`Saved recording: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB). Load it with "Replay" to review.`);
-        if (aiRecording) setAiPhase("completed", "AI recording saved locally. No marketplace QA was run.");
+        // Free play (no marketplace game): store the recording on the WeFarm server for later
+        // playback; download it in the browser only if the server cannot be reached.
+        setStatus(`Saving ${finished.steps} recorded steps on the WeFarm server…`);
+        try {
+          const response = await fetch(`${aiApiBase}/api/wefarm/free-play`, {
+            method: "POST",
+            headers: { "Content-Type": "application/gzip", "X-WeFarm-Session-Id": header.session_id },
+            body: blob,
+          });
+          if (!response.ok) throw new Error(`Server returned HTTP ${response.status}`);
+          const result = await response.json() as { watch_url?: string };
+          setStatus(`Recording saved on the WeFarm server: ${finished.steps} steps (${(blob.size / 1024).toFixed(0)} KB). Replay it from the WeFarm player page.`);
+          if (result.watch_url) console.info("Watch this recording:", result.watch_url);
+          if (aiRecording) setAiPhase("completed", "AI recording saved on the WeFarm server. No marketplace QA was run.");
+        } catch (error) {
+          downloadBlob(blob, filename);
+          setStatus(`WeFarm server unreachable (${(error as Error).message}). The recording was downloaded instead.`);
+          if (aiRecording) setAiPhase("completed", "AI recording downloaded. No marketplace QA was run.");
+        }
       }
     } catch (error) {
       setStatus(`Could not save recording: ${(error as Error).message}`);
@@ -541,10 +557,8 @@ async function main(): Promise<void> {
     const target = TomatoHarvestSimulation.cartToWorld(step.qpos.slice(0, 3), step.command.handTargetInCart);
     targetMarker.position.set(target[0], target[1], target[2]);
   };
-  hud.load.addEventListener("change", async () => {
-    if (aiMode !== "human") { hud.load.value = ""; return; }
-    const file = hud.load.files?.[0];
-    if (!file) return;
+  /** Enter replay mode for a recording file or a downloaded recording (for example `?replay=<url>`). */
+  const startReplay = async (file: Blob) => {
     try {
       const recording = await parseRecording(file);
       if (recording.header.scene_xml_sha256 !== sceneHash) {
@@ -571,9 +585,12 @@ async function main(): Promise<void> {
       setStatus("Replay: scrub the timeline, click an event to jump, then mark pass or fail.");
     } catch (error) {
       setStatus(`Could not load the recording: ${(error as Error).message}`);
-    } finally {
-      hud.load.value = "";
     }
+  };
+  hud.load.addEventListener("change", async () => {
+    const file = hud.load.files?.[0];
+    if (aiMode === "human" && file) await startReplay(file);
+    hud.load.value = "";
   });
   hud.replaySlider.addEventListener("input", () => {
     if (replay) replay.playing = false;
@@ -790,6 +807,18 @@ async function main(): Promise<void> {
   };
 
   void refreshAiConfig();
+  // Watch links from the marketplace open the simulator with ?replay=<recording URL>.
+  const replayUrl = params.get("replay");
+  if (replayUrl) {
+    setStatus(`Loading the recording${params.get("replay_label") ? ` ${params.get("replay_label")}` : ""}…`);
+    fetch(replayUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.blob();
+      })
+      .then(startReplay)
+      .catch((error: unknown) => setStatus(`Could not load the recording: ${(error as Error).message}`));
+  }
   updateAiUi();
 
   let lastTime = performance.now();

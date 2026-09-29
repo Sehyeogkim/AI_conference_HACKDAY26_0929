@@ -317,6 +317,48 @@ pre { margin: 0; font: 11.5px/1.55 var(--mono); background: var(--bg); border: 1
 .m-foot label { display: flex; gap: 6px; align-items: center; color: var(--ink-2); font-size: 12.5px; }
 .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; font-size: 13px; z-index: 20; box-shadow: 0 8px 24px rgba(0,0,0,.2); max-width: calc(100vw - 32px); }
 
+/* example farm + generation screen */
+.m-example { display: flex; gap: 12px; align-items: center; margin: 12px 16px 0; padding: 10px; border: 1px dashed #c9d9cf; border-radius: 10px; background: var(--green-bg); }
+.m-example img { width: 84px; height: 56px; object-fit: cover; border-radius: 6px; flex: none; }
+.m-example div { flex: 1; min-width: 0; font-size: 12.5px; color: #155436; }
+.m-example b { display: block; font-size: 13px; }
+.m-fields { display: flex; gap: 14px; flex-wrap: wrap; padding: 0 16px 10px; font-size: 12.5px; color: var(--ink-2); }
+.m-fields label { display: flex; gap: 6px; align-items: center; }
+.m-fields input { width: 70px; font: inherit; border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+.m-credit { padding: 0 16px 8px; margin: 0; color: var(--muted); font-size: 11.5px; }
+.gen { position: fixed; inset: 0; z-index: 15; background: rgba(12, 16, 13, .72); display: grid; place-items: center; padding: 16px; }
+.gen-card { width: min(980px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--panel); border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.35); display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+.gen-visual { position: relative; background: #0d130f; min-height: 420px; overflow: hidden; }
+.gen-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .8s ease, transform 6s ease; transform: scale(1.04); }
+.gen-visual img.on { opacity: 1; transform: scale(1); }
+.gen-visual .scan { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #8fd46b, transparent); box-shadow: 0 0 18px #8fd46b; animation: scan 2.2s linear infinite; opacity: 0; }
+.gen-visual.scanning .scan { opacity: 1; }
+@keyframes scan { from { top: 0; } to { top: 100%; } }
+.gen-visual .fruit-box { position: absolute; border: 2px solid #ff5a3c; border-radius: 4px; box-shadow: 0 0 0 1px rgba(0,0,0,.3); opacity: 0; transform: scale(.6); transition: opacity .3s, transform .3s; }
+.gen-visual .fruit-box.on { opacity: 1; transform: scale(1); }
+.gen-visual .fruit-box span { position: absolute; top: -17px; left: -2px; font: 600 10px/1 var(--font); color: #fff; background: #ff5a3c; padding: 2px 4px; border-radius: 3px; white-space: nowrap; }
+.gen-visual .vlabel { position: absolute; left: 12px; bottom: 12px; right: 12px; color: #fff; font-size: 12px; text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.gen-body { padding: 22px 22px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.gen-body h2 { margin: 0; font-size: 18px; }
+.gen-body .sub { margin: 0; color: var(--ink-2); font-size: 12.5px; }
+.gen-overall { height: 8px; background: var(--line-2); border-radius: 4px; overflow: hidden; }
+.gen-overall div { height: 100%; width: 0; background: linear-gradient(90deg, #1f7a4d, #8fd46b); transition: width .3s linear; }
+.gen-stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gen-stage { display: grid; grid-template-columns: 20px 1fr; gap: 8px; padding: 4px 8px; border-radius: 8px; opacity: .5; }
+.gen-stage.active { background: var(--blue-bg); opacity: 1; }
+.gen-stage.done { opacity: 1; }
+.gen-stage .gi { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 10px; font-weight: 700; margin-top: 1px; }
+.gen-stage.active .gi { border-color: var(--blue); border-right-color: transparent; animation: rot .9s linear infinite; }
+.gen-stage.done .gi { background: var(--accent); border-color: var(--accent); color: #fff; }
+.gen-stage b { font-weight: 600; font-size: 13px; }
+.gen-stage small { display: block; color: var(--ink-2); font-size: 12px; }
+.gen-tag { display: inline-block; margin-left: 6px; font-size: 10.5px; font-weight: 600; border-radius: 999px; padding: 0 7px; vertical-align: 1px; }
+.gen-tag.live { color: var(--green); background: var(--green-bg); }
+.gen-tag.prebuilt { color: var(--blue); background: var(--blue-bg); }
+.gen-tag.future { color: var(--amber); background: var(--amber-bg); }
+.gen-foot { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+@media (max-width: 820px) { .gen-card { grid-template-columns: 1fr; } .gen-visual { min-height: 220px; } }
+.ep-watch { white-space: nowrap; }
 @media (max-width: 1180px) { .content.split { grid-template-columns: 1fr; } .content.split .list { display: none; } .detail { border-left: 0; } }
 @media (max-width: 760px) {
   .app { grid-template-columns: 1fr; }
@@ -349,7 +391,7 @@ pre { margin: 0; font: 11.5px/1.55 var(--mono); background: var(--bg); border: 1
 <div class="app">
   <aside class="side">
     <div class="ws"><div class="logo" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.5 5 12.5 8 6.5 11 12.5 14 3.5"/></svg></div><div><b>WeFarm</b><small>Tomato harvest · MuJoCo</small></div></div>
-    <button class="nav" data-view="orders"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="M5 6h6M5 8.5h6M5 11h3.5"/></svg>Orders<span class="count" id="cOrders">0</span></button>
+    <button class="nav" data-view="orders" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="11" height="11" rx="2"/><path d="M5 6h6M5 8.5h6M5 11h3.5"/></svg>Orders<span class="count" id="cOrders">0</span></button>
     <button class="nav" data-view="market"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 6.5 3.5 3h9l1 3.5"/><path d="M2.5 6.5h11a0 0 0 0 1 0 0 2 2 0 0 1-3.7 1 2 2 0 0 1-3.6 0 2 2 0 0 1-3.7-1z"/><path d="M3.5 8.5V13h9V8.5"/></svg>Marketplace<span class="count" id="cMarket">0</span></button>
     <div class="nav-h">Account</div>
     <button class="nav" data-view="billing"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.8" y="3.5" width="12.4" height="9" rx="1.5"/><path d="M1.8 6.5h12.4"/></svg>Billing<span class="count" id="cBilling"></span></button>
@@ -363,7 +405,7 @@ pre { margin: 0; font: 11.5px/1.55 var(--mono); background: var(--bg); border: 1
     <header class="top">
       <h1 id="viewTitle">Orders</h1>
       <select id="viewSelect" aria-label="View">
-        <option value="orders">Orders</option><option value="market">Marketplace</option><option value="billing">Billing</option>
+        <option value="market">Marketplace</option><option value="billing">Billing</option>
       </select>
       <div class="tabs" id="filters"></div>
       <div class="spacer"></div>
@@ -381,6 +423,11 @@ pre { margin: 0; font: 11.5px/1.55 var(--mono); background: var(--bg); border: 1
 <div class="scrim" id="scrim">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <div class="m-head"><b id="mTitle">New farm request</b> · Upload a farm image and describe the robot data you need.</div>
+    <div class="m-example">
+      <img src="/static/demo/crete-farm-photo.jpg" alt="Cherry-tomato greenhouse path in Sitia, Crete">
+      <div><b>Try the example farm</b>A cherry-tomato greenhouse in Crete, with a ready-made data request.</div>
+      <button class="btn go sm" id="mExample" type="button">Use example</button>
+    </div>
     <div class="m-image">
       <label for="mImage">Farm reference image</label>
       <input id="mImage" type="file" accept="image/png,image/jpeg,image/webp" required>
@@ -388,13 +435,41 @@ pre { margin: 0; font: 11.5px/1.55 var(--mono); background: var(--bg); border: 1
       <small>PNG, JPEG, or WebP · up to 6 MB</small>
     </div>
     <textarea id="mText" aria-label="Farm data request" placeholder="Example: Collect 200 successful tomato harvest episodes using the single-arm mobile robot. Include robot state, operator actions, picked tomato events, and QA results."></textarea>
-    <p class="m-note">For this demo, the request is paired with the teammate's prepared tomato greenhouse simulator. Uploading an image does not regenerate the world yet.</p>
+    <div class="m-fields">
+      <label>Episodes wanted <input id="mEpisodes" type="number" min="1" max="10000" value="50"></label>
+      <label>Player reward <input id="mReward" type="number" value="10" disabled title="Set by the marketplace for this demo"> credits</label>
+    </div>
+    <p class="m-credit" id="mCredit" hidden>Example photo: “Cherry tomatoes greenhouse, Sitia, Crete” by Petro Stelte, CC BY-SA 4.0 (Wikimedia Commons).</p>
+    <p class="m-note">Demo: every request uses our prepared World Labs greenhouse (made from the example photo). Generating a new world from your own photo is the next step.</p>
     <p class="m-error" id="mError" role="alert" hidden></p>
     <div class="m-foot">
-      <button class="btn" id="mExample" type="button">Use example</button>
       <div class="spacer"></div>
       <button class="btn" id="mCancel">Cancel</button>
       <button class="btn primary" id="mSubmit">Publish game</button>
+    </div>
+  </div>
+</div>
+
+<div class="gen" id="gen" hidden role="dialog" aria-modal="true" aria-labelledby="genTitle">
+  <div class="gen-card">
+    <div class="gen-visual" id="genVisual">
+      <img id="genImgPhoto" alt="">
+      <img id="genImgPano" src="/static/demo/crete-world-panorama.jpg" alt="">
+      <img id="genImgSplat" src="/static/demo/crete-world-render.jpg" alt="">
+      <div class="scan"></div>
+      <div id="genBoxes"></div>
+      <div class="vlabel" id="genVisualLabel"></div>
+    </div>
+    <div class="gen-body">
+      <h2 id="genTitle">Building your farm simulation</h2>
+      <p class="sub" id="genSub">From one photo to a playable, physics-accurate harvesting game.</p>
+      <div class="gen-foot" id="genFoot" hidden>
+        <button class="btn primary" id="genOpen" type="button">Open the listing</button>
+        <a class="btn" id="genPlay" target="_blank" rel="noopener">Play it now ↗</a>
+      </div>
+      <div class="gen-overall"><div id="genBar"></div></div>
+      <ol class="gen-stages" id="genStages"></ol>
+      <p class="caption" style="margin:0"><span class="gen-tag live">live</span> runs now · <span class="gen-tag prebuilt">pre-built</span> made ahead of the demo with World Labs · <span class="gen-tag future">coming soon</span> planned</p>
     </div>
   </div>
 </div>
@@ -433,7 +508,7 @@ const FILE_INFO = {
 let config = { demo: false, worker: "", pricing_note: "" };
 let summaries = [];
 let full = null;              // full order JSON for the selected order
-let view = "orders", filter = "all", selected = null, tab = "overview";
+let view = "market", filter = "all", selected = null, tab = "overview";
 let listSig = "", detailSig = "";
 const drafts = {};
 
@@ -603,10 +678,27 @@ async function renderTomatoMarketPanel(gameId = "tomato-harvest") {
       h("div.buy", h("div.row1", count, buy, h("span.caption", "Use Billing to top up credits through Stripe Checkout."))),
       h("div.buy", h("div.row1", h("span.kv", "Minimum tomatoes"), minScore, arm, mine)),
       status,
+      isWeFarm ? episodeTable(gameId, data.episodes || []) : null,
       h("p.caption", isWeFarm
         ? "Recorded robot states, actions, and harvest events are delivered as JSONL.gz after QA."
         : "MuJoCo simulation trajectories are delivered as HDF5 after replay QA."));
   } catch (e) { panel.textContent = `Could not load tomato episodes: ${e.message}`; }
+}
+
+function episodeTable(gameId, episodes) {
+  if (!episodes.length) return h("div.buy", h("div.kv", "No episodes yet. They appear here as soon as players submit them. Open the game from its card to play one."));
+  return h("div.scroll-x", h("table.tbl",
+    h("thead", h("tr", h("th", "Episode"), h("th", "Player"), h("th", "Submitted"), h("th.r", "Ripe picked"), h("th.r", "Length"), h("th", "QA"), h("th", "QA Agent"), h("th", ""))),
+    h("tbody", episodes.map((e) => h("tr",
+      h("td.m", e.episode_id.slice(-12)),
+      h("td", e.player_id, e.operator_device === "crusoe-vlm" ? h("span.mode", { style: "margin-left:6px" }, "AI") : null),
+      h("td.kv", { style: "white-space:nowrap" }, Agri.ago(e.submitted_at)),
+      h("td.r", String(e.harvested_count ?? 0)),
+      h("td.r", `${Math.round(e.duration_s || 0)} s`),
+      h("td", qbadge(e.qa), e.purchased ? h("span.badge.b-blue", { style: "margin-left:4px" }, h("i"), "Bought") : null),
+      h("td.kv", { style: "min-width:200px" }, e.qa_reason || ""),
+      h("td.ep-watch", h("a.btn.sm", { href: `/watch/wefarm/${gameId}/${e.episode_id}`, target: "_blank", rel: "noopener" }, "▶ Watch"),
+        e.purchased ? h("a.btn.sm", { href: `/api/marketplace/${gameId}/episodes/${e.episode_id}/file`, download: true, style: "margin-left:4px" }, "↓") : null))))));
 }
 
 /* ---------------- wallet (credits, Stripe top-up) ---------------- */
@@ -999,20 +1091,25 @@ $("mImage").addEventListener("change", () => {
   imagePreviewUrl = file ? URL.createObjectURL(file) : null;
   if (file) $("mImagePreview").src = imagePreviewUrl;
 });
+const EXAMPLE_REQUEST = "Collect 50 successful ripe-tomato harvest episodes in our cherry-tomato greenhouse (Sitia, Crete) using the single-arm harvest cart. " +
+  "Pick only ripe red tomatoes into the basket and leave green ones on the plant. Record operator actions, robot joint states, and harvest events, " +
+  "and include the QA result for every episode. Reject episodes that drop fruit or damage plants.";
 $("mExample").onclick = async () => {
   const button = $("mExample");
   button.disabled = true;
   $("mError").hidden = true;
   try {
-    const response = await fetch("/static/example-tomato-farm.png");
+    const response = await fetch("/static/demo/crete-farm-photo.jpg");
     if (!response.ok) throw new Error("Example image is unavailable.");
-    const file = new File([await response.blob()], "example-tomato-farm.png", { type: "image/png" });
+    const file = new File([await response.blob()], "crete-cherry-tomato-greenhouse.jpg", { type: "image/jpeg" });
     const transfer = new DataTransfer();
     transfer.items.add(file);
     $("mImage").files = transfer.files;
     $("mImage").dispatchEvent(new Event("change", { bubbles: true }));
-    $("mText").value = "Collect 20 successful ripe tomato harvest episodes with the single-arm mobile robot. Record operator actions, robot states, picked tomato events, and QA results. Exclude unripe or dropped tomatoes.";
-    $("mText").focus();
+    $("mText").value = EXAMPLE_REQUEST;
+    $("mEpisodes").value = "50";
+    $("mCredit").hidden = false;
+    $("mSubmit").focus();
   } catch (error) {
     $("mError").textContent = error.message || "Could not load the example.";
     $("mError").hidden = false;
@@ -1034,35 +1131,135 @@ document.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "n" && !e.metaKey && !e.ctrlKey && !e.altKey && !/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); openModal(); }
 });
 $("mText").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) $("mSubmit").click(); });
+/* ---------------- generation screen ----------------
+   The World Labs steps replay the real, pre-built Crete world (generated ahead of the demo); "coming soon"
+   steps show planned features. Reading the request and publishing are real server calls. */
+const GEN_STAGES = [
+  { key: "read", label: "Reading your photo and request", tag: "live", who: "OpenRouter orchestrator", ms: 2600, visual: "photo", scan: true },
+  { key: "pano", label: "Estimating a 360° panorama", tag: "prebuilt", who: "World Labs Marble", ms: 3000, visual: "pano",
+    detail: "Imagines the parts of the greenhouse the photo doesn't show." },
+  { key: "world", label: "Generating the 3D Gaussian-splat world", tag: "prebuilt", who: "World Labs Marble 1.1", ms: 4200, visual: "splat",
+    detail: "Millions of coloured splats; streamed as a 1.4 MB preview, then 28 MB full detail." },
+  { key: "scale", label: "Measuring true scale and the ground", tag: "prebuilt", who: "WeFarm world builder", ms: 2000, visual: "splat",
+    detail: "Fits the floor and sets metres, so the robot and tomatoes are life-size." },
+  { key: "fruit", label: "Detecting tomatoes in the photo", tag: "future", who: "Vision model", ms: 3200, visual: "boxes",
+    detail: "Will find each fruit, its ripeness and truss, and place pickable tomatoes where the real ones hang." },
+  { key: "assets", label: "Lifting plant and fruit assets out of the scan", tag: "future", who: "Asset extraction", ms: 2400, visual: "splat",
+    detail: "Will turn scanned plants into touchable meshes with physics shapes." },
+  { key: "physics", label: "Building the physics scene", tag: "live", who: "MuJoCo", ms: 2200, visual: "splat",
+    detail: "Franka Panda on a harvest cart, a basket, and tomatoes on breakable stems; runs in the player's browser." },
+  { key: "publish", label: "Publishing to the marketplace", tag: "live", who: "WeFarm", ms: 900, visual: "splat" },
+];
+const TAG_TEXT = { live: "live", prebuilt: "pre-built", future: "coming soon" };
+const FRUIT_BOXES = [[17, 50, "ripe"], [27, 60, "ripe"], [11, 67, "turning"], [33, 45, "green"], [69, 54, "ripe"], [78, 64, "ripe"], [63, 71, "turning"], [85, 47, "ripe"]];
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function showGenVisual(kind, photoUrl, label) {
+  $("genImgPhoto").src = photoUrl;
+  $("genImgPhoto").classList.toggle("on", kind === "photo" || kind === "boxes");
+  $("genImgPano").classList.toggle("on", kind === "pano");
+  $("genImgSplat").classList.toggle("on", kind === "splat");
+  $("genVisualLabel").textContent = label;
+  const boxes = $("genBoxes");
+  boxes.replaceChildren();
+  if (kind === "boxes") FRUIT_BOXES.forEach(([x, y, ripeness], i) => {
+    const box = h("div.fruit-box", { style: `left:${x}%;top:${y}%;width:5.5%;height:7%` }, h("span", ripeness));
+    boxes.append(box);
+    setTimeout(() => box.classList.add("on"), 250 + i * 280);
+  });
+}
+
+async function runGeneration(photoUrl, publish) {
+  const rows = GEN_STAGES.map((stage) => {
+    const detail = h("small", stage.detail || "");
+    const row = h("li.gen-stage", h("span.gi"), h("div", h("b", stage.label), h("span.gen-tag." + stage.tag, TAG_TEXT[stage.tag]),
+      h("small", { style: "color:var(--muted)" }, stage.who), detail));
+    return { stage, row, detail };
+  });
+  $("genStages").replaceChildren(...rows.map((r) => r.row));
+  $("genFoot").hidden = true;
+  $("genTitle").textContent = "Building your farm simulation";
+  $("genSub").textContent = "From one photo to a playable, physics-accurate harvesting game.";
+  $("genBar").style.width = "0%";
+  $("gen").hidden = false;
+  const total = GEN_STAGES.reduce((sum, stage) => sum + stage.ms, 0);
+  let doneMs = 0;
+  const published = publish();  // the real request starts now; the screen waits for it where needed
+  published.catch(() => {});
+  let result = null;
+  for (const { stage, row, detail } of rows) {
+    row.className = "gen-stage active";
+    row.querySelector(".gi").textContent = "";
+    showGenVisual(stage.visual, photoUrl, `${stage.who} · ${stage.label.toLowerCase()}`);
+    $("genVisual").classList.toggle("scanning", Boolean(stage.scan));
+    const started = performance.now();
+    const tick = setInterval(() => {
+      const fraction = Math.min(1, (performance.now() - started) / stage.ms);
+      $("genBar").style.width = `${((doneMs + fraction * stage.ms) / total) * 100}%`;
+    }, 100);
+    await sleep(stage.ms);
+    if (stage.key === "read" || stage.key === "publish") {
+      try { result = await published; }
+      catch (error) {
+        clearInterval(tick);
+        row.className = "gen-stage";
+        $("genTitle").textContent = "Could not publish the game";
+        $("genSub").textContent = error.message;
+        $("genFoot").hidden = false;
+        $("genOpen").textContent = "Close";
+        $("genOpen").onclick = () => { $("gen").hidden = true; };
+        $("genPlay").hidden = true;
+        throw error;
+      }
+      if (stage.key === "read") detail.textContent = result.orchestrator_source === "openrouter"
+        ? `OpenRouter turned the request into a task: “${result.game?.title || "Harvest ripe tomatoes"}”.`
+        : "Used the standard tomato-harvest task (OpenRouter unavailable).";
+    }
+    clearInterval(tick);
+    doneMs += stage.ms;
+    $("genBar").style.width = `${(doneMs / total) * 100}%`;
+    row.className = "gen-stage done";
+    row.querySelector(".gi").textContent = stage.tag === "future" ? "·" : "✓";
+  }
+  $("genVisual").classList.remove("scanning");
+  $("genTitle").textContent = "Your game is live";
+  $("genSub").textContent = `“${result.game?.title || "Harvest ripe tomatoes"}” is in the marketplace. Players can pick it now; QA checks every episode they submit.`;
+  $("genFoot").hidden = false;
+  $("genPlay").hidden = false;
+  $("genPlay").href = result.game?.play_url ? `${result.game.play_url}?player_id=${encodeURIComponent(Agri.playerId(USER?.email || "demo-requester"))}` : "/player";
+  $("genOpen").textContent = "Open the listing";
+  $("genOpen").onclick = () => { $("gen").hidden = true; view = "market"; renderList(); };
+  return result;
+}
+
 $("mSubmit").onclick = async () => {
-  const request = $("mText").value.trim();
+  const text = $("mText").value.trim();
   const file = $("mImage").files[0];
   const error = $("mError");
   error.hidden = true;
-  if (!file) { error.textContent = "Choose a farm reference image."; error.hidden = false; return $("mImage").focus(); }
+  if (!file) { error.textContent = "Choose a farm reference image, or use the example farm."; error.hidden = false; return $("mImage").focus(); }
   if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
     error.textContent = "Choose a PNG, JPEG, or WebP image."; error.hidden = false; return;
   }
   if (file.size > 6_000_000) { error.textContent = "Image must be 6 MB or smaller."; error.hidden = false; return; }
-  if (request.length < 10) { error.textContent = "Describe the tomato harvesting data you need in at least 10 characters."; error.hidden = false; return $("mText").focus(); }
+  if (text.length < 10) { error.textContent = "Describe the tomato harvesting data you need in at least 10 characters."; error.hidden = false; return $("mText").focus(); }
+  const episodes = Math.max(1, Math.floor(+$("mEpisodes").value || 1));
+  const request = /\d+\s+[\w\s-]*episodes/i.test(text) ? text : `${text}\nEpisodes wanted: ${episodes}.`;
   $("mSubmit").disabled = true;
-  $("mSubmit").textContent = "Publishing…";
   try {
     const imageData = await readImage(file);
-    const result = await Agri.createFarmRequest(USER?.email || "demo-requester", request, file.name, imageData);
+    const photoUrl = URL.createObjectURL(file);
+    closeModal();
+    const result = await runGeneration(photoUrl, () => Agri.createFarmRequest(USER?.email || "demo-requester", request, file.name, imageData));
     selectedFarmId = result.game ? listingId(result.game) : result.game_id || result.request_id || null;
     market = null;
-    $("mText").value = ""; $("mImage").value = "";
+    $("mText").value = ""; $("mImage").value = ""; $("mCredit").hidden = true;
     $("mImagePreview").hidden = true;
     if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
     imagePreviewUrl = null;
-    closeModal();
-    view = "market";
     await loadMarket();
-    renderList();
-    toast("Farm request saved. The prepared greenhouse game is live in the marketplace.");
-  } catch (e) { error.textContent = "Could not publish game: " + e.message; error.hidden = false; }
-  finally { $("mSubmit").disabled = false; $("mSubmit").textContent = "Publish game"; }
+  } catch (e) { /* the generation screen shows the error */ }
+  finally { $("mSubmit").disabled = false; }
 };
 document.querySelectorAll(".nav[data-view]").forEach((b) => b.addEventListener("click", () => { view = b.dataset.view; renderList(); }));
 $("viewSelect").addEventListener("change", (e) => { view = e.target.value; closeDetail(); });

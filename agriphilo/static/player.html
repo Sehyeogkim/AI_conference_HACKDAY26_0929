@@ -92,6 +92,8 @@ if ((!USER || USER.role !== "player") && !new URLSearchParams(location.search).h
   <div id="games" class="mgrid"></div>
   <h2>My episodes</h2>
   <div id="mine"></div>
+  <h2>Free-play recordings</h2>
+  <div id="freePlay"></div>
 </main>
 <script src="/static/app.js"></script>
 <script>
@@ -149,11 +151,12 @@ async function loadMine() {
   $("kpis").replaceChildren(kpi("Earned credits", credits(me.balance)), kpi("Episodes submitted", eps.length.toLocaleString()), kpi("QA passed", passed.toLocaleString()));
   $("mine").replaceChildren(eps.length
     ? h("div.tblw", h("table",
-      h("thead", h("tr", h("th", "Game"), h("th", "Episode"), h("th", "Submitted"), h("th", "QA"), h("th", "Quality"), h("th", "QA Agent"), h("th", { style: "text-align:right" }, "Reward"))),
+      h("thead", h("tr", h("th", "Game"), h("th", "Episode"), h("th", "Submitted"), h("th", "QA"), h("th", "Quality"), h("th", "QA Agent"), h("th", { style: "text-align:right" }, "Reward"), h("th", ""))),
       h("tbody", eps.map((e) => h("tr",
         h("td", e.title), h("td.m", e.episode_id), h("td.muted", { style: "white-space:nowrap" }, e.submitted_at ? Agri.ago(e.submitted_at) : "—"),
         h("td", qbadge(e.qa)), h("td", stars(e.quality)), h("td", e.qa_reason || (e.qa === "pending" ? "Reviewing…" : "")),
-        h("td.r", e.reward_credits ? `+${credits(e.reward_credits)}` : "—"))))))
+        h("td.r", e.reward_credits ? `+${credits(e.reward_credits)}` : "—"),
+        h("td", e.kind === "wefarm_mujoco_jsonl_gz" ? h("a.btn", { href: `/watch/wefarm/${e.game_id}/${e.episode_id}`, target: "_blank", rel: "noopener", style: "padding:4px 10px" }, "▶ Watch") : ""))))))
     : h("div.note", "No episodes yet. Play a game above and submit an episode to earn credits."));
 }
 
@@ -164,8 +167,21 @@ if (USER) {
 }
 $("signOut").onclick = (e) => { e.preventDefault(); try { localStorage.removeItem("wemine_user"); } catch (err) { /* storage blocked */ } location.href = "/"; };
 
-loadGames(); loadMine();
-setInterval(() => { loadGames(); loadMine(); }, 5000);
+async function loadFreePlay() {
+  let items = [];
+  try { items = (await (await fetch("/api/wefarm/free-play")).json()).items || []; } catch (e) { /* server restarting */ }
+  $("freePlay").replaceChildren(items.length
+    ? h("div.tblw", h("table",
+      h("thead", h("tr", h("th", "Recorded"), h("th", "Length"), h("th", "Ripe picked"), h("th", "Dropped"), h("th", ""))),
+      h("tbody", items.slice(0, 20).map((r) => h("tr",
+        h("td.muted", r.saved_at ? Agri.ago(r.saved_at) : "—"), h("td", `${Math.round(r.duration_s || 0)} s`),
+        h("td", String(r.harvested_ripe ?? 0)), h("td", String(r.dropped ?? 0)),
+        h("td", h("a.btn", { href: `/watch/free-play/${r.session_id}`, target: "_blank", rel: "noopener", style: "padding:4px 10px" }, "▶ Watch")))))))
+    : h("div.note", "Recordings made in the simulator outside a marketplace game are stored here for playback."));
+}
+
+loadGames(); loadMine(); loadFreePlay();
+setInterval(() => { loadGames(); loadMine(); loadFreePlay(); }, 5000);
 </script>
 </body>
 </html>
