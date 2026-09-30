@@ -50,6 +50,7 @@ export interface ControlsGuide {
   open(page?: ControlsGuidePage): void;
   close(): void;
   toggle(): void;
+  isOpen(): boolean;
   /** Update the Controller page's connection line (and prefer that page while a controller is connected). */
   setGamepadStatus(status: GamepadStatus): void;
   /** Light up the buttons held on the controller, and show the layout of its current mode. */
@@ -179,7 +180,7 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
     diagram.setPressed(pressed);
   };
   const setGamepadRawReport = (report: string) => {
-    if (!root.hidden && gamepadRawLine.textContent !== report) gamepadRawLine.textContent = report;
+    if (gamepadRawLine.textContent !== report) gamepadRawLine.textContent = report;
   };
 
   let seen = false;
@@ -189,5 +190,5 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
     /* treat as not seen */
   }
   if (!seen) open();
-  return { open, close, toggle, setGamepadStatus, setGamepadButtons, setGamepadRawReport };
+  return { open, close, toggle, isOpen: () => !root.hidden, setGamepadStatus, setGamepadButtons, setGamepadRawReport };
 }

@@ -1031,7 +1031,7 @@ async function main(): Promise<void> {
   gamepadTeleop.onStatusChange(showGamepadStatus);
   gamepadTeleop.onButtons((pressed, gamepadMode) => {
     controlsGuide.setGamepadButtons(pressed, gamepadMode);
-    controlsGuide.setGamepadRawReport(gamepadTeleop.rawReport());
+    if (controlsGuide.isOpen()) controlsGuide.setGamepadRawReport(gamepadTeleop.rawReport());
     if (controllerMap.hidden) return;
     controllerMapDiagram.showMode(gamepadMode);
     controllerMapDiagram.setPressed(pressed);
