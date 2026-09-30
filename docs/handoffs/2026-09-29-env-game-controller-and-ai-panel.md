@@ -11,6 +11,8 @@
 - **Recordings** made while a controller is connected and on say `operator.device: "keyboard+mouse+gamepad"`. No fields were added; the schema version stays 0.
 - **Controls guide** has two pages, Keyboard & mouse and Controller. The Controller page is drawn from `GAMEPAD_LAYOUT`, so it stays in step with the code, and lights up the buttons being pressed.
 - **On-screen controller map** (🎮 Map button or G): a small drawing of the controller at the top of the screen that shows the current mode and lights up pressed buttons. It appears when a controller connects, unless the viewer hid it. Drawing shared with the guide: `web/src/ui/controllerDiagram.ts`.
+- **On-screen keyboard map** (⌨️ Keys button or B), the keyboard counterpart; keys light up while held. Drawing shared with the guide: `web/src/ui/keyboardDiagram.ts` (`KEYBOARD_ROWS` moved there from `controlsGuide.ts`).
+- **Marketplace address:** the simulator asks the marketplace named by `VITE_WEFARM_API_BASE` (set in `compose.yaml` from `MARKETPLACE_PORT`) for AI Mode and free-play uploads, instead of always `127.0.0.1:8765`. A game opened from the marketplace still uses the marketplace that opened it.
 - **Diagnostics:** the console logs `[gamepad]` lines for connect, disconnect, and every button press (index, position name, mode, effect); the guide's Controller page shows the browser's raw report.
 - **AI panel:** it now sits above the wrist-camera inset instead of covering it (`--ai-panel-bottom`, set from the inset's size), and folds down to its title and state with its Hide button or the N key (remembered per browser).
 

@@ -1,10 +1,11 @@
 // Tutorial-style controls guide with one page per input device:
-// - Keyboard & mouse: a drawn keyboard with every used key coloured by what it controls.
+// - Keyboard & mouse: a drawn keyboard (ui/keyboardDiagram.ts), keys lighting up while held.
 // - Controller: a drawn game controller in arm or cart mode (ui/controllerDiagram.ts), with the
 //   buttons you press lighting up live, and the browser's raw report for troubleshooting.
 // Each page has a legend and a short "first harvest" walkthrough. Opens from the Controls button or
 // the ? key, and once automatically on a first visit (remembered in localStorage when available).
 import { createControllerDiagram } from "./controllerDiagram.ts";
+import { KEYBOARD_ROWS, createKeyboardDiagram } from "./keyboardDiagram.ts";
 import {
   GAMEPAD_LAYOUT,
   type ControlGroup,
@@ -12,14 +13,6 @@ import {
   type GamepadControlMode,
   type GamepadStatus,
 } from "../teleop/gamepadTeleop.ts";
-
-interface KeyCap {
-  label: string;
-  code?: string;
-  group?: ControlGroup;
-  hint?: string;
-  widthUnits?: number;
-}
 
 const GROUP_LABELS: Record<ControlGroup, string> = {
   arm: "Move the gripper",
@@ -30,46 +23,6 @@ const GROUP_LABELS: Record<ControlGroup, string> = {
   modifier: "Precise (slow) moves",
   mode: "Switch arm ↔ cart mode",
 };
-
-const KEYBOARD_ROWS: KeyCap[][] = [
-  [
-    { label: "Q", group: "wrist", hint: "rotate ⟲" },
-    { label: "W", group: "arm", hint: "forward" },
-    { label: "E", group: "wrist", hint: "rotate ⟳" },
-    { label: "R", group: "arm", hint: "up" },
-    { label: "T" },
-    { label: "Y" },
-    { label: "U", group: "base", hint: "turn left" },
-    { label: "I", group: "base", hint: "drive fwd" },
-    { label: "O", group: "base", hint: "turn right" },
-    { label: "P", group: "view", hint: "plants" },
-    { label: "[", group: "base", hint: "prev stop" },
-    { label: "]", group: "base", hint: "next stop" },
-  ],
-  [
-    { label: "A", group: "arm", hint: "left" },
-    { label: "S", group: "arm", hint: "back" },
-    { label: "D", group: "arm", hint: "right" },
-    { label: "F", group: "arm", hint: "down" },
-    { label: "G" },
-    { label: "H", group: "arm", hint: "ready pose" },
-    { label: "J", group: "base", hint: "slide left" },
-    { label: "K", group: "base", hint: "drive back" },
-    { label: "L", group: "base", hint: "slide right" },
-    { label: "?", group: "view", hint: "this guide" },
-  ],
-  [
-    { label: "Shift", group: "modifier", hint: "precise", widthUnits: 1.8 },
-    { label: "Z", group: "wrist", hint: "tilt down" },
-    { label: "X" },
-    { label: "C", group: "wrist", hint: "tilt out" },
-    { label: "V", group: "view", hint: "camera" },
-    { label: "B" },
-    { label: "N", group: "view", hint: "AI panel" },
-    { label: "M", group: "view", hint: "wrist view" },
-  ],
-  [{ label: "Space", group: "grip", hint: "grip / release", widthUnits: 6 }],
-];
 
 const KEYBOARD_FIRST_HARVEST_STEPS = [
   "<b>Click</b> a red tomato (it lights up under the mouse). The arm glides above it with the gripper open.",
@@ -109,12 +62,6 @@ const legendFor = (groups: Iterable<ControlGroup>) =>
   [...new Set(groups)].map((group) => `<li><span class="guide-swatch group-${group}"></span>${GROUP_LABELS[group]}</li>`).join("");
 
 export function createControlsGuide(root: HTMLElement): ControlsGuide {
-  const keyboard = KEYBOARD_ROWS.map(
-    (row) =>
-      `<div class="guide-key-row">${row
-        .map((key) => `<div class="guide-key ${key.group ? `group-${key.group}` : "unused"}" style="--key-units:${key.widthUnits ?? 1}"><span class="guide-key-label">${key.label}</span>${key.hint ? `<span class="guide-key-hint">${key.hint}</span>` : ""}</div>`)
-        .join("")}</div>`,
-  ).join("");
   const keyboardGroups = KEYBOARD_ROWS.flat().flatMap((key) => (key.group ? [key.group] : []));
   const controllerGroups = (["arm", "cart"] as const).flatMap((mode) => Object.values(GAMEPAD_LAYOUT[mode]).map((binding) => binding!.group));
   root.innerHTML = `
@@ -129,7 +76,7 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
       </div>
       <section class="guide-page" data-page="keyboard">
         <div class="guide-body">
-          <div class="guide-keyboard">${keyboard}</div>
+          <div class="guide-keyboard-slot"></div>
           <div class="guide-side">
             <ul class="guide-legend">${legendFor(keyboardGroups)}</ul>
             <h3>Your first harvest</h3>
@@ -164,6 +111,7 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
   const pages = [...root.querySelectorAll<HTMLElement>(".guide-page")];
   const tabs = [...root.querySelectorAll<HTMLButtonElement>(".guide-tab")];
   const modeChips = [...root.querySelectorAll<HTMLButtonElement>(".guide-mode-chip")];
+  root.querySelector(".guide-keyboard-slot")!.replaceWith(createKeyboardDiagram().element);
   const diagram = createControllerDiagram();
   root.querySelector(".guide-controller-slot")!.replaceWith(diagram.element);
   const gamepadRawLine = root.querySelector<HTMLParagraphElement>(".guide-gamepad-raw")!;

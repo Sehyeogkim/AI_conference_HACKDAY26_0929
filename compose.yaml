@@ -39,6 +39,9 @@ services:
       - ${DATA_ROOT:-./data}:/data:ro
     ports:
       - "127.0.0.1:${WEB_DEV_PORT:-5180}:5173"
+    environment:
+      # The marketplace this simulator talks to for AI Mode and free-play uploads (same compose project).
+      VITE_WEFARM_API_BASE: http://127.0.0.1:${MARKETPLACE_PORT:-8765}
     command: ["npm", "run", "dev"]
 
   # Marketplace web app (requester, player, QA, Data Miner) on the host's loopback interface only.

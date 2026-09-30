@@ -46,7 +46,7 @@ Any controller the browser reports with the standard layout works (Xbox, PlaySta
 | Right face button | Grip / release | Grip / release |
 | − / + | Cart to the previous / next stop | Cart to the previous / next stop |
 
-Keyboard, mouse, and controller work at the same time: one person can orbit the camera with the mouse while another drives the robot. **N** folds the AI Mode panel; **M** hides the wrist-camera view.
+Keyboard, mouse, and controller work at the same time: one person can orbit the camera with the mouse while another drives the robot. **N** folds the AI Mode panel; **M** hides the wrist-camera view; **B** and **G** show on-screen keyboard and controller maps that light up what you press.
 
 Picking: click a red tomato, press **F** to lower until the fingers surround it, **Space** to close (the tomato snaps off when pulled), **R** to lift, **S** to bring it back over the basket (or press **H**), **Space** to drop. A ripe tomato in the basket scores.
 

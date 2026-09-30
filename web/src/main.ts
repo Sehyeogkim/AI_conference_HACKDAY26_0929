@@ -15,6 +15,7 @@ import { dressTomatoes } from "./render/tomatoFruit.ts";
 import { dressCart } from "./render/cartAppearance.ts";
 import { createControlsGuide } from "./ui/controlsGuide.ts";
 import { createControllerDiagram } from "./ui/controllerDiagram.ts";
+import { createKeyboardDiagram } from "./ui/keyboardDiagram.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import { GamepadTeleop, type GamepadStatus } from "./teleop/gamepadTeleop.ts";
@@ -34,7 +35,13 @@ const baseUrl = import.meta.env.BASE_URL;
 const marketplaceGameId = params.get("game_id")?.trim() ?? "";
 const marketplacePlayerId = params.get("player_id")?.trim() ?? "";
 const submissionUrl = params.get("submission_url")?.trim() ?? "";
-const aiApiBase = submissionUrl ? new URL(submissionUrl, location.href).origin : "http://127.0.0.1:8765";
+/**
+ * The WeFarm marketplace server (AI Player, free-play uploads): the one that opened this game, else
+ * the one this dev server was started with (VITE_WEFARM_API_BASE, set in compose.yaml), else 8765.
+ */
+const aiApiBase = submissionUrl
+  ? new URL(submissionUrl, location.href).origin
+  : (import.meta.env.VITE_WEFARM_API_BASE as string | undefined) || "http://127.0.0.1:8765";
 
 type AiPhase = "checking" | "unavailable" | "ready" | "observing" | "thinking" | "acting" | "paused" | "stopped" | "completed" | "error";
 type AiActionName = "move_arm" | "orient_wrist" | "move_base" | "gripper" | "wait" | "view" | "stop";
@@ -75,6 +82,7 @@ const writePreference = (key: string, value: string) => {
 const GAMEPAD_ENABLED_PREFERENCE = "wefarm.gamepadEnabled";
 const AI_PANEL_COLLAPSED_PREFERENCE = "wefarm.aiPanelCollapsed";
 const CONTROLLER_MAP_PREFERENCE = "wefarm.controllerMapVisible";
+const KEYBOARD_MAP_PREFERENCE = "wefarm.keyboardMapVisible";
 
 const statusElement = document.querySelector<HTMLDivElement>("#status")!;
 const setStatus = (text: string) => (statusElement.textContent = text);
@@ -970,6 +978,21 @@ async function main(): Promise<void> {
     if (tag === "TEXTAREA" || tag === "INPUT") return;
     if (event.code === "KeyG") setControllerMapVisible(controllerMap.hidden);
   });
+  // On-screen keyboard map (button or B), the keyboard counterpart of the controller map.
+  const keyboardMap = document.querySelector<HTMLElement>("#keyboard-map")!;
+  keyboardMap.querySelector(".keyboard-map-slot")!.replaceWith(createKeyboardDiagram("keyboard-map-mini").element);
+  const setKeyboardMapVisible = (visible: boolean) => {
+    keyboardMap.hidden = !visible;
+    writePreference(KEYBOARD_MAP_PREFERENCE, visible ? "1" : "0");
+  };
+  document.querySelector<HTMLButtonElement>("#button-keyboard-map")!.addEventListener("click", () => setKeyboardMapVisible(keyboardMap.hidden));
+  document.querySelector<HTMLButtonElement>("#keyboard-map-hide")!.addEventListener("click", () => setKeyboardMapVisible(false));
+  window.addEventListener("keydown", (event) => {
+    const tag = (event.target as HTMLElement).tagName;
+    if (tag === "TEXTAREA" || tag === "INPUT") return;
+    if (event.code === "KeyB") setKeyboardMapVisible(keyboardMap.hidden);
+  });
+  keyboardMap.hidden = readPreference(KEYBOARD_MAP_PREFERENCE) !== "1";
   let announcedGamepads = new Set<string>();
   const showGamepadStatus = (status: GamepadStatus) => {
     const first = status.gamepads[0];

@@ -125,11 +125,25 @@ button.accent-button { border-color: #e0a23a; }
 .guide-controller-note { margin: 0; font-size: 12.5px; opacity: 0.8; }
 /* Controller status in the play panel, and the cart-mode badge. */
 #button-gamepad.gamepad-on { border-color: #7fcf97; }
-#gamepad-mode-badge { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); padding: 8px 16px; border-radius: 99px; background: #253a66; border: 2px solid #5b83d6; font-weight: 700; z-index: 5; pointer-events: none; }
+#gamepad-mode-badge { padding: 8px 16px; border-radius: 99px; background: #253a66; border: 2px solid #5b83d6; font-weight: 700; z-index: 5; pointer-events: none; }
 #gamepad-mode-badge[hidden] { display: none; }
 @media (max-width: 700px) { .pad-cluster { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 44px); } .pad-button { min-width: 48px; } .guide-tabs { margin-left: 0; } }
 /* On-screen controller map (G): a smaller copy of the guide's controller drawing. */
-#controller-map { top: 16px; left: 50%; transform: translateX(-50%); width: min(470px, calc(100vw - 32px)); padding: 8px 12px 10px; z-index: 4; }
+/* Badge and on-screen maps stack in one column at the top centre. */
+#input-maps { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 4; pointer-events: none; max-width: calc(100vw - 32px); }
+#input-maps > * { pointer-events: auto; }
+#controller-map, #keyboard-map { position: static; width: min(470px, calc(100vw - 32px)); padding: 8px 12px 10px; }
+#keyboard-map[hidden] { display: none; }
+.keyboard-map-note { opacity: 0.7; flex: 1; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#keyboard-map-hide { padding: 1px 8px; font-size: 12px; }
+.guide-keyboard.keyboard-map-mini { gap: 3px; }
+.keyboard-map-mini .guide-key-row { gap: 3px; }
+.keyboard-map-mini .guide-key-row:nth-child(2) { padding-left: 10px; }
+.keyboard-map-mini .guide-key-row:nth-child(4) { padding-left: 64px; }
+.keyboard-map-mini .guide-key { width: calc(var(--key-units) * 33px + (var(--key-units) - 1) * 3px); height: 36px; border-bottom-width: 2px; }
+.keyboard-map-mini .guide-key-label { font-size: 11.5px; }
+.keyboard-map-mini .guide-key-hint { font-size: 7.5px; }
+.guide-key.pressed { transform: translateY(2px); box-shadow: 0 0 0 3px #fff inset, 0 0 14px rgba(255, 255, 255, 0.55); }
 #controller-map[hidden] { display: none; }
 .controller-map-header { display: flex; align-items: center; gap: 10px; font-size: 12.5px; margin-bottom: 6px; }
 #controller-map-mode { padding: 1px 8px; border-radius: 99px; background: #1f5a33; border: 1px solid #3fa464; }
@@ -146,5 +160,3 @@ button.accent-button { border-color: #e0a23a; }
 .controller-map-mini .pad-round .pad-button-label { font-size: 8px; }
 .controller-map-mini .pad-button-hint { font-size: 8.5px; }
 .guide-gamepad-raw { font: 11px/1.35 ui-monospace, monospace; opacity: 0.65; white-space: pre-wrap; overflow-wrap: anywhere; margin: 10px 0 0; }
-/* The cart-mode badge sits under the controller map when both show. */
-#controller-map:not([hidden]) ~ #gamepad-mode-badge { top: 250px; }
