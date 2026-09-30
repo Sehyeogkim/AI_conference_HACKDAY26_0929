@@ -224,7 +224,8 @@ class Handler(BaseHTTPRequestHandler):
                         items = graph.query_task_episodes(game_id)
                     finally:
                         graph.close()
-                    return self._json(200, {"available": items is not None, "items": items or []})
+                    return self._json(200, {"available": items is not None, "items": items or [],
+                                             "demo_mode": os.environ.get("WEFARM_DEMO_CACHE") == "1"})
                 if action == "image":
                     image = self.wefarm.image(game_id)
                     if image is None:

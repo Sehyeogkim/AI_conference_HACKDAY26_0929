@@ -647,7 +647,14 @@ async function main(): Promise<void> {
       hud.replayEvents.innerHTML = "";
       for (const event of recording.events) {
         const item = document.createElement("li");
-        const label = event.kind === "harvested" ? `harvested tomato ${event.tomato} (${event.ripeness})` : event.kind === "detach" ? `tomato ${event.tomato} came free (${event.forceN} N)` : `tomato ${event.tomato} dropped`;
+        const eventLabels: Record<string, string> = {
+          harvested: `harvested tomato ${event.tomato} (${"ripeness" in event ? event.ripeness : ""})`,
+          detach: `tomato ${event.tomato} came free (${"forceN" in event ? event.forceN : "?"} N)`,
+          grasp: `gripper closed on tomato ${event.tomato}`,
+          release: `gripper released tomato ${event.tomato}`,
+          dropped: `tomato ${event.tomato} dropped`,
+        };
+        const label = eventLabels[event.kind] ?? `${event.kind} (tomato ${event.tomato})`;
         item.innerHTML = `<button type="button">${event.time.toFixed(2)} s</button> ${label}`;
         item.querySelector("button")!.addEventListener("click", () => showReplayFrame(Math.round(event.time * recording.header.control_rate_hz) - 1));
         hud.replayEvents.appendChild(item);

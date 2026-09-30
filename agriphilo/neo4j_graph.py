@@ -32,6 +32,11 @@ class GraphStore:
         username = os.getenv("NEO4J_USERNAME") or os.getenv("NEO4J_USER")
         password = os.getenv("NEO4J_PASSWORD") or os.getenv("NEO4J_PW")
         database = os.getenv("NEO4J_DATABASE") or "neo4j"
+        # Demo mode is fast and offline: skip AuraDB (about 5 s per write) and use the local index.
+        if os.getenv("WEFARM_DEMO_CACHE") == "1":
+            result = cls(database=database)
+            result.last_error = "Neo4j is skipped in demo mode (WEFARM_DEMO_CACHE=1)"
+            return result
         if not all((uri, username, password)):
             result = cls(database=database)
             result.last_error = "Neo4j credentials are not configured"

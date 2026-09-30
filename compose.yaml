@@ -59,6 +59,8 @@ services:
       WEFARM_DATA_ROOT: /app/runs/wefarm
       # 1 = replay stored OpenRouter answers (agriphilo/demo_cache.json) instead of live calls; 0 = live.
       WEFARM_DEMO_CACHE: ${WEFARM_DEMO_CACHE:-1}
+      # In demo mode, 1 = episode QA still asks OpenRouter live (in the background); 0 = stored answer only.
+      WEFARM_DEMO_LIVE_QA: ${WEFARM_DEMO_LIVE_QA:-1}
     volumes:
       - .:/app
       - /app/web/node_modules

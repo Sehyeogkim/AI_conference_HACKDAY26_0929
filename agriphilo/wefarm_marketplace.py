@@ -38,8 +38,11 @@ MAX_STEPS = 200_000
 PRICE = PRICING["game"]["episode_price_credits"]
 REWARD = PRICING["game"]["player_share_credits"]
 CUSTOMER = "demo-customer"
-# Demo mode can replay stored OpenRouter responses; cached results remain
-# distinct from live OpenRouter QA and cannot pass the strict purchase gate.
+# Demo mode (WEFARM_DEMO_CACHE=1) keeps the demo fast: request reading replays a stored OpenRouter
+# answer and Neo4j is skipped. Episode QA still calls OpenRouter live in the background (unless
+# WEFARM_DEMO_LIVE_QA=0); only when OpenRouter is unreachable or unconfigured does a stored
+# acceptance stand in, and then only if every server-enforced hard gate passed, labelled "Demo
+# approval". Outside demo mode only live OpenRouter approves.
 DEMO_CACHE_PATH = Path(__file__).resolve().parent / "demo_cache.json"
 
 
@@ -88,11 +91,12 @@ def _sha256(data: bytes) -> str:
 
 
 def _approved(record: dict) -> bool:
-    """Only a current, audited OpenRouter acceptance is marketplace-eligible."""
+    """Only a current, audited OpenRouter acceptance is marketplace-eligible (in demo mode, also a stored one)."""
     from .openrouter_qa import QA_VERSION
     gates = record.get("qa_rule_results")
+    accepted_sources = ("openrouter", "openrouter-cached") if _demo_cache() is not None else ("openrouter",)
     return (record.get("qa") == "pass" and record.get("qa_status") in (None, "approved")
-            and record.get("ai_source") == "openrouter"
+            and record.get("ai_source") in accepted_sources
             and record.get("ai_verdict") == "accept" and record.get("qa_version") == QA_VERSION
             and isinstance(gates, dict) and all(gates.get(k) is True for k in
                                                  ("data_integrity", "reproducibility", "task_completion", "uniqueness"))
@@ -593,12 +597,27 @@ class WeFarmMarketplace:
             "unavailable_measurements": ["idle_ratio", "oscillation", "unintended_collisions",
                                          "near_duplicate_score", "starting_condition_coverage"],
         }
-        ai = _cached_episode_review(measured_evidence) or evaluate_episode(measured_evidence)
+        cached_review = _cached_episode_review(measured_evidence)
+        live_unavailable_reason = None
+        if cached_review is None:
+            ai = evaluate_episode(measured_evidence)
+        elif os.environ.get("WEFARM_DEMO_LIVE_QA", "1") == "1":
+            live_review = evaluate_episode(measured_evidence)
+            if live_review["source"] in ("unavailable", "unconfigured"):
+                ai, live_unavailable_reason = cached_review, live_review["reason"]
+            else:
+                ai = live_review
+        else:
+            ai = cached_review
         qa = {"accept": "pass", "review": "pending", "reject": "fail"}[ai["decision"]]
+        all_gates_passed = all(value is True for value in hard_gates.values())
         verified_accept = (qa == "pass" and ai["source"] == "openrouter"
-                           and isinstance(ai.get("model_response"), dict)
-                           and all(value is True for value in hard_gates.values()))
-        if qa == "pass" and not verified_accept:
+                           and isinstance(ai.get("model_response"), dict) and all_gates_passed)
+        demo_accept = qa == "pass" and ai["source"] == "openrouter-cached" and _demo_cache() is not None and all_gates_passed
+        if demo_accept:
+            why_stored = f"live OpenRouter QA unavailable ({live_unavailable_reason})" if live_unavailable_reason else "live QA is off (WEFARM_DEMO_LIVE_QA=0)"
+            qa_reason = f"Demo approval: every hard check passed (structure, physics replay, task, duplicates); {why_stored}, so the review text is a stored OpenRouter answer. {ai['reason']}"
+        elif qa == "pass" and not verified_accept:
             qa = "pending"
             qa_reason = "OpenRouter QA approval could not be verified."
         else:

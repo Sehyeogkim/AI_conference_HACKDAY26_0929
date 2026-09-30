@@ -735,7 +735,9 @@ async function renderGraphRecords(gameId, target) {
   if (!target.isConnected) return;
   if (!data.available) {
     target.replaceChildren(h("h3", "Neo4j records"),
-      h("div.buy", "Neo4j is unavailable. The submitted episodes above are still stored in the marketplace."));
+      h("div.buy", data.demo_mode
+        ? "Neo4j is skipped in demo mode, so the demo stays fast; the marketplace's local index holds the episodes above."
+        : "Neo4j is unavailable. The submitted episodes above are still stored in the marketplace."));
     return;
   }
   const items = data.items || [];
