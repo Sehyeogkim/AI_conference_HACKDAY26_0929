@@ -26,7 +26,7 @@ Default: `DampedLeastSquaresArmController` (damped least squares on MuJoCo's Jac
 | `gripperYaw`, `gripperPitch` | Wrist rotation relative to the cart heading; wrist tilt (rad) |
 | `gripperOpen` | Gripper open (true) or closed |
 
-Input devices (keyboard today; gamepad, VR, or a policy later) only write this command.
+Input devices only write this command. Today: keyboard and mouse (`web/src/teleop/keyboardTeleop.ts`) and game controllers (`web/src/teleop/gamepadTeleop.ts`), which move the robot through `KeyboardTeleop.applyMotionKeys` so every device shares one set of speeds and limits. VR or a policy can follow the same path.
 
 ## 3. Scene names (`web/src/sim/sceneXml.ts`) — shared
 

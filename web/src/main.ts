@@ -16,6 +16,7 @@ import { dressCart } from "./render/cartAppearance.ts";
 import { createControlsGuide } from "./ui/controlsGuide.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
+import { GamepadTeleop, type GamepadStatus } from "./teleop/gamepadTeleop.ts";
 import "./style.css";
 
 const SIMULATOR_VERSION = "wefarm-web 0.2.0";
@@ -55,6 +56,23 @@ const AI_DIRECTIONS: Record<AiActionName, readonly string[]> = {
   stop: [""],
 };
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
+/** Per-viewer preferences (localStorage, which may be unavailable: then the defaults apply). */
+const readPreference = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+const writePreference = (key: string, value: string) => {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable: the preference lasts for this page only */
+  }
+};
+const GAMEPAD_ENABLED_PREFERENCE = "wefarm.gamepadEnabled";
+const AI_PANEL_COLLAPSED_PREFERENCE = "wefarm.aiPanelCollapsed";
 
 const statusElement = document.querySelector<HTMLDivElement>("#status")!;
 const setStatus = (text: string) => (statusElement.textContent = text);
@@ -376,8 +394,12 @@ async function main(): Promise<void> {
   let savingRecording = false;
   let replay: { recording: Recording; frame: number; playing: boolean; accumulator: number } | null = null;
   const teleop = new KeyboardTeleop(simulation, layout);
+  // Game controllers are on by default; ?gamepad=off or the 🎮 button (remembered) turns them off.
+  const gamepadTeleop = new GamepadTeleop(teleop, {
+    enabled: params.get("gamepad") !== "off" && readPreference(GAMEPAD_ENABLED_PREFERENCE) !== "0",
+  });
   // Debug handle for the browser console (inspect the simulation, script a pick).
-  Object.assign(window, { wefarm: { simulation, layout, teleop, orbitCamera, orbitControls: controls, splatWorld } });
+  Object.assign(window, { wefarm: { simulation, layout, teleop, gamepadTeleop, orbitCamera, orbitControls: controls, splatWorld } });
 
   const newRecordingHeader = (device = "keyboard+mouse", model = "") => ({
     type: "header" as const,
@@ -535,7 +557,7 @@ async function main(): Promise<void> {
     if (mode !== "play" || savingRecording || aiMode !== "human") return;
     if (recorder) return void (await stopRecording());
     simulation.reset();
-    recorder = new SessionRecorder(newRecordingHeader());
+    recorder = new SessionRecorder(newRecordingHeader(gamepadTeleop.inUse() ? "keyboard+mouse+gamepad" : "keyboard+mouse"));
     hud.record.textContent = submissionUrl ? "■ Stop & submit" : "■ Stop & save";
     hud.record.classList.add("recording");
     setStatus("Recording from a fresh start. Pick the ripe tomatoes!");
@@ -569,7 +591,18 @@ async function main(): Promise<void> {
     if (event.code === "KeyV") cycleCamera();
     if (event.code === "KeyP") toggleScenery();
     if (event.code === "KeyM") wristInsetVisible = !wristInsetVisible;
+    if (event.code === "KeyN") setAiPanelCollapsed(!aiPanel.classList.contains("collapsed"));
   });
+  // The AI panel folds down to its title and state line (button or N), like the wrist view (M).
+  const aiCollapseButton = document.querySelector<HTMLButtonElement>("#ai-collapse")!;
+  const setAiPanelCollapsed = (collapsed: boolean) => {
+    aiPanel.classList.toggle("collapsed", collapsed);
+    aiCollapseButton.textContent = collapsed ? "Show (N)" : "Hide (N)";
+    aiCollapseButton.setAttribute("aria-expanded", String(!collapsed));
+    writePreference(AI_PANEL_COLLAPSED_PREFERENCE, collapsed ? "1" : "0");
+  };
+  aiCollapseButton.addEventListener("click", () => setAiPanelCollapsed(!aiPanel.classList.contains("collapsed")));
+  setAiPanelCollapsed(readPreference(AI_PANEL_COLLAPSED_PREFERENCE) === "1");
 
   // Replay (QA) mode.
   const showReplayFrame = (frame: number) => {
@@ -779,6 +812,7 @@ async function main(): Promise<void> {
       targetMarker.visible = markerWasVisible;
     }
   };
+  /** Draws the wrist-camera inset in the bottom-right corner; returns its top edge (CSS px from the bottom). */
   const renderAiWristInset = () => {
     const size = renderer.getSize(new THREE.Vector2());
     const insetWidth = Math.round(Math.min(360, size.x * 0.28));
@@ -795,6 +829,15 @@ async function main(): Promise<void> {
       renderer.setViewport(0, 0, size.x, size.y);
     }
     Object.assign(wristInsetLabel.style, { display: "block", right: "16px", bottom: `${insetY + insetHeight - 22}px`, width: `${insetWidth}px` });
+    return insetY + insetHeight;
+  };
+  // The AI panel sits on top of the wrist inset instead of covering it (CSS reads --ai-panel-bottom).
+  let aiPanelBottomPx = -1;
+  const stackAiPanelAbove = (insetTopPx: number | null) => {
+    const bottom = insetTopPx === null ? 34 : insetTopPx + 10;
+    if (bottom === aiPanelBottomPx) return;
+    aiPanelBottomPx = bottom;
+    document.documentElement.style.setProperty("--ai-panel-bottom", `${bottom}px`);
   };
   const captureAiCamera = (camera: THREE.Camera) => {
     if (camera === wristCamera) renderWristMeshes();
@@ -905,6 +948,35 @@ async function main(): Promise<void> {
   const controlsGuide = createControlsGuide(document.querySelector<HTMLDivElement>("#controls-guide")!);
   document.querySelector<HTMLButtonElement>("#button-controls")!.addEventListener("click", () => controlsGuide.toggle());
 
+  // ---------- Game controller: status button, cart-mode badge, guide ----------
+  const gamepadButton = document.querySelector<HTMLButtonElement>("#button-gamepad")!;
+  const gamepadModeBadge = document.querySelector<HTMLDivElement>("#gamepad-mode-badge")!;
+  let announcedGamepads = new Set<string>();
+  const showGamepadStatus = (status: GamepadStatus) => {
+    const first = status.gamepads[0];
+    gamepadButton.hidden = !first;
+    gamepadButton.classList.toggle("gamepad-on", status.enabled);
+    if (first) {
+      const modes = [...new Set(status.gamepads.map((gamepad) => gamepad.mode))].join(" + ");
+      gamepadButton.textContent = status.enabled ? `🎮 Controller on · ${modes} mode` : "🎮 Controller off";
+      gamepadButton.title = `${status.gamepads.map((gamepad) => gamepad.name).join(", ")}. Click to turn controller input ${status.enabled ? "off" : "on"}.`;
+    }
+    gamepadModeBadge.hidden = !status.enabled || !status.gamepads.some((gamepad) => gamepad.mode === "cart");
+    const names = new Set(status.gamepads.map((gamepad) => `${gamepad.index}:${gamepad.name}`));
+    const newlyConnected = status.gamepads.filter((gamepad) => !announcedGamepads.has(`${gamepad.index}:${gamepad.name}`));
+    if (newlyConnected.length > 0 && status.enabled) {
+      setStatus(`Controller connected: ${newlyConnected.map((gamepad) => gamepad.name).join(", ")}. D-pad moves the arm, right button grips; see Controls (?).`);
+    }
+    announcedGamepads = names;
+    controlsGuide.setGamepadStatus(status);
+  };
+  gamepadButton.addEventListener("click", () => {
+    gamepadTeleop.setEnabled(!gamepadTeleop.isEnabled());
+    writePreference(GAMEPAD_ENABLED_PREFERENCE, gamepadTeleop.isEnabled() ? "1" : "0");
+  });
+  gamepadTeleop.onStatusChange(showGamepadStatus);
+  gamepadTeleop.onButtons((pressed, gamepadMode) => controlsGuide.setGamepadButtons(pressed, gamepadMode));
+
   // Sharpen the scene in the background once everything else is running.
   if (splatWorld && world && sharperSplatLevel && world.files.splats[sharperSplatLevel] && sharperSplatLevel !== splatLevel) {
     const sharperFile = splatFileFor(world, sharperSplatLevel);
@@ -925,6 +997,7 @@ async function main(): Promise<void> {
     const now = performance.now();
     const elapsed = Math.min(0.1, (now - lastTime) / 1000);
     lastTime = now;
+    gamepadTeleop.poll(mode === "play" && aiMode === "human");
     if (mode === "play") {
       accumulator += elapsed;
       let ticks = 0;
@@ -940,7 +1013,10 @@ async function main(): Promise<void> {
             aiNextObservationAt = now + 150;
             setAiPhase("observing", "Checking the result in fresh head and wrist camera frames.");
           }
-        } else if (aiMode === "human") teleop.applyHeldKeys(controlPeriod);
+        } else if (aiMode === "human") {
+          teleop.applyHeldKeys(controlPeriod);
+          gamepadTeleop.applyHeldButtons(controlPeriod);
+        }
         simulation.controlTick();
         if (recorder) {
           const snapshot = simulation.snapshot();
@@ -987,9 +1063,10 @@ async function main(): Promise<void> {
     if (controls.enabled) controls.update();
     renderer.render(scene, activeCamera());
     if ((wristInsetVisible || aiMode === "running" || aiMode === "paused") && cameraMode !== "wrist") {
-      renderAiWristInset();
+      stackAiPanelAbove(renderAiWristInset());
     } else {
       wristInsetLabel.style.display = "none";
+      stackAiPanelAbove(null);
     }
     if (aiMode === "running" && !aiAbort && !aiAction && now >= aiNextObservationAt) void requestAiDecision();
   });

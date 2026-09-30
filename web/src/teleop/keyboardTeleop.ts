@@ -61,15 +61,11 @@ export class KeyboardTeleop {
       if (event.repeat) return;
       if (event.code === "Space") {
         event.preventDefault();
-        this.simulation.command.gripperOpen = !this.simulation.command.gripperOpen;
+        this.toggleGripper();
       }
       if (event.code === "BracketRight") this.selfDriveToStop(1);
       if (event.code === "BracketLeft") this.selfDriveToStop(-1);
-      if (event.code === "KeyH") {
-        this.simulation.handGoalInCart = [...this.readyPose];
-        this.simulation.command.gripperPitch = 0;
-        this.simulation.command.gripperYaw = 0;
-      }
+      if (event.code === "KeyH") this.returnToReadyPose();
     });
     window.addEventListener("keyup", (event) => {
       this.held.delete(event.code);
@@ -87,6 +83,29 @@ export class KeyboardTeleop {
     this.humanEnabled = enabled;
     this.held.clear();
     this.precise = false;
+  }
+
+  /**
+   * Apply movements named by their keyboard keys (the motion vocabulary shared by every input
+   * device), scaled by `factor`. Other devices, such as a game controller, drive the robot through
+   * this, so they share the keyboard's speeds, limits, and operator command.
+   */
+  applyMotionKeys(keys: ReadonlySet<string>, dt: number, factor = 1): void {
+    if (!this.humanEnabled) return;
+    if ([...keys].some((key) => ARM_KEYS.has(key))) this.simulation.handGoalInCart = null;
+    this.applyKeys(keys, dt, factor);
+  }
+
+  toggleGripper(): void {
+    if (!this.humanEnabled) return;
+    this.simulation.command.gripperOpen = !this.simulation.command.gripperOpen;
+  }
+
+  returnToReadyPose(): void {
+    if (!this.humanEnabled) return;
+    this.simulation.handGoalInCart = [...this.readyPose];
+    this.simulation.command.gripperPitch = 0;
+    this.simulation.command.gripperYaw = 0;
   }
 
   applyAiAction(action: string, direction: string, dt: number): void {

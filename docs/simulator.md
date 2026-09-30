@@ -33,6 +33,21 @@ Open <http://127.0.0.1:5180>. A loading screen shows each step with live progres
 | C | Camera: orbit (drag) → head → wrist |
 | P | Switch between the photo's own plants (default) and generated plants |
 
+### Game controller
+
+Any controller the browser reports with the standard layout works (Xbox, PlayStation, Switch Pro, and look-alikes; pair over Bluetooth, then press any button on the page). Buttons are named by position. Nothing needs holding together: a tap nudges about 1 cm, holding glides and speeds up. The Controls (?) guide has a Controller page that lights up the buttons you press. The 🎮 button in the bottom panel, or `?gamepad=off`, turns controller input off.
+
+| Button | Arm mode (default) | Cart mode (left face button toggles) |
+| --- | --- | --- |
+| D-pad | Hand forward / back / left / right | Drive forward / back, slide left / right |
+| Top / bottom face button | Hand up / down | — |
+| L / R | Rotate the wrist | Turn the cart |
+| ZL / ZR | Tilt the wrist down / out | — |
+| Right face button | Grip / release | Grip / release |
+| − / + | Cart to the previous / next stop | Cart to the previous / next stop |
+
+Keyboard, mouse, and controller work at the same time: one person can orbit the camera with the mouse while another drives the robot. **N** folds the AI Mode panel; **M** hides the wrist-camera view.
+
 Picking: click a red tomato, press **F** to lower until the fingers surround it, **Space** to close (the tomato snaps off when pulled), **R** to lift, **S** to bring it back over the basket (or press **H**), **Space** to drop. A ripe tomato in the basket scores.
 
 ## Record, replay, QA

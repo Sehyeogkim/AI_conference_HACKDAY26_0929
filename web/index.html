@@ -7,8 +7,14 @@
     <title>WeFarm · Tomato Harvest Sim</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='18' r='12' fill='%23c8200f'/%3E%3Cpath d='M16 6l3 4-3 1-3-1z' fill='%233d7a1e'/%3E%3C/svg%3E" />
     <style>
-      #ai-panel { right: 16px; bottom: 34px; width: min(340px, calc(100vw - 32px)); }
-      #ai-panel h2 { margin: 0 0 8px; font-size: 15px; }
+      /* Stacked above the wrist-camera inset: main.ts sets --ai-panel-bottom to the inset's top edge. */
+      #ai-panel { right: 16px; bottom: var(--ai-panel-bottom, 34px); width: min(340px, calc(100vw - 32px)); max-height: calc(100vh - var(--ai-panel-bottom, 34px) - 150px); overflow-y: auto; }
+      #ai-panel h2 { margin: 0; font-size: 15px; flex: 1; }
+      .ai-panel-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      #ai-collapse { padding: 1px 9px; font-size: 12px; }
+      #ai-panel.collapsed { overflow: hidden; }
+      #ai-panel.collapsed .ai-panel-header { margin-bottom: 2px; }
+      #ai-panel.collapsed > :not(.ai-panel-header):not(#ai-state) { display: none; }
       #ai-state { color: #a9deb7; font-weight: 600; }
       #ai-message { margin: 6px 0 9px; font-size: 12px; opacity: .88; }
       #ai-observations { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 9px; }
@@ -21,7 +27,7 @@
       #ai-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
       #ai-buttons button { flex: 1 1 90px; }
       #ai-start { background: #276c42; border-color: #51a16d; }
-      @media (max-width: 700px) { #ai-panel { bottom: 170px; width: min(340px, calc(100vw - 32px)); } }
+      @media (max-width: 700px) { #ai-panel { bottom: calc(var(--ai-panel-bottom, 34px) + 136px); width: min(340px, calc(100vw - 32px)); } }
     </style>
   </head>
   <body>
@@ -47,11 +53,15 @@
         <button id="button-controls" type="button" class="accent-button">Controls (?)</button>
         <button id="button-camera" type="button">Camera (V)</button>
         <button id="button-scenery" type="button">Show photo plants</button>
+        <button id="button-gamepad" type="button" hidden title="Turn controller input on or off">🎮 Controller</button>
       </div>
-      <p class="keys"><b>Arm</b> W/S fwd/back · A/D left/right · R/F up/down · Q/E rotate wrist · Z/C tilt wrist · Space grip · H ready<br /><b>Base</b> I/K drive · J/L sideways · U/O turn · [ ] self-drive to stop &nbsp;·&nbsp; <b>Shift</b> precise · <b>click</b> a tomato to reach it · <b>V</b> camera · <b>M</b> wrist view · drag to orbit</p>
+      <p class="keys"><b>Arm</b> W/S fwd/back · A/D left/right · R/F up/down · Q/E rotate wrist · Z/C tilt wrist · Space grip · H ready<br /><b>Base</b> I/K drive · J/L sideways · U/O turn · [ ] self-drive to stop &nbsp;·&nbsp; <b>Shift</b> precise · <b>click</b> a tomato to reach it · <b>V</b> camera · <b>M</b> wrist view · <b>N</b> AI panel · drag to orbit<br /><b>Controller</b> (Xbox, PlayStation, Switch Pro, and look-alikes): press any button to connect; buttons in Controls (?)</p>
     </section>
     <section class="panel" id="ai-panel" aria-label="AI Player">
-      <h2>AI Mode · Crusoe VLM</h2>
+      <div class="ai-panel-header">
+        <h2>AI Mode · Crusoe VLM</h2>
+        <button id="ai-collapse" type="button" aria-expanded="true" title="Hide or show the AI panel (N)">Hide (N)</button>
+      </div>
       <div id="ai-state" role="status" aria-live="polite">Checking availability…</div>
       <p id="ai-message">AI Mode requires a live Crusoe vision model.</p>
       <div id="ai-observations" hidden>
@@ -97,6 +107,7 @@
         <p class="loading-note">Everything runs in this tab: MuJoCo physics (WebAssembly) and a photoreal World Labs scene.</p>
       </div>
     </div>
+    <div id="gamepad-mode-badge" hidden>🚜 Cart mode · left button returns to the arm</div>
     <div id="wrist-inset-label">Wrist camera (robot and fruit) · M to hide</div>
     <div id="controls-guide" hidden></div>
     <pre id="error-box" hidden></pre>
