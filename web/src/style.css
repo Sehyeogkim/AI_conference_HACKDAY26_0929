@@ -128,3 +128,23 @@ button.accent-button { border-color: #e0a23a; }
 #gamepad-mode-badge { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); padding: 8px 16px; border-radius: 99px; background: #253a66; border: 2px solid #5b83d6; font-weight: 700; z-index: 5; pointer-events: none; }
 #gamepad-mode-badge[hidden] { display: none; }
 @media (max-width: 700px) { .pad-cluster { grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(3, 44px); } .pad-button { min-width: 48px; } .guide-tabs { margin-left: 0; } }
+/* On-screen controller map (G): a smaller copy of the guide's controller drawing. */
+#controller-map { top: 16px; left: 50%; transform: translateX(-50%); width: min(470px, calc(100vw - 32px)); padding: 8px 12px 10px; z-index: 4; }
+#controller-map[hidden] { display: none; }
+.controller-map-header { display: flex; align-items: center; gap: 10px; font-size: 12.5px; margin-bottom: 6px; }
+#controller-map-mode { padding: 1px 8px; border-radius: 99px; background: #1f5a33; border: 1px solid #3fa464; }
+#controller-map-mode.cart { background: #253a66; border-color: #5b83d6; }
+#controller-map-connection { opacity: 0.7; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#controller-map-hide { padding: 1px 8px; font-size: 12px; }
+.guide-controller.controller-map-mini { padding: 8px 12px 12px; border-radius: 18px 18px 40px 40px; }
+.controller-map-mini .pad-shoulders { margin-bottom: 6px; }
+.controller-map-mini .pad-body { gap: 6px; }
+.controller-map-mini .pad-cluster { grid-template-columns: repeat(3, 46px); grid-template-rows: repeat(3, 36px); gap: 2px; }
+.controller-map-mini .pad-button { min-width: 46px; min-height: 34px; }
+.controller-map-mini .pad-small { min-width: 44px; min-height: 30px; }
+.controller-map-mini .pad-button-label { font-size: 11px; }
+.controller-map-mini .pad-round .pad-button-label { font-size: 8px; }
+.controller-map-mini .pad-button-hint { font-size: 8.5px; }
+.guide-gamepad-raw { font: 11px/1.35 ui-monospace, monospace; opacity: 0.65; white-space: pre-wrap; overflow-wrap: anywhere; margin: 10px 0 0; }
+/* The cart-mode badge sits under the controller map when both show. */
+#controller-map:not([hidden]) ~ #gamepad-mode-badge { top: 250px; }

@@ -10,6 +10,8 @@
 - **Switch:** controllers are on by default; the 🎮 button in the bottom panel (remembered per browser) or `?gamepad=off` turns them off.
 - **Recordings** made while a controller is connected and on say `operator.device: "keyboard+mouse+gamepad"`. No fields were added; the schema version stays 0.
 - **Controls guide** has two pages, Keyboard & mouse and Controller. The Controller page is drawn from `GAMEPAD_LAYOUT`, so it stays in step with the code, and lights up the buttons being pressed.
+- **On-screen controller map** (🎮 Map button or G): a small drawing of the controller at the top of the screen that shows the current mode and lights up pressed buttons. It appears when a controller connects, unless the viewer hid it. Drawing shared with the guide: `web/src/ui/controllerDiagram.ts`.
+- **Diagnostics:** the console logs `[gamepad]` lines for connect, disconnect, and every button press (index, position name, mode, effect); the guide's Controller page shows the browser's raw report.
 - **AI panel:** it now sits above the wrist-camera inset instead of covering it (`--ai-panel-bottom`, set from the inset's size), and folds down to its title and state with its Hide button or the N key (remembered per browser).
 
 ## Seams

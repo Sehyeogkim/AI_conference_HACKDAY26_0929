@@ -107,6 +107,8 @@ export interface GamepadStatus {
 interface GamepadState {
   mode: GamepadControlMode;
   pressed: Set<GamepadButtonName>;
+  /** Raw button indices held at the last poll, for logging every press (standard layout or not). */
+  rawPressed: Set<number>;
   /** Seconds each movement button has been held while controlling. */
   heldSeconds: Map<GamepadButtonName, number>;
 }
@@ -138,6 +140,16 @@ export class GamepadTeleop {
   constructor(teleop: KeyboardTeleop, options: { enabled: boolean }) {
     this.teleop = teleop;
     this.enabled = options.enabled;
+    // Console log of what the browser reports, so controller problems can be diagnosed from the logs.
+    window.addEventListener("gamepadconnected", (event) => {
+      const gamepad = (event as GamepadEvent).gamepad;
+      console.info(`[gamepad] connected #${gamepad.index}: "${gamepad.id}" · layout ${gamepad.mapping || "non-standard"} · ${gamepad.buttons.length} buttons · ${gamepad.axes.length} axes`);
+    });
+    window.addEventListener("gamepaddisconnected", (event) => {
+      const gamepad = (event as GamepadEvent).gamepad;
+      console.info(`[gamepad] disconnected #${gamepad.index}: "${gamepad.id}"`);
+    });
+    if (!GamepadTeleop.supported()) console.info("[gamepad] this browser has no Gamepad API");
   }
 
   static supported(): boolean {
@@ -194,11 +206,20 @@ export class GamepadTeleop {
       seen.add(gamepad.index);
       let state = this.states.get(gamepad.index);
       if (!state) {
-        state = { mode: "arm", pressed: new Set(), heldSeconds: new Map() };
+        state = { mode: "arm", pressed: new Set(), rawPressed: new Set(), heldSeconds: new Map() };
         this.states.set(gamepad.index, state);
       }
       const pressed = readPressedButtons(gamepad);
       const active = controlling && this.enabled;
+      const rawPressed = new Set(gamepad.buttons.flatMap((button, index) => (button.pressed ? [index] : [])));
+      for (const index of rawPressed) {
+        if (state.rawPressed.has(index)) continue;
+        const name = (Object.entries(STANDARD_GAMEPAD_BUTTONS) as [GamepadButtonName, number][]).find(([, standardIndex]) => standardIndex === index)?.[0];
+        const binding = name ? GAMEPAD_LAYOUT[state.mode][name] : undefined;
+        const effect = !active ? "ignored (controller off, replay, or AI Mode)" : binding ? binding.hint : "no action";
+        console.info(`[gamepad] #${gamepad.index} button ${index} (${name ?? "not in the standard layout"}) pressed · ${state.mode} mode · ${effect}`);
+      }
+      state.rawPressed = rawPressed;
       for (const name of pressed) {
         if (state.pressed.has(name)) continue;
         const binding = GAMEPAD_LAYOUT[state.mode][name];
@@ -235,6 +256,20 @@ export class GamepadTeleop {
         this.teleop.applyMotionKeys(new Set([motionKey]), dt, factor);
       }
     }
+  }
+
+  /** One line per controller with what the browser reports right now (troubleshooting). */
+  rawReport(): string {
+    if (!GamepadTeleop.supported()) return "This browser has no Gamepad API.";
+    const gamepads = this.connectedGamepads();
+    if (gamepads.length === 0) return "Browser reports no controllers yet (press a button on the controller while this tab is in front).";
+    return gamepads
+      .map((gamepad) => {
+        const held = gamepad.buttons.flatMap((button, index) => (button.pressed ? [index] : []));
+        const axes = gamepad.axes.map((value) => value.toFixed(2)).join(", ");
+        return `Browser reports #${gamepad.index} "${gamepad.id}" · layout ${gamepad.mapping || "non-standard"} · buttons held: ${held.length ? held.join(", ") : "none"} · axes: ${axes || "none"}`;
+      })
+      .join("\n");
   }
 
   /** True when an enabled controller is connected (recorded as part of the operator's device). */

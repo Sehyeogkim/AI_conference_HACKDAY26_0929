@@ -14,6 +14,7 @@ import { LoadingScreen, formatMegabytes } from "./render/loadingScreen.ts";
 import { dressTomatoes } from "./render/tomatoFruit.ts";
 import { dressCart } from "./render/cartAppearance.ts";
 import { createControlsGuide } from "./ui/controlsGuide.ts";
+import { createControllerDiagram } from "./ui/controllerDiagram.ts";
 import { RECORDING_SCHEMA_VERSION, SessionRecorder, parseRecording, sha256Hex, type Recording } from "./recording/sessionRecording.ts";
 import { KeyboardTeleop } from "./teleop/keyboardTeleop.ts";
 import { GamepadTeleop, type GamepadStatus } from "./teleop/gamepadTeleop.ts";
@@ -73,6 +74,7 @@ const writePreference = (key: string, value: string) => {
 };
 const GAMEPAD_ENABLED_PREFERENCE = "wefarm.gamepadEnabled";
 const AI_PANEL_COLLAPSED_PREFERENCE = "wefarm.aiPanelCollapsed";
+const CONTROLLER_MAP_PREFERENCE = "wefarm.controllerMapVisible";
 
 const statusElement = document.querySelector<HTMLDivElement>("#status")!;
 const setStatus = (text: string) => (statusElement.textContent = text);
@@ -951,9 +953,29 @@ async function main(): Promise<void> {
   // ---------- Game controller: status button, cart-mode badge, guide ----------
   const gamepadButton = document.querySelector<HTMLButtonElement>("#button-gamepad")!;
   const gamepadModeBadge = document.querySelector<HTMLDivElement>("#gamepad-mode-badge")!;
+  // On-screen controller map (button or G): stays visible while playing, unlike the guide.
+  const controllerMap = document.querySelector<HTMLElement>("#controller-map")!;
+  const controllerMapMode = document.querySelector<HTMLSpanElement>("#controller-map-mode")!;
+  const controllerMapConnection = document.querySelector<HTMLSpanElement>("#controller-map-connection")!;
+  const controllerMapDiagram = createControllerDiagram("controller-map-mini");
+  controllerMap.querySelector(".controller-map-slot")!.replaceWith(controllerMapDiagram.element);
+  const setControllerMapVisible = (visible: boolean, remember = true) => {
+    controllerMap.hidden = !visible;
+    if (remember) writePreference(CONTROLLER_MAP_PREFERENCE, visible ? "1" : "0");
+  };
+  document.querySelector<HTMLButtonElement>("#button-controller-map")!.addEventListener("click", () => setControllerMapVisible(controllerMap.hidden));
+  document.querySelector<HTMLButtonElement>("#controller-map-hide")!.addEventListener("click", () => setControllerMapVisible(false));
+  window.addEventListener("keydown", (event) => {
+    const tag = (event.target as HTMLElement).tagName;
+    if (tag === "TEXTAREA" || tag === "INPUT") return;
+    if (event.code === "KeyG") setControllerMapVisible(controllerMap.hidden);
+  });
   let announcedGamepads = new Set<string>();
   const showGamepadStatus = (status: GamepadStatus) => {
     const first = status.gamepads[0];
+    controllerMapConnection.textContent = first
+      ? `${status.gamepads.map((gamepad) => gamepad.name).join(", ")}${status.enabled ? "" : " · input off"}`
+      : "not connected: press a button on it";
     gamepadButton.hidden = !first;
     gamepadButton.classList.toggle("gamepad-on", status.enabled);
     if (first) {
@@ -964,6 +986,8 @@ async function main(): Promise<void> {
     gamepadModeBadge.hidden = !status.enabled || !status.gamepads.some((gamepad) => gamepad.mode === "cart");
     const names = new Set(status.gamepads.map((gamepad) => `${gamepad.index}:${gamepad.name}`));
     const newlyConnected = status.gamepads.filter((gamepad) => !announcedGamepads.has(`${gamepad.index}:${gamepad.name}`));
+    // A newly connected controller brings up the map, unless the viewer hid it before.
+    if (newlyConnected.length > 0 && readPreference(CONTROLLER_MAP_PREFERENCE) !== "0") setControllerMapVisible(true, false);
     if (newlyConnected.length > 0 && status.enabled) {
       setStatus(`Controller connected: ${newlyConnected.map((gamepad) => gamepad.name).join(", ")}. D-pad moves the arm, right button grips; see Controls (?).`);
     }
@@ -975,7 +999,16 @@ async function main(): Promise<void> {
     writePreference(GAMEPAD_ENABLED_PREFERENCE, gamepadTeleop.isEnabled() ? "1" : "0");
   });
   gamepadTeleop.onStatusChange(showGamepadStatus);
-  gamepadTeleop.onButtons((pressed, gamepadMode) => controlsGuide.setGamepadButtons(pressed, gamepadMode));
+  gamepadTeleop.onButtons((pressed, gamepadMode) => {
+    controlsGuide.setGamepadButtons(pressed, gamepadMode);
+    controlsGuide.setGamepadRawReport(gamepadTeleop.rawReport());
+    if (controllerMap.hidden) return;
+    controllerMapDiagram.showMode(gamepadMode);
+    controllerMapDiagram.setPressed(pressed);
+    controllerMapMode.textContent = `${gamepadMode} mode`;
+    controllerMapMode.classList.toggle("cart", gamepadMode === "cart");
+  });
+  setControllerMapVisible(readPreference(CONTROLLER_MAP_PREFERENCE) === "1", false);
 
   // Sharpen the scene in the background once everything else is running.
   if (splatWorld && world && sharperSplatLevel && world.files.splats[sharperSplatLevel] && sharperSplatLevel !== splatLevel) {

@@ -1,9 +1,10 @@
 // Tutorial-style controls guide with one page per input device:
 // - Keyboard & mouse: a drawn keyboard with every used key coloured by what it controls.
-// - Controller: a drawn game controller in arm or cart mode, generated from the controller layout
-//   table (GAMEPAD_LAYOUT), with the buttons you press lighting up live.
+// - Controller: a drawn game controller in arm or cart mode (ui/controllerDiagram.ts), with the
+//   buttons you press lighting up live, and the browser's raw report for troubleshooting.
 // Each page has a legend and a short "first harvest" walkthrough. Opens from the Controls button or
 // the ? key, and once automatically on a first visit (remembered in localStorage when available).
+import { createControllerDiagram } from "./controllerDiagram.ts";
 import {
   GAMEPAD_LAYOUT,
   type ControlGroup,
@@ -88,17 +89,6 @@ const CONTROLLER_FIRST_HARVEST_STEPS = [
   "Press <b>+</b> to self-drive to the next plants (<b>−</b> goes back). For fine driving, press the <b>left</b> button: <b>cart mode</b> (press it again to return to the arm).",
 ];
 
-/** The drawn controller: which buttons sit where, with a short label on each. */
-const CONTROLLER_SHAPE: { shoulders: [GamepadButtonName, string][][]; dpad: [GamepadButtonName, string, string][]; face: [GamepadButtonName, string, string][]; middle: [GamepadButtonName, string][] } = {
-  shoulders: [
-    [["triggerLeft", "ZL"], ["shoulderLeft", "L"]],
-    [["shoulderRight", "R"], ["triggerRight", "ZR"]],
-  ],
-  dpad: [["dpadUp", "▲", "up"], ["dpadLeft", "◀", "left"], ["dpadRight", "▶", "right"], ["dpadDown", "▼", "down"]],
-  face: [["faceTop", "top", "top"], ["faceLeft", "left", "left"], ["faceRight", "right", "right"], ["faceBottom", "bottom", "bottom"]],
-  middle: [["minus", "−"], ["plus", "+"]],
-};
-
 const SEEN_STORAGE_KEY = "wefarm.controlsGuideSeen";
 
 export type ControlsGuidePage = "keyboard" | "controller";
@@ -111,6 +101,8 @@ export interface ControlsGuide {
   setGamepadStatus(status: GamepadStatus): void;
   /** Light up the buttons held on the controller, and show the layout of its current mode. */
   setGamepadButtons(pressed: ReadonlySet<GamepadButtonName>, mode: GamepadControlMode): void;
+  /** Show the browser's raw controller report (troubleshooting line on the Controller page). */
+  setGamepadRawReport(report: string): void;
 }
 
 const legendFor = (groups: Iterable<ControlGroup>) =>
@@ -125,17 +117,6 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
   ).join("");
   const keyboardGroups = KEYBOARD_ROWS.flat().flatMap((key) => (key.group ? [key.group] : []));
   const controllerGroups = (["arm", "cart"] as const).flatMap((mode) => Object.values(GAMEPAD_LAYOUT[mode]).map((binding) => binding!.group));
-  const padButton = (name: GamepadButtonName, label: string, extraClass = "") =>
-    `<div class="pad-button ${extraClass}" data-button="${name}"><span class="pad-button-label">${label}</span><span class="pad-button-hint"></span></div>`;
-  const controller = `
-    <div class="pad-shoulders">
-      ${CONTROLLER_SHAPE.shoulders.map((side) => `<div class="pad-shoulder-side">${side.map(([name, label]) => padButton(name, label, "pad-shoulder")).join("")}</div>`).join("")}
-    </div>
-    <div class="pad-body">
-      <div class="pad-cluster pad-dpad">${CONTROLLER_SHAPE.dpad.map(([name, label, slot]) => padButton(name, label, `pad-slot-${slot}`)).join("")}</div>
-      <div class="pad-middle">${CONTROLLER_SHAPE.middle.map(([name, label]) => padButton(name, label, "pad-small")).join("")}</div>
-      <div class="pad-cluster pad-face">${CONTROLLER_SHAPE.face.map(([name, label, slot]) => padButton(name, label, `pad-round pad-slot-${slot}`)).join("")}</div>
-    </div>`;
   root.innerHTML = `
     <div class="guide-card" role="dialog" aria-modal="true" aria-labelledby="guide-title">
       <div class="guide-header">
@@ -165,7 +146,7 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
               <button type="button" class="guide-mode-chip" data-mode="arm">Arm mode (default)</button>
               <button type="button" class="guide-mode-chip" data-mode="cart">Cart mode</button>
             </div>
-            <div class="guide-controller">${controller}</div>
+            <div class="guide-controller-slot"></div>
             <p class="guide-controller-note">Buttons are named by position; press any button and it lights up here. <b>Tap</b> a movement button to nudge, <b>hold</b> it to glide. Nothing needs holding together.</p>
           </div>
           <div class="guide-side">
@@ -173,6 +154,7 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
             <h3>Your first harvest</h3>
             <ol class="guide-steps">${CONTROLLER_FIRST_HARVEST_STEPS.map((step) => `<li>${step}</li>`).join("")}</ol>
             <p class="guide-mouse"><b>Two players:</b> the controller drives the robot while someone else orbits the camera with the mouse. The keyboard keeps working too.</p>
+            <p class="guide-gamepad-raw" title="What the browser reports, for troubleshooting"></p>
           </div>
         </div>
       </section>
@@ -182,10 +164,11 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
   const pages = [...root.querySelectorAll<HTMLElement>(".guide-page")];
   const tabs = [...root.querySelectorAll<HTMLButtonElement>(".guide-tab")];
   const modeChips = [...root.querySelectorAll<HTMLButtonElement>(".guide-mode-chip")];
-  const padButtons = new Map([...root.querySelectorAll<HTMLElement>(".pad-button")].map((element) => [element.dataset.button as GamepadButtonName, element]));
+  const diagram = createControllerDiagram();
+  root.querySelector(".guide-controller-slot")!.replaceWith(diagram.element);
+  const gamepadRawLine = root.querySelector<HTMLParagraphElement>(".guide-gamepad-raw")!;
   const gamepadStatusLine = root.querySelector<HTMLParagraphElement>(".guide-gamepad-status")!;
   let currentPage: ControlsGuidePage = "keyboard";
-  let shownMode: GamepadControlMode | null = null;
   let controllerConnected = false;
   let lastLiveMode: GamepadControlMode = "arm";
 
@@ -195,14 +178,8 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
     for (const tab of tabs) tab.setAttribute("aria-selected", String(tab.dataset.page === page));
   };
   const showMode = (mode: GamepadControlMode) => {
-    if (mode === shownMode) return;
-    shownMode = mode;
+    diagram.showMode(mode);
     for (const chip of modeChips) chip.setAttribute("aria-checked", String(chip.dataset.mode === mode));
-    for (const [name, element] of padButtons) {
-      const binding = GAMEPAD_LAYOUT[mode][name];
-      element.className = element.className.replace(/\s*(group-\S+|unused)/g, "") + (binding ? ` group-${binding.group}` : " unused");
-      element.querySelector<HTMLSpanElement>(".pad-button-hint")!.textContent = binding?.hint ?? "";
-    }
   };
   showPage("keyboard");
   showMode("arm");
@@ -251,7 +228,10 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
       showMode(mode);
     }
     if (root.hidden) return;
-    for (const [name, element] of padButtons) element.classList.toggle("pressed", pressed.has(name));
+    diagram.setPressed(pressed);
+  };
+  const setGamepadRawReport = (report: string) => {
+    if (!root.hidden && gamepadRawLine.textContent !== report) gamepadRawLine.textContent = report;
   };
 
   let seen = false;
@@ -261,5 +241,5 @@ export function createControlsGuide(root: HTMLElement): ControlsGuide {
     /* treat as not seen */
   }
   if (!seen) open();
-  return { open, close, toggle, setGamepadStatus, setGamepadButtons };
+  return { open, close, toggle, setGamepadStatus, setGamepadButtons, setGamepadRawReport };
 }

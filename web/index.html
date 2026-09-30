@@ -53,9 +53,10 @@
         <button id="button-controls" type="button" class="accent-button">Controls (?)</button>
         <button id="button-camera" type="button">Camera (V)</button>
         <button id="button-scenery" type="button">Show photo plants</button>
+        <button id="button-controller-map" type="button" title="Show or hide the on-screen controller map (G)">🎮 Map (G)</button>
         <button id="button-gamepad" type="button" hidden title="Turn controller input on or off">🎮 Controller</button>
       </div>
-      <p class="keys"><b>Arm</b> W/S fwd/back · A/D left/right · R/F up/down · Q/E rotate wrist · Z/C tilt wrist · Space grip · H ready<br /><b>Base</b> I/K drive · J/L sideways · U/O turn · [ ] self-drive to stop &nbsp;·&nbsp; <b>Shift</b> precise · <b>click</b> a tomato to reach it · <b>V</b> camera · <b>M</b> wrist view · <b>N</b> AI panel · drag to orbit<br /><b>Controller</b> (Xbox, PlayStation, Switch Pro, and look-alikes): press any button to connect; buttons in Controls (?)</p>
+      <p class="keys"><b>Arm</b> W/S fwd/back · A/D left/right · R/F up/down · Q/E rotate wrist · Z/C tilt wrist · Space grip · H ready<br /><b>Base</b> I/K drive · J/L sideways · U/O turn · [ ] self-drive to stop &nbsp;·&nbsp; <b>Shift</b> precise · <b>click</b> a tomato to reach it · <b>V</b> camera · <b>M</b> wrist view · <b>N</b> AI panel · <b>G</b> controller map · drag to orbit<br /><b>Controller</b> (Xbox, PlayStation, Switch Pro, and look-alikes): press any button to connect; buttons in Controls (?)</p>
     </section>
     <section class="panel" id="ai-panel" aria-label="AI Player">
       <div class="ai-panel-header">
@@ -107,6 +108,15 @@
         <p class="loading-note">Everything runs in this tab: MuJoCo physics (WebAssembly) and a photoreal World Labs scene.</p>
       </div>
     </div>
+    <section class="panel" id="controller-map" hidden aria-label="Controller map">
+      <div class="controller-map-header">
+        <b>🎮 Controller</b>
+        <span id="controller-map-mode">arm mode</span>
+        <span id="controller-map-connection">not connected: press a button on it</span>
+        <button id="controller-map-hide" type="button" title="Hide the controller map (G)">Hide (G)</button>
+      </div>
+      <div class="controller-map-slot"></div>
+    </section>
     <div id="gamepad-mode-badge" hidden>🚜 Cart mode · left button returns to the arm</div>
     <div id="wrist-inset-label">Wrist camera (robot and fruit) · M to hide</div>
     <div id="controls-guide" hidden></div>
