@@ -8,15 +8,38 @@ Implemented: three task selections, keyboard arm/base control, gripper toggle, p
 
 Local installation target: **Apple Silicon macOS, Python3.11, Git and [uv](https://docs.astral.sh/uv/getting-started/installation/)**. The setup script creates an independent `.venv`, downloads pinned source revisions and legacy assets, and records their provenance. First setup downloads roughly 1GB of fixtures/textures plus a 13MB mug subset and source dependencies; it may take several minutes. No model weights or NVIDIA GPU are needed for human play.
 
-From the repository root:
+### First run on your own computer
+
+Install **Git** and **[uv](https://docs.astral.sh/uv/getting-started/installation/)** first, then run these commands in a terminal:
 
 ```sh
-cd game1016
+git clone https://github.com/Sehyeogkim/AI_conference_HACKDAY26_0929.git
+cd AI_conference_HACKDAY26_0929/game1016
 bash scripts/setup.sh
 bash scripts/run.sh
 ```
 
 Open **[http://127.0.0.1:8786](http://127.0.0.1:8786)**. First scene initialization can take tens of seconds; wait for Ready. Keep one active player tab open. Stop the server with `Ctrl+C` in its terminal.
+
+The setup script creates its own Python 3.11 environment and downloads the required sources and assets. Local play needs **no API keys, RunPod account, or running cloud pod**. The simulation runs on your computer, so keep the terminal running while playing. The tested local platform is Apple Silicon macOS; Windows setup is not provided.
+
+For your first attempt:
+
+1. Select **Start the machine**, choose **Practice**, and click **Load scene**.
+2. Click **Start practice**, then click the robot view to use the keyboard. Use the controls table below or the **Keyboard controls** button.
+3. To save data, finish practice, select **Collection**, load a fresh scene, and click **Start recording**.
+4. Click **Stop & submit** when finished. The episode list shows QA results, replay, and the ZIP download. An incomplete attempt is saved but is not an eligible successful demonstration.
+
+### Start again later
+
+From the directory containing your clone:
+
+```sh
+cd AI_conference_HACKDAY26_0929/game1016
+bash scripts/run.sh
+```
+
+To update an existing clone, run `git pull --ff-only` and `bash scripts/setup.sh` from `game1016/` before starting it again.
 
 Equivalent explicit launch:
 

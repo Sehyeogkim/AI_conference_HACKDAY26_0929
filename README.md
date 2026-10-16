@@ -1,5 +1,22 @@
 # WeFarm
 
+## Coffee Lab — run on your own computer
+
+The independent coffee robot game is in **[`game1016/`](game1016/README.md)**. Tested locally on Apple Silicon macOS; install **Git** and **[uv](https://docs.astral.sh/uv/getting-started/installation/)** first.
+
+```bash
+git clone https://github.com/Sehyeogkim/AI_conference_HACKDAY26_0929.git
+cd AI_conference_HACKDAY26_0929/game1016
+bash scripts/setup.sh
+bash scripts/run.sh
+```
+
+Open **[http://127.0.0.1:8786](http://127.0.0.1:8786)** and wait for **Ready**. First setup downloads roughly 1 GB of assets and creates a Python 3.11 environment. Choose **Practice**, load a scene, start the session, and click the robot view to control it. Keep the terminal running; use `Ctrl+C` to stop.
+
+**No API keys or running cloud pod are required for local play.** See the [full Coffee Lab manual](game1016/README.md) for controls, recording, downloads, and Linux GPU setup.
+
+## Original harvest hackathon demo
+
 **Play the harvest. Capture robot data.**
 
 ![WeFarm concept cover: requester, game, player, and QA](docs/assets/wefarm-readme-cover.png)
