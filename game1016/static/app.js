@@ -1,4 +1,4 @@
-/* Local player UI. The server owns physics, timing, success, and recording. */
+/* Player UI. The server owns physics, timing, success, and recording. */
 (() => {
   'use strict';
   const $ = (id) => document.getElementById(id);
@@ -40,7 +40,7 @@
     try {payload=await response.json();} catch {payload={error:`Server returned ${response.status}`};}
     if(!response.ok) {
       const detail=payload.detail || payload.error || `Request failed (${response.status})`;
-      throw new Error(response.status===409 ? `Local session already in use. ${typeof detail==='string'?detail:'Close the other player tab before taking control.'}` : typeof detail==='string'?detail:JSON.stringify(detail));
+      throw new Error(response.status===409 ? `Session already in use. ${typeof detail==='string'?detail:'Close the other player tab before taking control.'}` : typeof detail==='string'?detail:JSON.stringify(detail));
     }
     if (payload.status && typeof payload.status==='object') updateStatus(payload.status);
     else if(payload.phase) updateStatus(payload);
@@ -98,15 +98,15 @@
     document.querySelectorAll('[data-view]').forEach(button=>button.disabled=pending||!connected||!!state.locked||['loading','replaying','submitting'].includes(phase));
     $('resetButton').disabled=pending||!connected||recording||paused||finished||['submitting','replaying'].includes(phase)||!!state.locked;
     $('sessionMode').disabled=$('seedInput').disabled=$('resetButton').disabled;
-    const notes={loading:'The local simulator is preparing the scene.',ready:state.mode==='practice'?'Practice is not saved as a demonstration.':'Ready to capture your next demonstration.',recording:state.mode==='practice'?'Practice session · no dataset recording.':'Recording observations before each action.',paused:'Paused · physics and recording are stopped.',completed:state.mode==='practice'?'Task complete. Finish to begin another practice.':'Task complete. Submit to save this episode.',stopped:'Session stopped. Submit to preserve this attempt.',submitting:'Saving and validating the recording…',submitted:'Session saved. Load a new scene to begin again.',replaying:'Playing saved simulator states · input is disabled.',error:'Check the error details below.'};
-    $('actionNote').textContent=state.locked?'Another player tab owns this local session.':notes[phase]||'Waiting for the simulator.';
+    const notes={loading:'The simulator is preparing the scene.',ready:state.mode==='practice'?'Practice is not saved as a demonstration.':'Ready to capture your next demonstration.',recording:state.mode==='practice'?'Practice session · no dataset recording.':'Recording observations before each action.',paused:'Paused · physics and recording are stopped.',completed:state.mode==='practice'?'Task complete. Finish to begin another practice.':'Task complete. Submit to save this episode.',stopped:'Session stopped. Submit to preserve this attempt.',submitting:'Saving and validating the recording…',submitted:'Session saved. Load a new scene to begin again.',replaying:'Playing saved simulator states · input is disabled.',error:'Check the error details below.'};
+    $('actionNote').textContent=state.locked?'Another player tab owns this session.':notes[phase]||'Waiting for the simulator.';
     const overlay=paused||finished||phase==='submitting'||!!state.locked;
     $('pauseOverlay').hidden=!overlay;
     $('overlayResume').hidden=!paused||!!state.locked;
     $('overlayResume').disabled=pending||!connected;
     $('overlayIcon').textContent=state.locked?'◷':finished?(state.success?'✓':'□'):phase==='submitting'?'↗':'Ⅱ';
     $('overlayTitle').textContent=state.locked?'Session in use':phase==='completed'?(state.success?'Nicely done.':'Session complete'):phase==='stopped'?'Attempt finished':phase==='submitting'?'Saving your demonstration':'Paused';
-    $('overlayText').textContent=state.locked?'This local simulator is controlled by another browser tab. Close that player tab to continue.':phase==='completed'?'The simulator reported the task complete. Submit this episode to save its result.':phase==='stopped'?'This attempt has stopped. You can submit it or discard it.':phase==='submitting'?'Keeping observations, actions, and replay state together.':'Your robot and recording are paused. Click Resume when you are ready.';
+    $('overlayText').textContent=state.locked?'This simulator is controlled by another browser tab. Close that player tab to continue.':phase==='completed'?'The simulator reported the task complete. Submit this episode to save its result.':phase==='stopped'?'This attempt has stopped. You can submit it or discard it.':phase==='submitting'?'Keeping observations, actions, and replay state together.':'Your robot and recording are paused. Click Resume when you are ready.';
   }
   function updateStatus(incoming) {
     const previous=state;
@@ -159,7 +159,7 @@
   function connect() {
     clearTimeout(reconnectTimer);
     socket=new WebSocket(`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/ws?client_id=${encodeURIComponent(playerID)}`);
-    socket.onopen=()=>{connected=true;state.locked=false;$('connectionText').textContent='Connected locally';$('reconnectButton').hidden=true;renderTasks();renderActions();inputMessage();};
+    socket.onopen=()=>{connected=true;state.locked=false;$('connectionText').textContent='Connected';$('reconnectButton').hidden=true;renderTasks();renderActions();inputMessage();};
     socket.onmessage=(event)=>{try{const message=JSON.parse(event.data);if(message.type==='status')updateStatus(message.status||message);else if(message.type==='frame')updateFrame(message.images);else if(message.type==='error'){if(message.locked)updateStatus({locked:true});setMessage(message.error||message.message||'Simulator connection error.',true);}}catch(error){console.warn('Invalid simulator message',error);}};
     socket.onclose=(event)=>{connected=false;keys.clear();const locked=event.code===1013||state.locked;if(locked){state.locked=true;$('connectionText').textContent='Session in use';$('reconnectButton').hidden=false;}else{$('connectionText').textContent='Reconnecting…';reconnectTimer=setTimeout(connect,1800);}renderTasks();renderActions();if(frameSeen)$('focusHint').textContent='Connection lost · controls released';};
     socket.onerror=()=>{$('connectionText').textContent='Connection error';};
