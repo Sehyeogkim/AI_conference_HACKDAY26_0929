@@ -9,7 +9,7 @@ Use a prebuilt NVIDIA runtime image with Python-capable Ubuntu/Debian and expose
 Transfer `game1016` source excluding `.venv`, `.cache`, `.tools`, `vendor`, `runs` and logs. Keep sources/assets on persistent workspace storage. On the pod:
 
 ```sh
-cd /workspace/AI_conference_HACKDAY26_0929/game1016
+cd /workspace/wefarm/game1016
 bash scripts/cloud_setup.sh
 MUJOCO_GL=egl PYOPENGL_PLATFORM=egl .venv/bin/python -m coffee_game.server --host 0.0.0.0 --port 8786
 ```
@@ -50,3 +50,27 @@ Training collection uses object splitA with layout/style pairs0/0,3/3,5/5. Held-
 ## Current validation
 
 Native CoffeeSetupMug reset, three camera renders, state53, action12/native12, one step and metadata generation succeeded on local Apple Silicon with MuJoCo3.2.6. This validates execution, not human task completion or policy performance. The root game's replay/recording checks provide additional evidence separately.
+
+
+## Verified Linux GPU smoke (2026-10-16)
+
+The Ubuntu22.04/glibc2.35 pod with Python3.11.10 and RTX3070 successfully installed the pinned sources, direct dependencies, fixtures, textures and mug subset using `cloud_setup.sh`. All three native coffee tasks passed camera/state/action/clock/movement and exact qpos state-restore checks on train seed0 (layout3/style3):
+
+| Task | Construction seconds | Median step + three camera renders seconds | qpos restore error |
+| --- | --- | --- | --- |
+| CoffeeSetupMug |25.612 first initialization |0.0318 |0 |
+| CoffeeServeMug |12.603 |0.0327 |0 |
+| CoffeePressButton |12.782 |0.0314 |0 |
+
+These short timings are smoke measurements without a connected browser or recorder; they do not guarantee end-to-end wall-clock20Hz under load. Each test exercised six native actions with all three RGB256 cameras, state53 and action12, and simulation timestamp increments0.05s. No task success was claimed.
+
+Reusable commands (run on the simulation owner thread, outside the active game):
+
+```sh
+MUJOCO_GL=egl PYOPENGL_PLATFORM=egl .venv/bin/python scripts/smoke_simulator.py
+MUJOCO_GL=egl PYOPENGL_PLATFORM=egl .venv/bin/python scripts/smoke_replay.py
+```
+
+The scripts write evidence to ignored `logs/simulator-smoke.json` and `logs/replay-smoke.json`. The second script measures continuous native-action replay from the first saved integration state; it does not prove arbitrary mid-episode controller recovery or successful task completion. Deployment acceptance still requires external browser gameplay, recording, submission and download verification.
+
+The Linux CoffeeSetupMug continuous action replay check passed for12 mixed arm/base/gripper commands: maximum qpos difference1.4457253177138597e-9 against tolerance1e-3, with recorded and replay success flags matching (both false). The optional OpenGL renderer/vendor strings were unavailable through PyOpenGL and are recorded as unavailable; no renderer-vendor identity is inferred from that query.
