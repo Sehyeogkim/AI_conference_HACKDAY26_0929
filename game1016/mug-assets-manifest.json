@@ -1,0 +1,4751 @@
+{
+  "url": "https://huggingface.co/datasets/Livfour/robocasa-assets/resolve/69f7446f5f0f763971cabeb8b77026fcecced17c/objaverse.zip",
+  "revision": "69f7446f5f0f763971cabeb8b77026fcecced17c",
+  "files": [
+    {
+      "path": "objaverse/mug/mug_14/model.xml",
+      "size": 13321,
+      "sha256": "609d7f0ef8f58a844ad6d3cb4caa89f87ea58da46371c74f8932a815be2762dc"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_12.obj",
+      "size": 3248,
+      "sha256": "7b21ebf1ab4f66f362127d6d2f24c6099aea90f2a3f6c42ca12b0ab567bad79e"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_10.obj",
+      "size": 4787,
+      "sha256": "b0d0ab32486772a07379125942f6ffbe868d769dca413f5fc34651766c7ffcf5"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_5.obj",
+      "size": 4395,
+      "sha256": "c123a90e7cf2d3329928434803d88926ab4346ee8fcdc0dee84d3df3d04752ba"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_16.obj",
+      "size": 1104,
+      "sha256": "2fe38abc5ec74dee84ab709cc0789fe70c4c08d64917f5bd99bb1cb66adec7f8"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_9.obj",
+      "size": 1319,
+      "sha256": "3e9c57e381e181e9137c170c8cdb5ad723dc5b8500e092c17254ab121250ffb5"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_26.obj",
+      "size": 770,
+      "sha256": "f5f60449c5f9ba8a1ef3bf91a0f23b597f1abe148c816720c1230450c461560a"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_3.obj",
+      "size": 8930,
+      "sha256": "33644e7b14409326d36eac4924c28f8d723a0255b962dab0c062f044d7a70e85"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_18.obj",
+      "size": 1371,
+      "sha256": "2ae34628c435e86b334154fa408ae7f8793db8522eb22d67406e79b53400648e"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_2.obj",
+      "size": 5576,
+      "sha256": "5d6f8bc8a04cc7d2689dad54f0773fd1c1ba7530ddcd10bb1b0a355891fecce9"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_9.obj",
+      "size": 5509,
+      "sha256": "6ef5e509ebc9c1e55c3ff0014b064966951c96986acf62fda84bf0771eaa5540"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_21.obj",
+      "size": 1122,
+      "sha256": "9d3e7caf9f98f7236f9409beca59f9e06451d23b6e88c6573e18fc8fca1d6154"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_25.obj",
+      "size": 425,
+      "sha256": "55d31d76958597dd5847210e1c2204c93b2bf37e3c1052eb7833458a02399124"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_31.obj",
+      "size": 484,
+      "sha256": "cb0e28953f12c62901e13013998ac1b0a2c0ad9b00690fd60bce35827e7dea0a"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_15.obj",
+      "size": 1427,
+      "sha256": "273abda950bda5686401393ed8fcf0b7560a05aed91c0fb36689db6cde104867"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_1.obj",
+      "size": 1270,
+      "sha256": "465d76695f78b08da9aa21a2e7a51a58a199622db0762d648201fa0edaa2ac77"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_6.obj",
+      "size": 3999,
+      "sha256": "1485191ef40f2ed84e63a63e7bb5ae0151faf71fc64308f0275146a3eee166d8"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_2.obj",
+      "size": 3385,
+      "sha256": "b76b74e84c3111c4d1d1f3e30524d79c3f04e085a0246ad5fe08badee531d9af"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_12.obj",
+      "size": 1577,
+      "sha256": "d30738e4f71b9df93dee9bd584f54d8c61117f44e70fbcd3f481794ab1fea308"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_22.obj",
+      "size": 1659,
+      "sha256": "5bb0a5d5377a53a6b75c88be7344009fb5d1d4859f0c7d75826cca6d9638c564"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_23.obj",
+      "size": 1067,
+      "sha256": "e9dd5ed85bbe1890e36226f244f6cb95e460059c1d71d5288ad3b2fa19d16b3d"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_8.obj",
+      "size": 1313,
+      "sha256": "80bb462c6452f53cc50d981c8490c4af9b6a2bbc152a92d95f08332c2730e2d4"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_4.obj",
+      "size": 1072,
+      "sha256": "35cacfd0356ec74ed34e857462d1a59bc91dca79def02371db9f7849c36cf13d"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_7.obj",
+      "size": 4185,
+      "sha256": "fa08fbe08b5b7acfc9048684dce53f72adcb467502a9ed737fb6e0f8e041e21e"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_20.obj",
+      "size": 759,
+      "sha256": "0ba39a5094ce85d77adb012e1b49326816518903aa75cf69aef794492ab8aafd"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_13.obj",
+      "size": 2551,
+      "sha256": "de11be65935269bc27973b5e0166b56d48a5c50c2b9e7efe8e142671ac914e5d"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_14.obj",
+      "size": 3180,
+      "sha256": "9e634db80a966dff76a766ad18f33c7d54a366c190db1b9f109a5c1bdd204153"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_6.obj",
+      "size": 1006,
+      "sha256": "243415b23a3010662098869ccb103bce6129150e2a7133ddb0b8356e12ddbc09"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_30.obj",
+      "size": 654,
+      "sha256": "482c96adf424f32e9f5443314ad93114fae5da4a8c088f2b0f68f8e8ae68a4df"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_3.obj",
+      "size": 1400,
+      "sha256": "f0c174dd25d39253fb5bee801089ba35905f590059ef6b87d8a8c0acaa1a01c9"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_11.obj",
+      "size": 3998,
+      "sha256": "45f1f8542dcb5f8e0537a3171f1ca6fbbe5ac1d99da87d5e717e0fad3fb0d905"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_10.obj",
+      "size": 2065,
+      "sha256": "e95d89b6374a5691dc0b9ef8ac4b5229f0a0f2eea0bd6e4a24e40cbdef17d139"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_14.obj",
+      "size": 1292,
+      "sha256": "ad588bd8b37f21728e86b85cc8f402c281281d36526686ce85eb9806ecb735c5"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_5.obj",
+      "size": 1071,
+      "sha256": "e15d595a3f3e9c6ce95d0b4c8aa29dcf676173400450d417810ab09fbbfea4f4"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_13.obj",
+      "size": 4485,
+      "sha256": "2c8163bade7bdbc5cf97aaf881e3f5dc0874020dd44f857b2c7b3349cb3080e1"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_29.obj",
+      "size": 1003,
+      "sha256": "0ecdecb6e8fc9a35f5725bccdefb07ce784eaa05c03e25222977d4e52c880a98"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_11.obj",
+      "size": 822,
+      "sha256": "dfbb371e949107269655d2b0b43ef22e643a8ebe34fca6bc150af3166745dfb8"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_0.obj",
+      "size": 23794,
+      "sha256": "a89c5d15ecbac4ab8c45d178b8a22e641cd07c1092a6599bd1bbee67d01d1446"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_0.obj",
+      "size": 1370,
+      "sha256": "75e3c55c4fcc42764bd621360f7c393e8375ad3ffe2d9e94e5fe04c66803f779"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_7.obj",
+      "size": 1102,
+      "sha256": "d1327c4973e1bd3f7620c8c92b078ae56370cd45f1bdc4af224904d06d6e453c"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_1.obj",
+      "size": 5849,
+      "sha256": "5bc2869178947749357bb8210ada12669b4e702262dbf1144d3acb4324996fd9"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_15.obj",
+      "size": 1581,
+      "sha256": "07eed3cee01b7bfc321b2062ee534210406c21558a7a941ef0123d2c734748b5"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_27.obj",
+      "size": 718,
+      "sha256": "0e3096279538fcd76597ef3d25aa638c3f953c2ab940913778efc4a6a2d778b0"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_24.obj",
+      "size": 1114,
+      "sha256": "999317877937bc99b08136ab8e34f304e0a79457d38d8fa2a913228fcdf234b8"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_19.obj",
+      "size": 1214,
+      "sha256": "86d1657f4096fd95b9fa02825587a3593133ef19b157dfbabec26cc4f7a6da5b"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_28.obj",
+      "size": 547,
+      "sha256": "8d22ea175afd35f5600c7cf08f0eafcd1901c62bf5e357eb4bcc24c49de31a86"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/model_normalized_collision_17.obj",
+      "size": 820,
+      "sha256": "c6581f7a91df37e94df01f180d1cdd953a3d3792c917739fc4ed94bda87bcce4"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_8.obj",
+      "size": 4415,
+      "sha256": "edb41b382acf38fd0ebc24a395df2983b9db4f36dc8f4351d059d2ec401f1b33"
+    },
+    {
+      "path": "objaverse/mug/mug_14/collision/collision_mesh_collision_4.obj",
+      "size": 2728,
+      "sha256": "1b32302498635d39b99e577d09616fa8d15769831c7b3c9d57568d804d5e015e"
+    },
+    {
+      "path": "objaverse/mug/mug_14/visual/model_normalized_0.obj",
+      "size": 343594,
+      "sha256": "1f0fa8950a3cbce1b519294e9f56647ace3ac169b309460da98c30b85a43bd25"
+    },
+    {
+      "path": "objaverse/mug/mug_14/visual/material.mtl",
+      "size": 178,
+      "sha256": "78b5f6a31a33653c7544401ee746349f82d6b80204904deb01438d9a2b759a09"
+    },
+    {
+      "path": "objaverse/mug/mug_14/visual/model_normalized_1.obj",
+      "size": 379050,
+      "sha256": "8a7e093fada7f8b2d6dda8211f81f346682367472c3cc53b5ff55b8eff6e3871"
+    },
+    {
+      "path": "objaverse/mug/mug_11/model.xml",
+      "size": 13002,
+      "sha256": "b3a9cb7462d43a41b658ef1b6213181b7195631f96b988e173750b5eaa9a6bfe"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_12.obj",
+      "size": 17421,
+      "sha256": "45b1b9695d71911043926285b147423ee1826597a9baec400d4c147634f76204"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_10.obj",
+      "size": 15897,
+      "sha256": "c546558d3d5bd1a1a4e683609e552436922490e5ef6d5787259ae61de23c38f4"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_5.obj",
+      "size": 14315,
+      "sha256": "2645cbd6d013d88e88e2adb4933de9dbb19015fe776fb73ef7382857df125093"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_16.obj",
+      "size": 820,
+      "sha256": "bc89a1ab3ac3c8efe976407e7bb60eb809a8495ccc284d1c5c402629562d3a0a"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_9.obj",
+      "size": 1723,
+      "sha256": "4f49ca063ecc006eab56f2bf1a41397987580dd9156c9d8a0556fd4315dcaa97"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_26.obj",
+      "size": 655,
+      "sha256": "9d77c10e4ac1f33c9392a6c09bc71c9853c6fa70d67b8499d0fad7dabbb0330d"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_3.obj",
+      "size": 23888,
+      "sha256": "ce61d9eb00239a8bb6ab6da0f5cb77ff85983efbbfe233f5d628b371ce434985"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_18.obj",
+      "size": 652,
+      "sha256": "6c5c949a10effc6c95ecd2baff62b3d9540ab7af829629cef202a998ebfea843"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_2.obj",
+      "size": 169129,
+      "sha256": "fc788230d6c9ac4e22a50eadb5235992dc6ecfc20c74743e15339b96ad13400b"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_9.obj",
+      "size": 20827,
+      "sha256": "aa454afce96e21eca06f0c9e50e1a0a76067cf8eb74766ce53a4ab24bb372f8d"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_21.obj",
+      "size": 1703,
+      "sha256": "13c663c0b90e3eed3aa411ae525a5a5d1805854a9c8fe18bc9fbbed91eafdda3"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_25.obj",
+      "size": 1148,
+      "sha256": "83d6a42510dd6a53783429c89ec3604fd7e38875fc80c6b301a88283b19a7d9f"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_31.obj",
+      "size": 427,
+      "sha256": "18f15a8994f107f0586600b94d730e733e3d7be5689b4ce72fcb03219ba34075"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_15.obj",
+      "size": 25828,
+      "sha256": "2f22648a90fe38cd3ab3c19c005c179325217361b40e9611c7b8489047b19b71"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_1.obj",
+      "size": 1347,
+      "sha256": "a7231fe68cdeed0bb37f211cfc2160f8491205d8237c29463c2e5ccaa3a859db"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_6.obj",
+      "size": 13865,
+      "sha256": "b22a94115f40c3da03e9a51005800ed619266c756348ed129c3d3b154fd5227b"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_2.obj",
+      "size": 1664,
+      "sha256": "a2273ed34f8cdbbd510ef13632537b18747ba3ae8e20ca9a8bb66fe850aea6cb"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_12.obj",
+      "size": 1348,
+      "sha256": "dfd9bfe72e8c4290eda6ac537329561e0d00524439b826f26e5f850c8cd7b30c"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_22.obj",
+      "size": 1792,
+      "sha256": "6ef4d8783ae7e6f0ad53ab9da87f5cb307174f461fa9644d03ab1464989cfdc3"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_23.obj",
+      "size": 1558,
+      "sha256": "530d75c46f7e68aed07e03ec2cf422fbbae85e70c70fdffbadfb12a60b79f018"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_8.obj",
+      "size": 758,
+      "sha256": "652cbd12607b5f0f08fd98d5c9c1e3ae7730982a8bb39cd2345c9c934ea89453"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_4.obj",
+      "size": 1832,
+      "sha256": "05de7a81f595705b166777b9a2b532ed82480c7d8c73fce52c43d84e4a78b101"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_7.obj",
+      "size": 10973,
+      "sha256": "7347b1edff5257df59cd5da70401c071ce87ac019e4d9a288c11490bc298b911"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_20.obj",
+      "size": 1010,
+      "sha256": "a9794b291bb96dcba88c106c726db7e69ce2de9ae34f665da60cf7f571726c50"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_13.obj",
+      "size": 1354,
+      "sha256": "0ed6589f7a857f5e3829c602de55b19936bf8fd5c44d70a0ae0de0981f9ea2f7"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_14.obj",
+      "size": 250750,
+      "sha256": "47ff01a53f5bf2eceee374c370d792f9de996c620f24644bc42c7f3ffa40a820"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_6.obj",
+      "size": 1053,
+      "sha256": "e5a379b8e4587286ae0811e709b83240cae99c17ea89be0aa0c2e052d57fab37"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_30.obj",
+      "size": 1505,
+      "sha256": "22b895938158cc6f62d21774113d4b434dadb7f449e383402279e732c1c7f312"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_3.obj",
+      "size": 1761,
+      "sha256": "a502973f732c976a0b0ba26dbde630ee702b2584e67997c6fbcf48fcd2fe0734"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_11.obj",
+      "size": 21857,
+      "sha256": "5aa16ce74397edf3363244bbf88c70a0d7e7419f99d0fb8c16924ee4ec94d62d"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_10.obj",
+      "size": 1388,
+      "sha256": "1b36887c78d89a69233d36f58246379073dc0356dd5880194b0fb668b9f62e37"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_14.obj",
+      "size": 2079,
+      "sha256": "a3f60688357a15c8eb2c8b4e575f6a4e9a591225290395c2ebbe7e71a02a2c21"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_5.obj",
+      "size": 1522,
+      "sha256": "9a031023f16d512bdc467762e0eed89dd7803e1cc4430f6bb0f13f3fe7643198"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_13.obj",
+      "size": 16010,
+      "sha256": "559e656d92f111daec0a70d4dc5228dd112df56a3d465442b027598532a3dd95"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_29.obj",
+      "size": 1065,
+      "sha256": "ef8fae27c45d40bb41190f515bf14f21b441e7154b5902758f4b64bfea08330d"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_11.obj",
+      "size": 1727,
+      "sha256": "c5c8764d0e9b839cba009428c14b58450fd743a8e0bb2a825daf9afaa3acc2a6"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_0.obj",
+      "size": 200685,
+      "sha256": "d170d4be7ffc38863432b47267acaca69e4de26fc4bae971516a1b921e747243"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_0.obj",
+      "size": 1929,
+      "sha256": "aa494d870d8b102aa16dde5405c463cef552c3412fb823a78ccae5af08532b0c"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_7.obj",
+      "size": 1068,
+      "sha256": "09f63a26c8199ee2d91a2241be22915e90e118b2014701d14e23661cee9081b4"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_1.obj",
+      "size": 128735,
+      "sha256": "fff509b53ec97b06ada6993c36f1f9645d6c83c8c930fdb4f5bc746d5e8d1ac1"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_15.obj",
+      "size": 1811,
+      "sha256": "d99e5dc3d69d2f2803de16f11931ca241b8f0ae8e0241e3209ef231b51b31724"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_27.obj",
+      "size": 1332,
+      "sha256": "fe7fd084486c07d1def1822e00fbec3d12b80ed20611bbe92d874c2e27adb375"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_24.obj",
+      "size": 1041,
+      "sha256": "368f32a151e1b10091bf7bb651a05cfae704b0496936c5e3915fa763a6723255"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_19.obj",
+      "size": 707,
+      "sha256": "c45f865dc7d1173d6580e2536d30656845c5ee897aeb85db51f224b3c91374f8"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_28.obj",
+      "size": 925,
+      "sha256": "a1d5f0829e933c6533582391eeb92d631c85731f47692a78f08c8cdb82fdb4bc"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/model_normalized_collision_17.obj",
+      "size": 928,
+      "sha256": "74efa1cc6fe512765be2c6d14abe7248b2bd0713a6b90ea53b43120fdb123399"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_8.obj",
+      "size": 18660,
+      "sha256": "f9027b4e511e0f4d43b7f7330f077078238304541cf63af32d20e8839e33e8eb"
+    },
+    {
+      "path": "objaverse/mug/mug_11/collision/collision_mesh_collision_4.obj",
+      "size": 19522,
+      "sha256": "e12da0f5dbecdc781b6b9c737a0b81d2a5d2fd305a36f504acabd848f0a765c9"
+    },
+    {
+      "path": "objaverse/mug/mug_11/visual/model_normalized_0.obj",
+      "size": 12059944,
+      "sha256": "1a9f2de5a669f79c82b322547c4ce02c74b51bc1429dd5990c63a783e77fcdf5"
+    },
+    {
+      "path": "objaverse/mug/mug_11/visual/material.mtl",
+      "size": 201,
+      "sha256": "5d7cf6bca9376f990af2a47c00189d45ea45ba4b3e3d54147320831638e71d0b"
+    },
+    {
+      "path": "objaverse/mug/mug_11/visual/material_0.jpeg",
+      "size": 8821,
+      "sha256": "937f10a24b6ab68177a464e939f5b73ab54283cd3463c3194a5208a695cd0e6b"
+    },
+    {
+      "path": "objaverse/mug/mug_11/visual/image0.png",
+      "size": 2708,
+      "sha256": "10ecd8557c2ae70fbbc71613ebfed8ce0f8b54c3d655a04b4ddc7703df953440"
+    },
+    {
+      "path": "objaverse/mug/mug_2/model.xml",
+      "size": 14893,
+      "sha256": "5c7fc9f07dbd8bd54eab9412f7777b272560386c5422a2d7c47fd57f0302fe3c"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_12.obj",
+      "size": 4784,
+      "sha256": "8ac07bd88e7761556f49d10244da8619cb6708272ecd2dfb59a8b2aab26207e7"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_10.obj",
+      "size": 21287,
+      "sha256": "3b13135bcacf12cf261e46cae09dd90e5bf0e560a5bcb09d547978270bb0d95c"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_5.obj",
+      "size": 5563,
+      "sha256": "89ddf77c709275a6536515df634b2417c472ce437325a9e60f066ddd5cee1e73"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_16.obj",
+      "size": 1092,
+      "sha256": "da56626e1154632b32e59e894d6eb8f04ef611a3ec6c0e7107c5370d3cc6d971"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_9.obj",
+      "size": 1005,
+      "sha256": "168dc057338ef63bceab6708e4233ddd8a266104221cef1646d8b65b19a786bf"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_26.obj",
+      "size": 653,
+      "sha256": "62bda40527c28ef53e2f103c2654171dafea2ab6bfa9c380d1b58f15a1b074cc"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_3.obj",
+      "size": 3820,
+      "sha256": "dcbc93462f3fd9a4f1df7275ac316ae00c47bb45e547fd1be89d00ca20af395c"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_18.obj",
+      "size": 595,
+      "sha256": "f3d2b58562f5eb6e021b601b1ecdbea1a203702bf61d6675c73ffb397c7a927b"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_2.obj",
+      "size": 19059,
+      "sha256": "8f3140818393b4be123ff3ea12b72ce1c3e61fa6fa4c945e02f1e54a4811f5bd"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_9.obj",
+      "size": 3648,
+      "sha256": "0dc41704702298b04ade67f972eaa9904d64e208ae9b257d1dd96d7901491954"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_21.obj",
+      "size": 857,
+      "sha256": "2781904d72b460222d529ac1fd1c26c8f762751fc2967968262f17f6946a9172"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_25.obj",
+      "size": 776,
+      "sha256": "564b9c6fffe358de3476cc0b3538635c5069ca1bef0b0881612b12631645d72e"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_31.obj",
+      "size": 547,
+      "sha256": "cf11ba1579af6fbfd311e43593734d0f680d96eca01e8ef98ff2eabed1a7e52d"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_15.obj",
+      "size": 17574,
+      "sha256": "9ec48b65aaec0154d750a75ae49d6505addb6f10b90c632f995b36d24c164c61"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_1.obj",
+      "size": 1156,
+      "sha256": "377d7608a818881c9573d1bad38c10fa870b6b6c523f8a94485f4125e4dc6aeb"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_6.obj",
+      "size": 544,
+      "sha256": "2766017cee42cb4bea643b3bae7a1f8845240dcc488f120a4ee3b463d375909c"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_2.obj",
+      "size": 1187,
+      "sha256": "0ff45d62198491ea31507c2781649764b1b46f79dd8624b04ce61b46f7efd0bb"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_12.obj",
+      "size": 1220,
+      "sha256": "332c889cdb4c38dd12703209d55596c55f73c8b4ae78efa7e10e341116371ac8"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_22.obj",
+      "size": 997,
+      "sha256": "109fbfbb4465ece8868785e7b4f0eb367a5579117be8f6b506982fd2a8371c85"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_23.obj",
+      "size": 2799,
+      "sha256": "f7fd816380097db5062a6344a2db2b3e9773644a58209ee5400b6c5473041833"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_8.obj",
+      "size": 806,
+      "sha256": "689bd56547c9da5b9ed24632c6d05e60ae8c57e5643af7c2bf305307f6852d3b"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_4.obj",
+      "size": 1337,
+      "sha256": "6b717145475fea5a35606c7a11785d74f8eaf43eadd7ba667d986452762181eb"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_7.obj",
+      "size": 3961,
+      "sha256": "4b1cbbb22998626eb5f8364cf854e5df125a479075aa7168722087e0ccdd4cfa"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_20.obj",
+      "size": 1226,
+      "sha256": "e000be9be0e49c9b0cbfd05d11d20e678e3563cfab067723c7464b8dba752dc1"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_13.obj",
+      "size": 1776,
+      "sha256": "d807e8977a667f75488c3ecd3a111982e3801eeaf154fa9d79c97be7ff6711f6"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_14.obj",
+      "size": 3627,
+      "sha256": "5315dbc696409c8e2e890516e9a9dda7ead95e6dba044980dd9ff04f6ea4b94f"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_6.obj",
+      "size": 1152,
+      "sha256": "13de8fe50d6e5ff5e860047a0a6348f4ba9056a98058360986d39f261867a1b9"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_30.obj",
+      "size": 419,
+      "sha256": "342dac93b582b1bfa7536885a72d4e0740ccac3f315832a7b1af8909c05c1bf6"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_3.obj",
+      "size": 1315,
+      "sha256": "7d9dbdc1c8beb42128d0dc64733df3b45f62b604ede082145396f9279c5751bf"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_11.obj",
+      "size": 3656,
+      "sha256": "55ca9126c80464e622173115eb9e99a2d96f3948540977fb0fbf5905319f568a"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_10.obj",
+      "size": 1209,
+      "sha256": "5f3cf608128bde6349b13283036768ba108cd1985ffbee298c0a2d8acc9bf918"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_14.obj",
+      "size": 875,
+      "sha256": "8dacdb13c4a4aec1311d9459d281fb992f41efdb9e0b0d9e4e3b7f06634e95d7"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_5.obj",
+      "size": 2794,
+      "sha256": "e652bf2be53d393d706d6f2341aaa75dc421b46cc93ff0f3b83057802483d997"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_13.obj",
+      "size": 2541,
+      "sha256": "e208c3aaec7ebe208cf5737ff28effb2c9dc2cf74a52d245bc3379a13315c7ec"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_29.obj",
+      "size": 957,
+      "sha256": "653dda5e0f1752121b5d7c355d7aaef4a2ea68d28a8e8638e7a409d7bd9e1240"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_11.obj",
+      "size": 932,
+      "sha256": "3a1a5f2d2b8b5516617dd7a4b657fcee774038d5b928212f317a0129f7ddcc5b"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_0.obj",
+      "size": 5652,
+      "sha256": "341acfe9a9c0a7a89a82d57da54045bef411c6afa9281fde83f76941158c08df"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_0.obj",
+      "size": 1284,
+      "sha256": "11a434028bd6af32c6c9dc171af46585e0714a279293888c5976178b8274a4e5"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_7.obj",
+      "size": 1685,
+      "sha256": "d784507d30c71bacdf2433eacb92a7a76c15ae2ef9321b44a360f86d66c16e3d"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_1.obj",
+      "size": 5467,
+      "sha256": "f29c805c6fb6fecc18d488326ae6713266336a748d8c37d210f042e07da42821"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_15.obj",
+      "size": 1285,
+      "sha256": "10040239432db8a59ca588dbd7c68dd57046a1a4a5471831f2455889bd632379"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_27.obj",
+      "size": 987,
+      "sha256": "eaedc6317ed4b77c56f3a199d6f46a0be8b333a2a77c840f5b94fd91adcf161a"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_24.obj",
+      "size": 641,
+      "sha256": "4b89ea30a1baa87390f143dc904990a10b7d4ab7991943a5d30f5db48fb07c71"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_19.obj",
+      "size": 2003,
+      "sha256": "5af4f0bdab23434f8c7c87fef7c867e88bda29a1618c343918f6209d7cb8d442"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_28.obj",
+      "size": 1402,
+      "sha256": "37341edb202b8e0f681fbb12872a1ccb6671a8c1b97fac450ff64d5d926a6677"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/model_normalized_collision_17.obj",
+      "size": 827,
+      "sha256": "f3cf1d547314d08fd293832637882f06a641750a9cae0ea6a731b98a8c438719"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_8.obj",
+      "size": 3930,
+      "sha256": "c1fa5171da63a4ef2007b76a45cfd1d79d5809699526ef6372fc88097df172b9"
+    },
+    {
+      "path": "objaverse/mug/mug_2/collision/collision_mesh_collision_4.obj",
+      "size": 5828,
+      "sha256": "16579e9a591b981ed1472c6e9bddc2b6daf4a2a90011a2c1d0dd76ed671710ca"
+    },
+    {
+      "path": "objaverse/mug/mug_2/visual/model_normalized_0.obj",
+      "size": 459394,
+      "sha256": "a86d25eabc75e72c31766cfdad5c0e01b5a2ca7bc29340d1befdcb71a60183bb"
+    },
+    {
+      "path": "objaverse/mug/mug_2/visual/material.mtl",
+      "size": 176,
+      "sha256": "8875fe0bc6e55e8c37fa91a11bbf907e9d7dbd391db327018e7f0e1d751db7d2"
+    },
+    {
+      "path": "objaverse/mug/mug_2/visual/model_normalized_1.obj",
+      "size": 1278943,
+      "sha256": "0df681d44064ea8174e5c912043754c830def7dc9ffdfd813372c2f46214f6c0"
+    },
+    {
+      "path": "objaverse/mug/mug_16/model.xml",
+      "size": 11886,
+      "sha256": "774439065761d606b645efca37374df0abbc82a1c3442f4065a552e7135efe6c"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_12.obj",
+      "size": 22269,
+      "sha256": "4b64b6a6012548d5ed436170183d9810362301d18a591917ce71edcb8f364662"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_10.obj",
+      "size": 7010,
+      "sha256": "f5c36a9a073245964866dc55a3a3dc968b6306bcfdc7f9103f81a1bc7e941d92"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_5.obj",
+      "size": 14582,
+      "sha256": "a4f0988c3b949fac098779b3b24cb572afc79517fd8f9d5d87f699e555e685c6"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_16.obj",
+      "size": 636,
+      "sha256": "2b80fd2881d1dace427e48d9cfd4ee5f32518261101da2ccc5bae0d5d7204d06"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_9.obj",
+      "size": 1393,
+      "sha256": "d5fa7e9e5f5df31325d35a3260b6e086f4384311d0abe216206c909c5da75a09"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_26.obj",
+      "size": 1110,
+      "sha256": "5366cc38cf2b27b095c965032500383a4e1e137fa0fb3cabbdfbed9f38448cd0"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_3.obj",
+      "size": 24392,
+      "sha256": "18f40b113117a48990715516a7fb5c27f57171894b83280fced8e95d641b7dfc"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_18.obj",
+      "size": 1178,
+      "sha256": "0dc0cd7a846c4dfbccf6d54ee844f3559815d7aa66a69abee7db02afb0742df0"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_2.obj",
+      "size": 28798,
+      "sha256": "4a81ef7836cae5a4e8d049b6f17cfa5f8ae5d9c1d5205116663f2897847bd508"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_9.obj",
+      "size": 14118,
+      "sha256": "730c62733e439d17d4ce553837111146e40aaf8ca958c9e7675e05b5b0fc799d"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_21.obj",
+      "size": 700,
+      "sha256": "d1ddd4b03b061f8968f400bc85d95ebd16ec3e6451662ce35e628b83ab6b8b7e"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_25.obj",
+      "size": 997,
+      "sha256": "63005b577359ca9de9e122a19d2ac70ba72bf0cf30b436106a59408b6675a395"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_31.obj",
+      "size": 576,
+      "sha256": "6275c0e56ee0cb021970125f81085180367ddab6f2c154c934962e338126cc49"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_15.obj",
+      "size": 8157,
+      "sha256": "7c0b6d1d332f5c753ae3b8eb8b3398c837ce7362993c516568dccaf5ac43279c"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_1.obj",
+      "size": 1614,
+      "sha256": "6bba6576a98eea751b95434f74e211d0fd533ca48771fd0b2a3bb11d5a544ff6"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_6.obj",
+      "size": 17539,
+      "sha256": "91e4f61d538605064db3a2cb7274c35a32f1e01d90295e2629f2295b425f047b"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_2.obj",
+      "size": 1099,
+      "sha256": "f6ba8265a6ce6013a4bc7c2331ce235ab96877265e409cfe02c6c6177c8694d7"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_12.obj",
+      "size": 1149,
+      "sha256": "de5ad8492aa404d5b49d9e9ec2d437637f9b647074c5ec10c43dfd4f19b18124"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_22.obj",
+      "size": 760,
+      "sha256": "c5589ea666fc8ecde4112cdba15a3fb1d8bf20bb178884d2f4729443af7cdf1a"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_23.obj",
+      "size": 634,
+      "sha256": "d4e9e0b6e90de8505013359f3891b318bd770e8168ac903f02bf43d47ac0fcd5"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_8.obj",
+      "size": 877,
+      "sha256": "a90ec5b99984e5426c3dbaf6b65a20c3cfb72654120bb06582f449d2f672e58f"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_4.obj",
+      "size": 2134,
+      "sha256": "a433dada7bef2041b221f148924da2c6e79dc1f44b68dceb2d36437635391f0a"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_7.obj",
+      "size": 20050,
+      "sha256": "587dba9557195d466486ffa038e1996abb7a90e31cc45937a65470ab02530d87"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_20.obj",
+      "size": 949,
+      "sha256": "8838dc4fd414999c16ec83a1038b30e671f042a3b94e807cc21cda6b5c0bb5d0"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_13.obj",
+      "size": 995,
+      "sha256": "dc964837d51c11d3d65e959d877ee42177c1e57c7963f093e2eab6e35cd5c2d7"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_14.obj",
+      "size": 21615,
+      "sha256": "01b854d3a98de310e15191a26e2a0559213ab8edc30da0acc09fa7d41418ccf3"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_6.obj",
+      "size": 1186,
+      "sha256": "28e5f089ef5e97e7f418a3a5c17692186b1fa7ddcc21966b9e2e8efae58359b3"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_30.obj",
+      "size": 475,
+      "sha256": "4f007bc53f8acbe7ab1439386cce096671ac1e6cb06d34d0236559967ebc3a73"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_3.obj",
+      "size": 1976,
+      "sha256": "1c6d2990bb00403439615ffa60840a8e700eee384b5d68090a8d270ee120d38c"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_11.obj",
+      "size": 19894,
+      "sha256": "3fa29e7ac65b049a5f45f6c5b2eeb18288ee9da1384c0f03f6aad7482c683c4c"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_10.obj",
+      "size": 1277,
+      "sha256": "605c56c49668db2c89b9fff2533e62c3994a4000b58265a7527184605424a32e"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_14.obj",
+      "size": 824,
+      "sha256": "15ddf2bfc024b6c093ceb75262c533194349069743e2c4afaabf510d42ab04f1"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_5.obj",
+      "size": 1301,
+      "sha256": "8b5392604f2099f22d6f97309e74a13a7f82deb8db1a9361fe2c1505515aa0d9"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_13.obj",
+      "size": 19082,
+      "sha256": "fee6514ce0d8c2809a22d60253517d9ea57936f8157871b374c791cff3d3917f"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_29.obj",
+      "size": 470,
+      "sha256": "3ace881a44360e2ba8dfc1659d55031cf52c24435faa71031782a3c0c26f0229"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_11.obj",
+      "size": 969,
+      "sha256": "8b312220cebfd84ba4e9484b37ace1316441617041326a3df3e3ea033a853f85"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_0.obj",
+      "size": 33985,
+      "sha256": "cdca0d513fe614f59b87fb528dd87488ae10f7771f425204d6af7789aaf5320d"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_0.obj",
+      "size": 993,
+      "sha256": "24db806e6d73e406ffa32ae6d756594c7fc09af57d7adce75ef70242f4ff8974"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_7.obj",
+      "size": 1102,
+      "sha256": "9fb681323626ffea14fc9acb328cef5d09bfd1d1c7d6848bf7ea936e4ac07a51"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_1.obj",
+      "size": 61057,
+      "sha256": "a24caa5c7fdb55057915106852c0295644c122ddf87b6a62695a20cfd5105dc6"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_15.obj",
+      "size": 823,
+      "sha256": "67ff4698278e513ac4bf5a7d3cbf5f9312b53d60317c573141d84346a66f9e7f"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_27.obj",
+      "size": 942,
+      "sha256": "4ad2b2517ecac80fd7aa23a25d70e5c6f702605aa6569567e6bd0bf7560aaf86"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_24.obj",
+      "size": 691,
+      "sha256": "c52b5fa09b7d04882ec95f06cbace47b4ae54cc154a3eafe03e6ce0c319d7c36"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_19.obj",
+      "size": 942,
+      "sha256": "4f72aa57889fa34e3439e44897f70bc5f6603dba958f23f324095b8e54fcf3a7"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_28.obj",
+      "size": 701,
+      "sha256": "d720a80f51bbb45addd6ed2dd7925536aba0ba761903cb5af99531fa5ee269be"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/model_normalized_collision_17.obj",
+      "size": 715,
+      "sha256": "1e8027e5c94c4bb5143267112373e9c501b665a84314b71aaf768abd7d26df63"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_8.obj",
+      "size": 15598,
+      "sha256": "cda658449221a2706a8a3c9cf4c3e1b0bf84cd908a25cc4c86b5e5b343909cf4"
+    },
+    {
+      "path": "objaverse/mug/mug_16/collision/collision_mesh_collision_4.obj",
+      "size": 15574,
+      "sha256": "89cbb8107eebd0ccba66f64963964a3797aff1c46492ffded4fffa99f73269db"
+    },
+    {
+      "path": "objaverse/mug/mug_16/visual/model_normalized_0.obj",
+      "size": 717167,
+      "sha256": "4f61d051f6ae309a98be03e47bb88e739bceb75104648155f89751c7dc9d0061"
+    },
+    {
+      "path": "objaverse/mug/mug_16/visual/material.mtl",
+      "size": 201,
+      "sha256": "e85f057a715b59472fc42b286f35bab0ff6a0803792db998f12b78e4371309d7"
+    },
+    {
+      "path": "objaverse/mug/mug_16/visual/material_0.jpeg",
+      "size": 47624,
+      "sha256": "7505737c3ec775aea8eff2052cd53ea52ead39e3c94594278413a6c7695b199a"
+    },
+    {
+      "path": "objaverse/mug/mug_16/visual/image0.png",
+      "size": 316784,
+      "sha256": "0a07cccd91fb6bdff37bae843e3eb5602bbf16b800b51f372fdfa6a5c3cdfccd"
+    },
+    {
+      "path": "objaverse/mug/mug_0/model.xml",
+      "size": 13459,
+      "sha256": "48f30da77726f77128eb7c204509bc4f7598d2955c5de4f190bdb2e07d4a3ce2"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_12.obj",
+      "size": 105228,
+      "sha256": "1f327a1b9ce8c3364c54d588bd64e2ac31b6b3b3180fdf3cc2773682d6b5c03c"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_10.obj",
+      "size": 53922,
+      "sha256": "3236c6c854b008d2080a82232008fac83ca9a12fc4e7b9b02319cb8f30918002"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_5.obj",
+      "size": 78128,
+      "sha256": "7c13d68e06fd400960a2a121e3d3b225747b6dd09afbe7e0b187fcd7d37d1003"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_16.obj",
+      "size": 1592,
+      "sha256": "4e84f79d5c6bbfdb48650ac956f1e49eb0542f5debdb5396ce559e1de7459eaf"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_9.obj",
+      "size": 3627,
+      "sha256": "5d7d85fac2d89162e3eb7dd6a75ba37280a64433174a824da91bbb10eb9ed12a"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_26.obj",
+      "size": 1463,
+      "sha256": "1831b0310e14626b1137e7babf53dc12380b2f8f925d5b51717405fa63ab9b67"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_3.obj",
+      "size": 33694,
+      "sha256": "3e0a6c892dfc61088f04ba03e9c6f5b52ff59833a6bad396a0beb5039952d761"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_18.obj",
+      "size": 1585,
+      "sha256": "1b8991d56f9e238b5441f5cc9d406dd94830bd3b46e7160f7f3e9bc360d8ce03"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_2.obj",
+      "size": 84181,
+      "sha256": "73043a6ad659a7d727c02b6fbd917fb5cfce8d6e3a1f75fd904937673522cdb2"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_9.obj",
+      "size": 47189,
+      "sha256": "cbfd74b03c0baa73462e553ac027f9b34af7b83f5d007fe1f2abc5ad22e63b25"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_21.obj",
+      "size": 744,
+      "sha256": "c18ca2667184b07de7ac2155ba1548bbe7711ba55f387299c3f4418a7f0aa41c"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_25.obj",
+      "size": 646,
+      "sha256": "46d97bb5ad1bd3ca4055eb0b1981672cd1a86b5331ee2df3eaf515c8fa72ff6f"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_31.obj",
+      "size": 711,
+      "sha256": "eb0f4a99fc015497cf374567218b37128338a132f6bd78b12d35e9a2a3245eb6"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_15.obj",
+      "size": 44200,
+      "sha256": "7956b0053a12902967cff6f7a61b096d44030800e7592118247850f3282692b4"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_1.obj",
+      "size": 3492,
+      "sha256": "b33749d8c0fdd83360d2319d96cfb73c4ba8b9e8cf1154e37ce02f655fc9d017"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_6.obj",
+      "size": 17529,
+      "sha256": "42b225291d64fdffcf51dadeb0e742a95a10eb4e66556d145b2b39c99dc79c23"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_2.obj",
+      "size": 3139,
+      "sha256": "733682ecbd5af4b22bb0d1716f96af7c3a177d6831a98cfaa397f03995ecccda"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_12.obj",
+      "size": 2365,
+      "sha256": "9f6144ba8cae6f09aa28422f92b10e8a3aeea07d2715162642324bccf9eb852e"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_22.obj",
+      "size": 654,
+      "sha256": "a4cac58feba588727ef0e1bfedefb67b102e2eada28aeff71297fb2c747eccb7"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_23.obj",
+      "size": 3706,
+      "sha256": "a2a7e1db3a7747648a96e57ef13389f3687627c3aec6b61d18dff6d1086e3ff6"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_8.obj",
+      "size": 1208,
+      "sha256": "0d348fbafe065a21a6d7303bc472834a24ec0df1652ec6bc973b5a70334aa001"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_4.obj",
+      "size": 3688,
+      "sha256": "9926ec87db28949f13594e910ded68977bb9bca02798aad44c8d259de430fa43"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_7.obj",
+      "size": 4525,
+      "sha256": "6b73d17113c555be879381a5f3460f82e6c7d4c7cca06a89f5b804989caf4335"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_20.obj",
+      "size": 1670,
+      "sha256": "da90d4aa6c460819099dfe7759c082340cb985e69042d017e5c2fab51350733e"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_13.obj",
+      "size": 3200,
+      "sha256": "ea0d95603dcc5879b3cb0becb75259c09d145151a843e84b3aa30516b8287dbe"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_14.obj",
+      "size": 42145,
+      "sha256": "6d50f7c4936ea065270eca5f1d36c78adeca0a018d654395472bb0e0a69c4699"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_6.obj",
+      "size": 782,
+      "sha256": "fa991b600243e9eeb4aff9693ac83f1da1ca43b8b219d9deae894daf5f885afa"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_30.obj",
+      "size": 1205,
+      "sha256": "cf9a1e1f370e7b47cc60287b85e74b3a7c8bb095d10b51fe17ab7507836ee210"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_3.obj",
+      "size": 1106,
+      "sha256": "32fcc8983066c3a1d05c8cefdf6a2d6a937f64627c5caca40c7f64794041820a"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_11.obj",
+      "size": 27794,
+      "sha256": "3fb40a96c04d70852471d98b78a4d812f97615d634146662365ce469500a8b85"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_10.obj",
+      "size": 1450,
+      "sha256": "7e7fd9d6a6f4d0b777ec91c78de07d01df0c1c2f5dfa068005ded89a9c629f3f"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_14.obj",
+      "size": 3396,
+      "sha256": "ec3bff7255dd996bf2cbcdc7441f673d7e142bd140ee285ad5aecaeb3cc64b2e"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_5.obj",
+      "size": 3705,
+      "sha256": "e144670bdbecfb3e3fecc5979fedc44b6e9a23c5bc11102d2cefa28bfaafb023"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_13.obj",
+      "size": 25967,
+      "sha256": "7116fbb7f62e217c0895741637bda16cc6f61ab797992adeeec25eded4c2e4b2"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_29.obj",
+      "size": 2258,
+      "sha256": "606165dcebfd74531991595c57d59951c294b3ff15ad712fa5991372beca9fc4"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_11.obj",
+      "size": 3663,
+      "sha256": "4b386157f169d42fc062df6fbfb569675db7c90c819619010af65663465c9143"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_0.obj",
+      "size": 320779,
+      "sha256": "76fc38643ca75d386fd7bba673dda1d3b4130f92727f5d5ee9e12a3adbbf94ed"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_0.obj",
+      "size": 2778,
+      "sha256": "2e9c0b8796743a6d55888ee813cf848859a793ba186bbbab93888ea6c59f0162"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_7.obj",
+      "size": 2911,
+      "sha256": "057c27e1f3131dcf0cd14770fcb177d9a3a51e31207c3f951555bfc58f7603b0"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_1.obj",
+      "size": 17014,
+      "sha256": "fda95e631e644f327946bbfceebafa18b05d4e64f9b550056a6f2aee25d11a3c"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_15.obj",
+      "size": 3278,
+      "sha256": "d07f4dc8fa7f20d28da82be78cf473abee8d90c86943cd70a013d68c7034d9a0"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_27.obj",
+      "size": 2483,
+      "sha256": "8873a2ce02f318141963c68b85f9a68b224424c4fd3db98a1ab1ace28f6fb8ad"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_24.obj",
+      "size": 1592,
+      "sha256": "8c2608095ca2993224e6aaa602e7a8dbfd81f36a501031758390147e17333e50"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_19.obj",
+      "size": 2369,
+      "sha256": "384fc19693ccb84b0ccd39c034dbe7813ccaf35eb14dccd80688acde5b838e00"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_28.obj",
+      "size": 1497,
+      "sha256": "3183c842bb4ea9010b00b80e1023795dd0808b88d2be914aaab3a84ba1fb11ea"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/model_normalized_collision_17.obj",
+      "size": 2888,
+      "sha256": "844d3c84841e06fcd95262cff919f2b8a351ebe4ee3d8c4372ac613124956522"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_8.obj",
+      "size": 97552,
+      "sha256": "8b5a1ac6b0ee5f61ddbe22eef71d2efa8d6281180a90bce009dbac4e4a778c8b"
+    },
+    {
+      "path": "objaverse/mug/mug_0/collision/collision_mesh_collision_4.obj",
+      "size": 8453,
+      "sha256": "b2e2ca8e298475e6e62733dc53bbc298b574e3802545ad76e6e586365a08bacc"
+    },
+    {
+      "path": "objaverse/mug/mug_0/visual/model_normalized_0.obj",
+      "size": 1977,
+      "sha256": "daba1e47c2546bbc2d755dfd63dfbb90f436fe4996ece03e441dce7bef6fa5dd"
+    },
+    {
+      "path": "objaverse/mug/mug_0/visual/material.mtl",
+      "size": 200,
+      "sha256": "55cfd8f73731a8ad57eccf137116d2960bec3cbbc33c4eba605f5eb099f6a725"
+    },
+    {
+      "path": "objaverse/mug/mug_0/visual/material_0.png",
+      "size": 108331,
+      "sha256": "d7baa5eceb8da98d0010f8af4a2d918e997c234e16b90539f0694c72da52db42"
+    },
+    {
+      "path": "objaverse/mug/mug_0/visual/model_normalized_1.obj",
+      "size": 522462,
+      "sha256": "eae6177b9b8e4ae59339c64d9a4219726824ededb2b5967cdea9de26f3babe1b"
+    },
+    {
+      "path": "objaverse/mug/mug_0/visual/image0.png",
+      "size": 108331,
+      "sha256": "d7baa5eceb8da98d0010f8af4a2d918e997c234e16b90539f0694c72da52db42"
+    },
+    {
+      "path": "objaverse/mug/mug_13/model.xml",
+      "size": 12883,
+      "sha256": "d0442056f62fdc0ffda2ca96fe9516c2058e483ac300773a870abfbcc93b459b"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_12.obj",
+      "size": 2348,
+      "sha256": "d4b95ac17ca477f34fe65bdb898f6867153748912f5629fdb90190f9e412ef8a"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_10.obj",
+      "size": 3513,
+      "sha256": "dbf8d43214653ea7bc56709964dd0e744d31e21a44c7ea14df9748ae4ff82bc1"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_5.obj",
+      "size": 2552,
+      "sha256": "99f8c353ac511a7158bc78026f681c15ff9f108529e0a6ed7573ce014330b601"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_16.obj",
+      "size": 1240,
+      "sha256": "6464509caf2ceaad8a68929305b55aa7833a22b2f3407d83f3531cd996550b61"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_9.obj",
+      "size": 1012,
+      "sha256": "50450ee1b2a78459a6db166c248f01a4c65358b99daca5fc4e6b89987bbacdd8"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_26.obj",
+      "size": 3147,
+      "sha256": "02bfb25a14ecb495c92c93ea9ae86af5a4677663214f0599e7a10106e97dd354"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_3.obj",
+      "size": 4043,
+      "sha256": "bf400f9a1355f0603b749ca3953b517df9625ab6b27ce46bf35e75c36a95967d"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_18.obj",
+      "size": 1176,
+      "sha256": "ac9ac2ae97a396958a051bbd087f52ea638418aa01a98f55c82bfb535d2e3ada"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_2.obj",
+      "size": 1656,
+      "sha256": "3f71c4c13045626cae06518ea42421a40aaf5698b213efc2f988cd6ce2c3537f"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_9.obj",
+      "size": 2593,
+      "sha256": "040b2bb9c149ff2e6d0ec5232a1f2c4e121d214aeef088ab8725ae3f60a2a43e"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_21.obj",
+      "size": 993,
+      "sha256": "ab14269eb74740ad4de55178a9c22a67b9d8194a9bad76c5443d4bf89653158c"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_25.obj",
+      "size": 880,
+      "sha256": "8ea0840f6cbd46f1de9cceff9223ac17ffc6d5de22bcdc13e6c9be53e3a832aa"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_31.obj",
+      "size": 427,
+      "sha256": "6969dc0d40da5379497e0cf1d96b066cdde0c5edd271656a0af833986f50f469"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_15.obj",
+      "size": 2980,
+      "sha256": "ca10d76416efd568062010aef44527d89d4df2e1e8d5a2258b114aa8f0726fe9"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_1.obj",
+      "size": 774,
+      "sha256": "7a3e6f06c0445ba8153db9441c9dc6d9435208239fd225bc52d3e48fff780183"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_6.obj",
+      "size": 2552,
+      "sha256": "0d8a0489f0c2ab3f72c6d5ca6546461fda969e5ccee729ab70d9322229a12095"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_2.obj",
+      "size": 1054,
+      "sha256": "b35fde99ecedc6f02af33b37878dedbf348ea74ed94d2b211523142f6d4a1f7e"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_12.obj",
+      "size": 3599,
+      "sha256": "f3be23695f90fd3bdabb4631f1c5ed1205c2dd12362a53edc1ed975654259adf"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_22.obj",
+      "size": 485,
+      "sha256": "48605606b26fdf088667ea01785446849ecae992dc80656508b35a4bd902fb78"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_23.obj",
+      "size": 752,
+      "sha256": "5ef121a20f0247bd45b0f503ea0e7c94539c05859272b581df3f19b94d5e5163"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_8.obj",
+      "size": 1256,
+      "sha256": "a3bbe01391885c0b6b5aa1865e7b6dbc5270ee5f6a13277b5d52ba8ccf66f473"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_4.obj",
+      "size": 1282,
+      "sha256": "3b394826a72fb65ced7f03653d9be4539a39c8034cbce55418389b33c286c13f"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_7.obj",
+      "size": 1660,
+      "sha256": "1083b856523b5e55973b834258da88371088f4b360624e9389cb3d222f00d60c"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_20.obj",
+      "size": 932,
+      "sha256": "9e866fca5543b16079f42dd04639caea441cfe3812c75236bcda94f5aa427ffc"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_13.obj",
+      "size": 1174,
+      "sha256": "558947d6e3bd9fce7f2f5850fd9bb9505a09541034b1ae563d1926fbf884a0f3"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_14.obj",
+      "size": 1022,
+      "sha256": "d4959210bfeedae4a2c72ba3e44985a4652f2933dd05c7fac0c9ea90f9170ba8"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_6.obj",
+      "size": 998,
+      "sha256": "d2f75c570c80aedf9ca4bb6ecb93673d7c5921a98faf9ff94874cb27654f1a4d"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_30.obj",
+      "size": 653,
+      "sha256": "7f0fa57002bc44fa875b9f57c14acfca300507d97c58600dbd7f780463d5846e"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_3.obj",
+      "size": 1146,
+      "sha256": "25248f517c0460cb542377b46fbe7908c2bfb21b2fa40c3243f36636056765c0"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_11.obj",
+      "size": 1139,
+      "sha256": "d9d19a1e594a1dcd76cac0d9c4dd70cc092fc41661dc6951d1eddd67a9ead408"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_10.obj",
+      "size": 1314,
+      "sha256": "5daedb075b5054beee32ab8c074efb30b0b0cf2bce4cf3e38c5069e13bd3ba94"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_14.obj",
+      "size": 875,
+      "sha256": "f7180c488924f43145ad6d064c3224db513d4cf640e6d98fe0ad278585ad08dd"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_5.obj",
+      "size": 1055,
+      "sha256": "83122d6aa4a373c3be8dd5da62902fba53909e145dc690dafae753abb23b63f0"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_13.obj",
+      "size": 2481,
+      "sha256": "c0208083912ad90940644a8c8069261a2045be3342c34401d2e68aaaff05dd83"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_29.obj",
+      "size": 642,
+      "sha256": "8f5d7ed0626a29043322da11adc168d5e3b71f281b573645d7c0945b0e18e889"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_11.obj",
+      "size": 887,
+      "sha256": "cacecbd54f3b4b35d7572a9e0a6c69472c5a10faf9a4e1062d8c4971c3037d90"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_0.obj",
+      "size": 5842,
+      "sha256": "0ab2ce42344acfbb027eff8cd0de0b02abb229fb72aa5f2effde12c183496229"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_0.obj",
+      "size": 1406,
+      "sha256": "1ddbc431fd6430559c1527d5d3d5ee27641f6b06004f28df0c07b7c809cc7e80"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_7.obj",
+      "size": 771,
+      "sha256": "c554764f905effc34bffe446da8252f35e88f9f5430e89b0e00937579d7f05fe"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_1.obj",
+      "size": 11540,
+      "sha256": "e90b860e81a5cf9d50ee7d5cc6599e31e9bd119f22057fa16737d3066af34436"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_15.obj",
+      "size": 899,
+      "sha256": "bab5550f1c2065af7f8cadeac824037a9c0b93d40ec29e967521b4d4586afdc0"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_27.obj",
+      "size": 896,
+      "sha256": "f1c4da33a2be757f414c57066dc339f032b91ba6590b441a81c38f707efb30c7"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_24.obj",
+      "size": 642,
+      "sha256": "55d3b753063459f9357ba71296ca662089d263b6cdd9f51c8a6f4e405e356859"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_19.obj",
+      "size": 834,
+      "sha256": "97a0d62aef30062d583f6a348991c6a98d692f0d681d69d55b38ac8ffbf91412"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_28.obj",
+      "size": 1170,
+      "sha256": "4ef31e815bfd6f9cbdcfd659bbe545c405fffd65bc3930cc37d0d81d77e49536"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/model_normalized_collision_17.obj",
+      "size": 1316,
+      "sha256": "d0a191208ac80b06e978ea862d82a221d6bbadc0cb47de9a0d1e805d0aa373bf"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_8.obj",
+      "size": 6318,
+      "sha256": "2d5c50c529062579a5224ddf41365613f6c7582083b24970d8aaeda1110f07c0"
+    },
+    {
+      "path": "objaverse/mug/mug_13/collision/collision_mesh_collision_4.obj",
+      "size": 2758,
+      "sha256": "8b272e23991059251a06418c2ea3898ce571c23c5ecbaac5e603576d3dc21eeb"
+    },
+    {
+      "path": "objaverse/mug/mug_13/visual/model_normalized_0.obj",
+      "size": 379647,
+      "sha256": "1e5a7954f58857208cd5b45d9071e51c544bd9c24f8567d9d1fe423c3de99247"
+    },
+    {
+      "path": "objaverse/mug/mug_13/visual/material.mtl",
+      "size": 201,
+      "sha256": "e85f057a715b59472fc42b286f35bab0ff6a0803792db998f12b78e4371309d7"
+    },
+    {
+      "path": "objaverse/mug/mug_13/visual/material_0.jpeg",
+      "size": 42123,
+      "sha256": "2f734b6fa990e80016ca1b6af205596a0d9ffbbc0f4ad17bc7e0cd452e0be5c9"
+    },
+    {
+      "path": "objaverse/mug/mug_13/visual/image0.png",
+      "size": 333674,
+      "sha256": "1aea870ec9b8239645d863981700ab53d026e9637f99eb9382aec83fed83ede1"
+    },
+    {
+      "path": "objaverse/mug/mug_12/model.xml",
+      "size": 12990,
+      "sha256": "32f8f4a2c0e385df026a914f4a8b525b5153636aa6f2cd20045e90851edde1eb"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_12.obj",
+      "size": 927,
+      "sha256": "65070ae6ee6a032978780e49808db20eb28c0d7aa00c1a048b1a81b8498cd2aa"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_10.obj",
+      "size": 2901,
+      "sha256": "9d251fca9bfb7f3302b70bad0cbf6475c41e925d2fc9dbf57e580b4274544297"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_5.obj",
+      "size": 4017,
+      "sha256": "9f1ce41175045196284fc16648a608ccd0292b4d712749555534c0714675a6f0"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_16.obj",
+      "size": 2013,
+      "sha256": "1e6f03d7bed4e913db268fac63073c1d3743b6513cd314b870a6d55b670371d9"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_9.obj",
+      "size": 1518,
+      "sha256": "11b28438e39fdc6c53e38ab24a94155f78ed530adc36c86e6ff7aa8c641e03a9"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_26.obj",
+      "size": 1570,
+      "sha256": "eca1c5de1c32d97e5634573f0622011de157d794a7ba0a568c76c46b05b68294"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_3.obj",
+      "size": 3956,
+      "sha256": "473c2345eb7ee23a61d2ccdee8e24f0362a56655b004ba16a916055b2fc645db"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_18.obj",
+      "size": 2268,
+      "sha256": "0cc397dc680687ce0b626c1dd9700ce869e4652e81913ac9fc57472b81b84d9d"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_2.obj",
+      "size": 1236,
+      "sha256": "a0fe005cd923fd2cab558269ae2cee03887660459f0700f2b73ae30228b8da1a"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_9.obj",
+      "size": 3351,
+      "sha256": "853b3ece81eaa1f10e76823e8ccd4fe6e91248ab5e8f5734d1b02a81b94d4ccb"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_21.obj",
+      "size": 710,
+      "sha256": "98e7429dfc0be98274b0b7c4fb8003aa203ecf19ddcc97d84411476fef09047c"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_25.obj",
+      "size": 2072,
+      "sha256": "817adec00c813ebbfa7bffce4211b5acb416bc24009d5b0eb5fcdacb7093fc9d"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_31.obj",
+      "size": 1054,
+      "sha256": "6800090da13a20b0a827e87c47ea4b64a8b464f06e7e0f6bff4a3665c99c1d8c"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_15.obj",
+      "size": 1337,
+      "sha256": "7ae6a0b5e455335ecb5f6a7ded810423093d8e0306b0d0f7740a7e02cf33390f"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_1.obj",
+      "size": 2190,
+      "sha256": "e4382484eef47d46ad29a497e05b2d37081cbf14ed5420d2d7b78a328cd955eb"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_6.obj",
+      "size": 3196,
+      "sha256": "a8eb0c29cea92ed45f775d296f19192593bb5b7e0b1e04257d0e4ce52bb5e0b4"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_2.obj",
+      "size": 3664,
+      "sha256": "ed00d51ddca3386c73c26007e21c3fbef2d61ed8f26279ddd75eb35d3be6d67e"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_12.obj",
+      "size": 639,
+      "sha256": "6309f86240ffe9489943ef65e50b1a4ff7bb83491df10c710d97f24c32e10a18"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_22.obj",
+      "size": 1281,
+      "sha256": "997ba988cf37e71d9f0156f33bdcde83cf6644ddacaa03d61b2ce877ba139eb1"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_23.obj",
+      "size": 2467,
+      "sha256": "60974fbb2466534b6450ec13ca5f595219e1bcdbb65a51ffbc2f0a0626d32b7c"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_8.obj",
+      "size": 652,
+      "sha256": "b907c5001dcd5bb711da43825632d956276f507a750f80fd3dcf762374ac60fb"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_4.obj",
+      "size": 3152,
+      "sha256": "99c951ce1e6f685d4d5a12ee0dedc5d5c6ec0470a4186e50a6b38c2c64b6cb84"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_7.obj",
+      "size": 2117,
+      "sha256": "6bad592ce93c771c053c856606a2e89b6464d47a1c10ce950c09e8dda1aa40bd"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_20.obj",
+      "size": 1790,
+      "sha256": "97cd67866e038b19b6b62e543571cf338ba487165fef6eae04098088c6ba25d2"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_13.obj",
+      "size": 3092,
+      "sha256": "4df3707167437b93ffe6a0ce77985111c7a606d098a7ca5ea9e46f73fd272537"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_14.obj",
+      "size": 5506,
+      "sha256": "fa9cebb36211a3ceb89d337c2fea746f82ea019ce85c669224e564bdfc6a2875"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_6.obj",
+      "size": 3405,
+      "sha256": "f8966850a8363908ec7d36b3c2b78bc2c28d7e07623ef801172b33cdd1f4dda5"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_30.obj",
+      "size": 423,
+      "sha256": "367a10888091080344de51f609448de0a623aa0c4fc9db26b122008c1311183a"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_3.obj",
+      "size": 1809,
+      "sha256": "67aff278c90b64ac57ecc222dbf60a216aa449a80b91d96813903aefff8bf4db"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_11.obj",
+      "size": 2660,
+      "sha256": "01c6faadf7deb521f7e9d1ac145e4bce094fbaea51f62ade981e07e9b8e129ea"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_10.obj",
+      "size": 1877,
+      "sha256": "434dc01f1860fb026a2e9788d1ac140c2b4cb95c90a367337ac9e7ba2018b065"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_14.obj",
+      "size": 2230,
+      "sha256": "6929c747db02d14f8030ff1a28a0a330d4cbd3c6453262fa5e0c5631a8375656"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_5.obj",
+      "size": 3757,
+      "sha256": "823f7a26fb0ec6e787db1d64c56ddbb7d615515f0e6d03bfc63a32618f39174b"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_13.obj",
+      "size": 4017,
+      "sha256": "94e44bfb6f12b94e48c03a7584f1f7a543a748063811366cc255de3704aba530"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_29.obj",
+      "size": 1434,
+      "sha256": "98d516fa2bf059cd05b151fcb5bd5ab9c07e9410e0833de30f9059cff6ca4b1f"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_11.obj",
+      "size": 2255,
+      "sha256": "c1429d25b96edde1e2b5d4bed3f3efaa23d0e630730903b396175f7e20906c27"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_0.obj",
+      "size": 9346,
+      "sha256": "d6cdeb644c7729dffc01316ab4b4772b0e664a47d8bacdbb574b955923ad24c6"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_0.obj",
+      "size": 2860,
+      "sha256": "923e96c93c52150e4fdd2ba749614b8f1e4e64f511260e93525268384e0b61a1"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_7.obj",
+      "size": 3431,
+      "sha256": "0c37fae77f9a38e0a0455a24eac3c8f520485c8e2d6db37046dbc03aa9fb8cb2"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_1.obj",
+      "size": 2722,
+      "sha256": "16c87b1993bd1c9369671f2ff5dd354d71decda68a487c37a7468e094916791b"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_15.obj",
+      "size": 2480,
+      "sha256": "559f700197a1dbb8d6813879c9ae137a29be154e48cf86988214e406458f5b33"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_27.obj",
+      "size": 1909,
+      "sha256": "4fd6e268be9c504e6073ae344d03ce52b6014a07c7e4a0d59208135ccca0b051"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_24.obj",
+      "size": 1874,
+      "sha256": "d07a41c7137517fe76b2b67b4d4d5f8bc7318ee740d1f5da48adf5caf9f70d85"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_19.obj",
+      "size": 1502,
+      "sha256": "d338024eea1d5e4ce28551beaf730e5b44607f48f853a1f4808d5a27128f8fe1"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_28.obj",
+      "size": 2887,
+      "sha256": "298cff825a7c862c51320b59ec6d12780fd73c94133639b368404ec05eb76879"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/model_normalized_collision_17.obj",
+      "size": 1896,
+      "sha256": "8e3cfb73436a2688bb1e160d723db73c5a08dd4b45907b9a23dff289bd279ae0"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_8.obj",
+      "size": 3221,
+      "sha256": "8f5f73b7ee9f57a568b18c06e4b05585b9adb5cff881c156c03579f252f870cd"
+    },
+    {
+      "path": "objaverse/mug/mug_12/collision/collision_mesh_collision_4.obj",
+      "size": 1601,
+      "sha256": "9e3251433543f9bc6cbda6048b3ed905baa7003e2b417b0b5f0ef141980ada05"
+    },
+    {
+      "path": "objaverse/mug/mug_12/visual/model_normalized_0.obj",
+      "size": 148843,
+      "sha256": "84b32773be326b220dbe5e813a2308898cda002ccc010a768e51f305a3c36c9e"
+    },
+    {
+      "path": "objaverse/mug/mug_12/visual/material.mtl",
+      "size": 201,
+      "sha256": "d632fb3e4b86ee1d6e6b1eaed09e607fc0fe516a58b1a65df2667124233db695"
+    },
+    {
+      "path": "objaverse/mug/mug_12/visual/material_0.jpeg",
+      "size": 23808,
+      "sha256": "9912dccd660076a67ffc385779e75d6b4c0e83c0b4543f13145f4fa34389740e"
+    },
+    {
+      "path": "objaverse/mug/mug_12/visual/image0.png",
+      "size": 56947,
+      "sha256": "891bbadee51211a05ce320f64eeb4ab765675064fb0c6cc067303d16d14c6f2e"
+    },
+    {
+      "path": "objaverse/mug/mug_8/model.xml",
+      "size": 12548,
+      "sha256": "90a25543667610f2f53225bb5a3009fecec06bd9620b76b34e48ccb1b1d6f1ef"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_12.obj",
+      "size": 42924,
+      "sha256": "1b1adc9346e615735a3f70261bcdf594324a6d478fde4960b588e2d20c17f666"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_10.obj",
+      "size": 44972,
+      "sha256": "994ad432e02450f3c7acb9c4dfa83c4fd2526337ed8468c36863a70c8745a6d0"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_5.obj",
+      "size": 76774,
+      "sha256": "19f2c302927b6c9f6c85403c9bbe683201c3e0be94dbc98f007f1b7749b383e1"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_16.obj",
+      "size": 1817,
+      "sha256": "deb95ac46f714b0e8bcb66346145c1c0a30235072b5a5799baae9744cbe06a95"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_9.obj",
+      "size": 2117,
+      "sha256": "4e566a8ab119732b34cbb7ba32487aff9293b143ebfa7a1bc7c9d0f7a0777c5e"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_26.obj",
+      "size": 1078,
+      "sha256": "14f7c68543a963800b453812da1f8f4c41728b42c6a786fb3bfaca2116631d48"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_3.obj",
+      "size": 47142,
+      "sha256": "8500ff0b7fa4d619b9119befefeca74264268414aaa6cfb3d5dc9d7b922e7467"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_18.obj",
+      "size": 1113,
+      "sha256": "149e1db115e4ffe0e33e2d681381047978f9634cee5c0f9d5047bed936c2959d"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_2.obj",
+      "size": 53220,
+      "sha256": "1722cf3188f20945089918a100dd1594260e13ee485c955772573f35d6693543"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_9.obj",
+      "size": 26973,
+      "sha256": "bb561ddefb8ffa3f13f7ef0cf5f75fd70a745f499b64252a649cfb8257935496"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_21.obj",
+      "size": 2343,
+      "sha256": "f669ee9410ce3057fc79e46faa1060d27b3d6a8d55aa67b64a0a5d660d857417"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_25.obj",
+      "size": 1881,
+      "sha256": "54911063d135e6531dc690aa19e7240f574b1be78e454cb43dd1838c83245ad4"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_31.obj",
+      "size": 991,
+      "sha256": "45bccf847101264f4c60b3e9e26baa1eb5a2f5a2b0166157e723e32971e50088"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_15.obj",
+      "size": 62076,
+      "sha256": "b9800eade209de67bf5751d5ec370d79ec1814d5e2a9818c7fcb3dde267c6a6b"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_1.obj",
+      "size": 3742,
+      "sha256": "3f200873434d44046f8700ee9795c035e05ea47c21e43822783a4a5dba4abef4"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_6.obj",
+      "size": 42564,
+      "sha256": "28e4f704e0acb8f0b6a0006a9094a1e8cfd937a2079b1318a1220424da5806c8"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_2.obj",
+      "size": 3075,
+      "sha256": "2b65d65bfcb21d53c780495a6274b853081d2701ba625abe8e91df47da8df30d"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_12.obj",
+      "size": 1405,
+      "sha256": "cb28a50588d9f66499d9f34dc14daf417263457774ca1c053160edbc330ce7da"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_22.obj",
+      "size": 1758,
+      "sha256": "19143a87481794a9c0b6fa2f2bca4124ded6a2f72414ef48f340b399173bbab5"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_23.obj",
+      "size": 1512,
+      "sha256": "70130e3905cbdbc29b78e5a1e84875118e786b43b27a09597786b49cf963920b"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_8.obj",
+      "size": 1901,
+      "sha256": "8d3e7b7f79fcc7a773a79798b6c075ed36e38bf749dd897693077b48fcb8eac7"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_4.obj",
+      "size": 2190,
+      "sha256": "bc976274b3a2112adaf060f9d5306ccc12db7440c79595b364f7c0622d1769aa"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_7.obj",
+      "size": 34368,
+      "sha256": "8ed968f78383d738f50a9d2f4534c60638f58745e5672d03402434141a0926ea"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_20.obj",
+      "size": 2067,
+      "sha256": "516417e2ad66fffb3444e92840d2a4e8a1135a4b913d2e5fd68d9e0323b0a6d8"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_13.obj",
+      "size": 2304,
+      "sha256": "a3208c39340250f1af0a0f218849bf236ed160ab3ddb543246036897694c54ee"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_14.obj",
+      "size": 39226,
+      "sha256": "f41b82f8e59510936e477d3931f4dd0028e0ba6d934f3dd23720d13ba35386fc"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_6.obj",
+      "size": 2558,
+      "sha256": "747cb1796461f72378b7cf69bec61ffcd8b8d134770cd15d9aa48246dfe4071a"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_30.obj",
+      "size": 1591,
+      "sha256": "2a6a04d39d8703ebc7de554c4866e5b77e48484c23bc7b19a3361fb4ab67fb18"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_3.obj",
+      "size": 2582,
+      "sha256": "7ccbd81b4b2c94ea2933f9021ff8737703df21916021c2411089b024ad194f80"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_11.obj",
+      "size": 16836,
+      "sha256": "1b90bb657930d8152d26f8dd655a9b75fb136dbe21a76f84f1a525204acfe503"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_10.obj",
+      "size": 1608,
+      "sha256": "ddcaa0b9e7321080a43a264a2a783a7fc28ec26b21a160be7a57d8a7dff46ec4"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_14.obj",
+      "size": 2404,
+      "sha256": "9b3ae866c3c8578685d86132f81849aa18da7248674ab8ce4ce62b0ac5d7c178"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_5.obj",
+      "size": 1870,
+      "sha256": "16ada592e01ad836a974c84f8dc9a6c0511cd177e2c17e79844d4f54280a82ce"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_13.obj",
+      "size": 34701,
+      "sha256": "2766ea7839b9526b9d0224c41161d5e2040dc77176220d91264f5b750392f7d6"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_29.obj",
+      "size": 1126,
+      "sha256": "fbc199ccf16b4a0c9039a5b2d3bd8682257609095921b8b97ae86efbf3afef8a"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_11.obj",
+      "size": 2480,
+      "sha256": "2c1ce0077677b18601ff40e60908373eb13b3a0bed3ed088b54d6427a06089fd"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_0.obj",
+      "size": 38771,
+      "sha256": "1a124771093e9f47c37c4150529e234bbc264ddc2523929b95f723650613d38b"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_0.obj",
+      "size": 2063,
+      "sha256": "f98601235a684e07429c6100f560ece2cd466c0165536556cf465cdf527c56ac"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_7.obj",
+      "size": 1667,
+      "sha256": "0b47eb68de9b6ab54a21a1e78ad37b1a29174ce8e109fee611246a8e90f2ec6b"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_1.obj",
+      "size": 73014,
+      "sha256": "4b4569d73eca0871ae07515d196c2b4d968b2ffc00ed9917dd393d28c046525d"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_15.obj",
+      "size": 1660,
+      "sha256": "ee0c51257e507497b36b642f3e5fb8651a6fef4041c2159de3e2774772a87f8f"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_27.obj",
+      "size": 1647,
+      "sha256": "b47c794e3ca243b2fba90455a34d61231cc97243efc84bf618775bfc1bdab550"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_24.obj",
+      "size": 2671,
+      "sha256": "5cd128a0621b32892846fbe18032e03c32f522a993847273f2028bceac1942c6"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_19.obj",
+      "size": 2917,
+      "sha256": "f4e66eda5a174bc83bfb9983c805393570251da040ce187de0447cbffb6034f9"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_28.obj",
+      "size": 1440,
+      "sha256": "3bfee93511b83ca03a4ad94aaf17c052cbd1673d7c1de2a620df0ec7d7bfdde7"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/model_normalized_collision_17.obj",
+      "size": 2137,
+      "sha256": "7ea513c26d02f9fbea18cc0f9b519c2559f6261e2db7790febc5ffe3df881f55"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_8.obj",
+      "size": 13349,
+      "sha256": "b0c21f4401dac9d6696394289f8fb8d38d5c39d88b227d6b54be4ddf681608e4"
+    },
+    {
+      "path": "objaverse/mug/mug_8/collision/collision_mesh_collision_4.obj",
+      "size": 66318,
+      "sha256": "c27a7849f92fe8f0694922c6a43fa802bdb01cf2052a8890807e48fa0be49675"
+    },
+    {
+      "path": "objaverse/mug/mug_8/visual/model_normalized_0.obj",
+      "size": 2340135,
+      "sha256": "d8c84da250a5e3828e63e17187ff58c5f33197ddc68c056353af2a5b0351fdb9"
+    },
+    {
+      "path": "objaverse/mug/mug_8/visual/material.mtl",
+      "size": 201,
+      "sha256": "684ddec5fd2977d6f2780fa37d422ae334f2f84b564f5e3211a69c450a2d53a0"
+    },
+    {
+      "path": "objaverse/mug/mug_8/visual/material_0.jpeg",
+      "size": 174622,
+      "sha256": "1444e5a3dec598c8557fc516961adf6887a79436ea9845b667552192f610cf67"
+    },
+    {
+      "path": "objaverse/mug/mug_8/visual/image0.png",
+      "size": 1321897,
+      "sha256": "e62ef279fd72d0df27577c4bebaa641eb3642f5872170fbb144af023171500d7"
+    },
+    {
+      "path": "objaverse/mug/mug_4/model.xml",
+      "size": 14202,
+      "sha256": "e109440758cf20b09943ed29ed4ce0b9c27c3089e2de188d8f72e0df66484e1c"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_12.obj",
+      "size": 7078,
+      "sha256": "041b21960c4ed1fb3599274c30c9e942a4fa77bb47092e58dca732efb5f8a0ea"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_10.obj",
+      "size": 5386,
+      "sha256": "591532685c32ca5a16de34554646f2e00d5da84d5a421f16229da51523d39d84"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_5.obj",
+      "size": 4424,
+      "sha256": "b9f52b6e81239130c6fd4af27cee7e65cb6ac027b8fdcbb4c62d3d879ac63c07"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_16.obj",
+      "size": 1089,
+      "sha256": "8541e32f218ef6e9fd912b14fb9a25094b3f0d096fd73425dbfe550c776ca85a"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_9.obj",
+      "size": 658,
+      "sha256": "3fba09a4e226b6389871f52d2d6284eb5eb1fbd4a8255ebe8f490794214273b0"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_26.obj",
+      "size": 929,
+      "sha256": "8638dd467c793e487ffc63078e48bd2c1a42e9fc4b1549f68f46048fc3780512"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_3.obj",
+      "size": 6012,
+      "sha256": "a7259a3e8299aeb068cfed26b69b6d411136b1edad199efd5a989419adef84d3"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_18.obj",
+      "size": 1233,
+      "sha256": "4e90f88ed8f8ef20f6c0256d85ff1c2b38b2addfabaa9981a828beb6b90d9359"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_2.obj",
+      "size": 9853,
+      "sha256": "ea4f9ff68c6e6f1625b3b74bc82aebb0f2fef957d8d3a6bf57b3d5d123cb1423"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_9.obj",
+      "size": 5208,
+      "sha256": "0247815f8de7d5ffbb17e8827aaf81fc5b4da84ecd91c3fc9c62e055bd9f7231"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_21.obj",
+      "size": 901,
+      "sha256": "4abde457bea0e4b9bfef8d6da60ba91e1bd84cedffc731b8351825949592e415"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_25.obj",
+      "size": 770,
+      "sha256": "460ec13c8f211a608da749579452bf04ac140afe4201f75463edde13df4daaa4"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_31.obj",
+      "size": 760,
+      "sha256": "24a86e628b6ba1640d46428fa258a7524b8fa7de31895ab84a0fd959aa426bda"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_15.obj",
+      "size": 603,
+      "sha256": "77d1359a170492e0ebe6c22ba260450f485d819084787fa5c70ae52a2a4f4407"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_1.obj",
+      "size": 1017,
+      "sha256": "571441e7b07be1deab77933a5bee012118b5ac533cacc9c80ac1a2069b58d724"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_6.obj",
+      "size": 8746,
+      "sha256": "95e1edf720314bf13abd07fef16032030e17418978262b42e84d1e757168d263"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_2.obj",
+      "size": 2671,
+      "sha256": "3b582c07e63f6a2727dfd3633ce811e9373077757a96cf771f0b96ad6c400c6a"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_12.obj",
+      "size": 1264,
+      "sha256": "72d756f63ec91fb64ace8a8847a8ce883bfcaa8994524db3ba6c19c97445eb89"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_22.obj",
+      "size": 594,
+      "sha256": "e98e0117700ec47543a0cb99713177740888e1fa4776286b017a27232f0b9898"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_23.obj",
+      "size": 884,
+      "sha256": "e5de3e881d5dd4d7c9a693edf2e0664c44091405319768a909d975a6d9e46a07"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_8.obj",
+      "size": 871,
+      "sha256": "527f407f819363a695a0372699e226db0d24590756690260db9a9f9055ed9b19"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_4.obj",
+      "size": 1807,
+      "sha256": "8f0dec13922ae96ff3a30f25a07056d1459e2b16421573de520bc41602cf640e"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_7.obj",
+      "size": 4644,
+      "sha256": "f7b823175dd13330a57529239557b8b29909b538bd3c9aaa3f49d75a4939e1f1"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_20.obj",
+      "size": 889,
+      "sha256": "9b5355962ea102ae5e7b47300533a71ecbee43c3201b5807df37ee97e5960b92"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_13.obj",
+      "size": 1050,
+      "sha256": "e01092fbcd3369ff174e106c6285e0d33b73e31a449ea5fee071a79126868208"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_14.obj",
+      "size": 4945,
+      "sha256": "0bea0df6d835463d5cb27f3463540e31b68cf0dbab5874a6e52ccd2175fb3f54"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_6.obj",
+      "size": 1142,
+      "sha256": "d69f870655051b7029df62a6a0d4fc6dd97fbb2f7a9af4a9e269e0a3fb4b5ee4"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_30.obj",
+      "size": 946,
+      "sha256": "26e0c66ea658e10cad3d583728e94db240eda642080001f30c0bd92b438cb5e9"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_3.obj",
+      "size": 1180,
+      "sha256": "9c748fc9720a763ea293a5f8816de63260fe15da75288075e76ba8be59798387"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_11.obj",
+      "size": 4557,
+      "sha256": "73236a620ac197ead21c4c2d853abe7f953a7a534f294f1f4725713720761d43"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_10.obj",
+      "size": 1045,
+      "sha256": "f5585079240c360ca9d5a7738fda2e67f4379812e4962de6763f2672f3b675bd"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_14.obj",
+      "size": 829,
+      "sha256": "b8dcddbd675ac037bfb77fa5d840c8ad0d1d48228a754b5bdd590b46c3658474"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_5.obj",
+      "size": 1243,
+      "sha256": "ca40d484c2db89f1114317b3732aa0bb3f5d02470e8959f5d799243581aeaae4"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_13.obj",
+      "size": 2898,
+      "sha256": "42b37ecd64210d693538b68dc23794041a348715b510a9bf919c22b4728255c7"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_29.obj",
+      "size": 2335,
+      "sha256": "7eac65941ace0eabfdc030660aec49149436bded35a9a039da4e76e5e5a01f77"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_11.obj",
+      "size": 1182,
+      "sha256": "7c49dde9ee23e9bf6deaba5ea71d9337306ba35ddf9f61b85994e671278bbe65"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_0.obj",
+      "size": 9747,
+      "sha256": "9a4b00cad77c865c771415b7a551ae7330cd730fc26ef7c2a7a070840f8b8ab9"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_0.obj",
+      "size": 1242,
+      "sha256": "fa378b43016bace947113e71ec7ae543333172f16560d647937f6eeabe4444e6"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_7.obj",
+      "size": 3156,
+      "sha256": "c3cb7a2752168f60ace825f26214bbffac50123969443ea7b2454099de46ea40"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_1.obj",
+      "size": 40250,
+      "sha256": "dc84936ede9f2808dced21e29f13b3fd5e158382b3bc7c58e734dffae185e8e3"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_15.obj",
+      "size": 978,
+      "sha256": "fe705119e784d8de43506eb30170a54f96aedd95873cb37a2a66e53473e809f0"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_27.obj",
+      "size": 892,
+      "sha256": "7f709ce37791b6d82ca0f00a603dafbe1b2e9dc586676c4ff6600c412eb6224b"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_24.obj",
+      "size": 933,
+      "sha256": "a1ad34e3a48d0a14b1b36d56d761bf04ce5afd9e4c234ba438fe79a825ae242a"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_19.obj",
+      "size": 874,
+      "sha256": "27901d8e86ca6a8114fb51792e198b47335a660094f979e0e208cbbdc79b38ea"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_28.obj",
+      "size": 852,
+      "sha256": "1c11d09269ac80072e9f3343489a218a2f30dab64c46bf9082f921887af2adbe"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/model_normalized_collision_17.obj",
+      "size": 1266,
+      "sha256": "8144e84e2f2e3a5b08f8e177c0cd298d24354f4cb780485d9b72ea03b1be0561"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_8.obj",
+      "size": 16532,
+      "sha256": "234351bb2e0417f80658fb8ed8783afa501005a9411a18f694d1a628897aa0ab"
+    },
+    {
+      "path": "objaverse/mug/mug_4/collision/collision_mesh_collision_4.obj",
+      "size": 29780,
+      "sha256": "8fc24ee89dcde47c2f13127c8224867cd587e9da7edf7ad3f020aadd2f5c36bc"
+    },
+    {
+      "path": "objaverse/mug/mug_4/visual/model_normalized_0.obj",
+      "size": 3946173,
+      "sha256": "9ed964d5a0a0950ccf6b5915a31bc39f335613d0c047f2924162d24d99091c9c"
+    },
+    {
+      "path": "objaverse/mug/mug_4/visual/material.mtl",
+      "size": 176,
+      "sha256": "21290c907087f8af76067792fe482d9a1bf36cfb0fe2e83c2fbfd2153dc7cba8"
+    },
+    {
+      "path": "objaverse/mug/mug_10/model.xml",
+      "size": 12989,
+      "sha256": "ccc7161525d291192a784876abe6767a50f289a7bc7cc98d04bcfe3bdacdb7de"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_12.obj",
+      "size": 41996,
+      "sha256": "909a88d11a139d2fb57ede90fa52da3c23e29b46fa7434dff179d4fd6816acbe"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_10.obj",
+      "size": 23237,
+      "sha256": "e8dbb3a8fdbfbfdc87ff86db7c41b600832bccf4dcaf12641547e44ee5f00e16"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_5.obj",
+      "size": 39956,
+      "sha256": "826603e84b4c2189a92ac94a4942dbf02ac2a4c9f668a6d7270f509f61c08e30"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_16.obj",
+      "size": 1462,
+      "sha256": "36856f8f65e4b6f60a0f2a03912d4d94b896eddc21463fef88eecbef57e7b59c"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_9.obj",
+      "size": 1757,
+      "sha256": "12c493da6890dbe8e79ce69febbe1a27e97f9b168bc369f482b54cc338e908d7"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_26.obj",
+      "size": 717,
+      "sha256": "2e7e8a31e0e570b32e99dc03ecb77ff030dcbdf1a5c1d2278aebd89a94dfe1aa"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_3.obj",
+      "size": 22988,
+      "sha256": "b7119155a7439bb60dcf26e34ba8a80543511820325baf4d6500256bd884a4ce"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_18.obj",
+      "size": 1048,
+      "sha256": "4ae9369438f86ff86816939524394b5039bb44605f726cbd489e76e844e057e7"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_2.obj",
+      "size": 111195,
+      "sha256": "da8a003179b35f0ab5fbbaaa45eeb8424fb7cf1430ce6b914a05faeb292b7e54"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_9.obj",
+      "size": 22298,
+      "sha256": "d31b1d96968fb2530bcc95b2629c2eb82ec0ef3b4c6efaa9ff44282b2819007f"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_21.obj",
+      "size": 538,
+      "sha256": "117942b68b59cf511daa75a493131d3fa88f3be3c9cec6f4f76414fd2267529d"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_25.obj",
+      "size": 533,
+      "sha256": "bc1101153e2b68a19c2f83ac25b0cc5014079f6b371efe384160937f2cf4c203"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_31.obj",
+      "size": 1579,
+      "sha256": "8b36d0cf5ab5c1c5ce53dddd13203e61c125741661e22b5f1b685e294784ae85"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_15.obj",
+      "size": 11356,
+      "sha256": "4c91e4c3cc2836ee61bc6db56db79d1a6157fc69ece8d992ac525c3a315c144e"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_1.obj",
+      "size": 1842,
+      "sha256": "7b96a3570e65c0b5c89ff85bef071800dc15763c8a070dceff359dd7a8a304a5"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_6.obj",
+      "size": 46502,
+      "sha256": "68c5c9bc7d76addb373de16ab798519384cf95ac266b1e1b3a5c5ac61955ed45"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_2.obj",
+      "size": 2668,
+      "sha256": "31d5d87dd4218b5b2ad2199e5cf3ae5a8a653eb2d7d80f2e301eba4263207e47"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_12.obj",
+      "size": 646,
+      "sha256": "d9001572f1e63ae0f13e6ae7904484fa62427c87d04c0406bb6abbcda2f8801e"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_22.obj",
+      "size": 536,
+      "sha256": "bdaa80777b283df9dcf4e8dedd3eb3869a1e55e476ff31af43c7a217e08da359"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_23.obj",
+      "size": 1660,
+      "sha256": "4538aa6ad7de53206af6330a3f89b2348bfc2aa900ce061d3aaecc1a07c33732"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_8.obj",
+      "size": 3679,
+      "sha256": "bdbbc42f2525ef9317c8bdb6575a4c46b59465d99e67b38de4466cccfbe449b7"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_4.obj",
+      "size": 3460,
+      "sha256": "d31e94a1ab0b62fdc776c2c63504e10d2c12b5dc4c09f9d70149c9dca3b4b977"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_7.obj",
+      "size": 20458,
+      "sha256": "94a99179f0620534ae21c7d208a3a5b5fe5bcd4dac7ac8a13e6d5fcca5107337"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_20.obj",
+      "size": 2594,
+      "sha256": "84ac0dc0f6b9311710c3e5cb27413bbb16016920e8a8440f287a82312333e75a"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_13.obj",
+      "size": 1618,
+      "sha256": "fefe315e93c323fe1278549eedab08c6158ce68075a2e79e3bea8ee4fb9fe6b7"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_14.obj",
+      "size": 17038,
+      "sha256": "36051c65ec1c21aa48d951bbb53f00c8cb34acc6b3c9b211a4951a78017a2433"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_6.obj",
+      "size": 3675,
+      "sha256": "c7bf4b86272e741e58de5264874cb17cb64f66929e065447ab80bdcf5609d477"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_30.obj",
+      "size": 1811,
+      "sha256": "082453c3856a15160a993768f283afb3fd0299e20589b57833458642642f0dec"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_3.obj",
+      "size": 2123,
+      "sha256": "18bc3206686efa7dbc80d221cee723c0c483f86704f6508ecc257c5006d86df3"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_11.obj",
+      "size": 1747,
+      "sha256": "d7d77708a6c00574d522722a4da29b64cb9ea510014c53824cd7fd0321846e30"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_10.obj",
+      "size": 2660,
+      "sha256": "d37437c5ec1e8fe930c88584116500f76e91260a6be80f631668a00cd6c8303b"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_14.obj",
+      "size": 2777,
+      "sha256": "1f16a4ad77e797c8b71cbac45fb9d0a2aa122791ad9e9652c1c5dd1dbeb6bc58"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_5.obj",
+      "size": 2043,
+      "sha256": "7b55b56d866ca0c7e929d309a09af0aa4cfefff34a5a9029045746f1460559b0"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_13.obj",
+      "size": 46618,
+      "sha256": "f5b026104343fbe9538dbf91bddd14e16b00194a175c0a435436958e57acc9b8"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_29.obj",
+      "size": 3712,
+      "sha256": "f89f454d5b4eb10c0219893e6fb3767e75881649dbdce20684c4b37880eb1d1f"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_11.obj",
+      "size": 2006,
+      "sha256": "37a791edf48921ce6de1e1038e13d032e38384ca3cf5b1fd1a911f4ce9b82aa6"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_0.obj",
+      "size": 89575,
+      "sha256": "7c192e25474c5237cafe225556aa144eda3effc01362cfce81af825bba2634d5"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_0.obj",
+      "size": 1890,
+      "sha256": "527281882e518f342f15a687fbda0e34b267bbcb7b7fa4f6fa43369e4a3c108c"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_7.obj",
+      "size": 3652,
+      "sha256": "a0d3d21cb537cecd0f70eac784492859d55dd58548f538a896f59d46ef9de4a5"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_1.obj",
+      "size": 28942,
+      "sha256": "5a48e9f1835d6c887e3ba92dfee3ec0a2ab375c6e8c23ac2453e872811fa397c"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_15.obj",
+      "size": 3182,
+      "sha256": "d459a91ee62a2080f8b1e5708f707a0f608e33a62037450d2764269cc68a9600"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_27.obj",
+      "size": 816,
+      "sha256": "0736b2250db58ed9b2031a89bf7c52fca9b0539c95727166c80ce460aed15fc8"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_24.obj",
+      "size": 1332,
+      "sha256": "1fbaef7d471a0a9de42eca6fd574210b422c80832b85189a48f26bdbdccbc505"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_19.obj",
+      "size": 692,
+      "sha256": "a1df1370b595376b8d996cfe51009d7c3a8157c804df4ca7666b08a4f249fc15"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_28.obj",
+      "size": 1362,
+      "sha256": "0f33f6c556e4c0081f8cd7831a93fe5d2d8bea6a2b20f18785b7177d2a79bf50"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/model_normalized_collision_17.obj",
+      "size": 1709,
+      "sha256": "e293df10444f3be9ef7af7396653ae42f0188a8106c8b5e92fe8fb8b6485b861"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_8.obj",
+      "size": 46843,
+      "sha256": "5ab839523b99dd62cd028207a25d6c0fdedba35a8e5af92ff783fa14baebca33"
+    },
+    {
+      "path": "objaverse/mug/mug_10/collision/collision_mesh_collision_4.obj",
+      "size": 37951,
+      "sha256": "adb28c887028db55b57da977423556fedd48dc9a7fcf1011b14e225b6f77b8a6"
+    },
+    {
+      "path": "objaverse/mug/mug_10/visual/model_normalized_0.obj",
+      "size": 168257,
+      "sha256": "d6e749d84398dba3b80ee42759fc98a5fc08efb242dd85500e0624dc5fa78e17"
+    },
+    {
+      "path": "objaverse/mug/mug_10/visual/material.mtl",
+      "size": 200,
+      "sha256": "64cf74d663de464c0c31650d177c6a72e526619e0b11a9f7593857cebe2a3e36"
+    },
+    {
+      "path": "objaverse/mug/mug_10/visual/material_0.png",
+      "size": 11961,
+      "sha256": "098d5903f102d13cb22936ae2af98291aaa918ab41bee40058ead68d39602c5d"
+    },
+    {
+      "path": "objaverse/mug/mug_10/visual/image0.png",
+      "size": 11961,
+      "sha256": "098d5903f102d13cb22936ae2af98291aaa918ab41bee40058ead68d39602c5d"
+    },
+    {
+      "path": "objaverse/mug/mug_1/model.xml",
+      "size": 12986,
+      "sha256": "630e3724842abd117b76369bab65bc14a6388259f6352540515d0d558eaa3283"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_12.obj",
+      "size": 2029,
+      "sha256": "2a9065f0b81da9150cf57f78a41ef50cccb57756fb652290f4df59491d959d0a"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_10.obj",
+      "size": 4013,
+      "sha256": "f698e438cededb727b46d1af49ff57692de16d1b596028535dea83cae66f0430"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_5.obj",
+      "size": 4085,
+      "sha256": "b265df5f602bf07c34545ae78f542c0a680451ee07f6c74aa3716a867c04df15"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_16.obj",
+      "size": 917,
+      "sha256": "9e445323182d6006449e67156392dbb4eb2e310408863923299432a7490e321a"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_9.obj",
+      "size": 1170,
+      "sha256": "1db74e068cd4fc14e4908ccf60488e48daddb44f945407fc8254838174ce8669"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_26.obj",
+      "size": 761,
+      "sha256": "e1ce123eda9b2cfd471523080a17d0ee54161f3dfa5cfc64e83626216d98119e"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_3.obj",
+      "size": 3487,
+      "sha256": "d613678d19029dff75f5b182e74e24620bad9a9e7e9a71ba88053b8157f18a5a"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_18.obj",
+      "size": 1386,
+      "sha256": "09bc1be899c435ad3bd7edb6d3a2346fa2b14737ebf37b024a7a65f17dd5c6e1"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_2.obj",
+      "size": 1428,
+      "sha256": "484f7a8f6f2c36839cdb3975f9e16ac23bf84b306fa69d5d4e58b7a5901c67f8"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_9.obj",
+      "size": 4869,
+      "sha256": "8ed2e6a354856e75af2fc771f844709ff06484569cd058663afe8260b1d8fc24"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_21.obj",
+      "size": 1655,
+      "sha256": "0bffd98a1f956fe6520c6e2d45b0098d9b8cc44466788b70a1770ec95a631492"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_25.obj",
+      "size": 873,
+      "sha256": "e420be6c9d3e7e348c0d9017ce9d3c7d0e9909e655ec81fd441fae4c4f0cf534"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_31.obj",
+      "size": 536,
+      "sha256": "31e4ef02207c99768f7d68753424d3d55440c341431a50836ae34c0909474183"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_15.obj",
+      "size": 3077,
+      "sha256": "ae1f4023996d4558017afa6cf82a72a69830f74eb949c4b1dfb8906e31bc8f18"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_1.obj",
+      "size": 1409,
+      "sha256": "f9744bbf93c63a679ef39302d01b13391bab500010b4535cd6dac780a3f25611"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_6.obj",
+      "size": 3072,
+      "sha256": "ce8eb51624d627529bda1db618c706479543e0ac09104b9887a95dbf2917b77e"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_2.obj",
+      "size": 1004,
+      "sha256": "2157ba2d2711d24dedd28724ca5b716f6a6296699875f7f7ea63f2cd5a950b0b"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_12.obj",
+      "size": 2268,
+      "sha256": "4fc6757e7bdc87c0ac803585c8dd73fec84cd5493bf895d84751ea7aa3efaae9"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_22.obj",
+      "size": 1180,
+      "sha256": "95d0f71d69a3aa4ee10974c868ea155cf278a43fe897d23b91671d7f22de424a"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_23.obj",
+      "size": 1100,
+      "sha256": "d2a633c0c40b8ce166b49cf7d7e0288faf6553b63099c6ae83cac3a24b853783"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_8.obj",
+      "size": 1162,
+      "sha256": "86ef387d21972404f077a618b7237f1bc687c84f6eb90df6ce8a9a9cd0398cac"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_4.obj",
+      "size": 1144,
+      "sha256": "b8925caccdc5f946d66477b0a6b5431ed02e3a995d225780657261868e001e27"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_7.obj",
+      "size": 2702,
+      "sha256": "dbc07d889f514a4dcdddef3ee1301b00ffbd344404ae3f5b9065d0211f952a96"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_20.obj",
+      "size": 1028,
+      "sha256": "6d68db8f8f98d51ed07870a762bfe44d0ceaca24cd2ffb08383af35216df3c33"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_13.obj",
+      "size": 1343,
+      "sha256": "d33fe9dd968be42c18c2e25ef22f7029cc452dc021d007557219b3e62d86cdf0"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_14.obj",
+      "size": 3857,
+      "sha256": "92f4864cebe5f79bcdd008aaedd81ad55e5c9135cd593f2582a41c442e56a52d"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_6.obj",
+      "size": 1424,
+      "sha256": "37f3a3c211bace31ff1829674d3926a6970eef73ccf5d5ffc7168d1ec882dca2"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_30.obj",
+      "size": 771,
+      "sha256": "0cf369eb2f27a4bcc4791ed85098feeebf2de33896484d8d19ce77d8b85ac82a"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_3.obj",
+      "size": 1035,
+      "sha256": "b0135580f70b05de836add5d36da8f4012df3bc00e3842c59ca766e46141e9a3"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_11.obj",
+      "size": 3669,
+      "sha256": "f7536e67baf65e7dd6f32ad58650d125335fe5f7c2d40c0d4401535919e74b37"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_10.obj",
+      "size": 1112,
+      "sha256": "b8eb76faafbd2bd3e9e9f8b36a17c6c1a75abba40ec4e3d73089a5fa2141d871"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_14.obj",
+      "size": 2304,
+      "sha256": "16067ecf0cb39311633b98005fbe204241677e4af3aeb4eb8bda788d9709e4be"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_5.obj",
+      "size": 820,
+      "sha256": "ee348bc07e2a22255bdb64c947a7fad239fcbec5892576e641a04c4325034f14"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_13.obj",
+      "size": 4727,
+      "sha256": "fdf99321b6c58dce90964fcb33f9b2b43b6ad96bdba9ca5206070d313583a0f1"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_29.obj",
+      "size": 711,
+      "sha256": "30c54cf97e1f17b49c2ab38a3058aff1ad073a96ccc06fd8903e1987a8a8f2f2"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_11.obj",
+      "size": 878,
+      "sha256": "6ca5fab6c72da7a1db0093584a08ca5a5217d28a1fda9328e868ed1c0a3f89c1"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_0.obj",
+      "size": 4948,
+      "sha256": "9c6f8fe00fe19bf439d123733d9d457af529932fe23db2078a8cf6ae9ae3e58c"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_0.obj",
+      "size": 1352,
+      "sha256": "8ba2fe95b0b95e0e552ec1b2ec07060c54f4e3f0fd649e96acca2db21accf136"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_7.obj",
+      "size": 1545,
+      "sha256": "8e2c27493bc2c83f6c0d7c126203f07c860ea2d9a715f003d921a30cc24494d3"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_1.obj",
+      "size": 7142,
+      "sha256": "267e487839cc69e0c3eefaa8c272ef89d085942ef6be58bc14b55125a45eaf0e"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_15.obj",
+      "size": 999,
+      "sha256": "01af6a87da005c2c51f0a318acd007909901d20e342e265f184dfd38cb5c9ba7"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_27.obj",
+      "size": 864,
+      "sha256": "84f1d10e5bde24a20ea227f0dbbbbb470d8de8c876e1f232d8c4b9f65ac0c12e"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_24.obj",
+      "size": 889,
+      "sha256": "a6405b8e5bdcad9d22a7d8ff3baadbd62e25f8e6a5c4e91ca09a193b5c39b995"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_19.obj",
+      "size": 1889,
+      "sha256": "cc642cb8cb7fc077a76b5bb3f0bd6613f0ef1d2147ef57c4e742f6f666eb2580"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_28.obj",
+      "size": 935,
+      "sha256": "59be5ef176a2fdeedb37bdac780f06521214f7dcc2b70785ea0800d52c01ae53"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/model_normalized_collision_17.obj",
+      "size": 1329,
+      "sha256": "7008903d1541dca7de9c493fd2cce23f64530789891ca4c0013606ac31a35fbf"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_8.obj",
+      "size": 2937,
+      "sha256": "0d2fc6bc8a46c25730f291ce155ae9c170e373dc44c1a5659e23c80e450fd1b5"
+    },
+    {
+      "path": "objaverse/mug/mug_1/collision/collision_mesh_collision_4.obj",
+      "size": 3020,
+      "sha256": "908e601e0c6e9e99fedebde74cefc39d6dea3784027d1efaf9fd1fb240db5289"
+    },
+    {
+      "path": "objaverse/mug/mug_1/visual/model_normalized_0.obj",
+      "size": 212767,
+      "sha256": "7adfccecaafdd545af632455f958d25bd7a2fe1add253fbc08c06e9bacf6fadf"
+    },
+    {
+      "path": "objaverse/mug/mug_1/visual/material.mtl",
+      "size": 200,
+      "sha256": "9986adc0ce2ac07dd2fb1c5478bc7073c5ccc87eb82b9208ad02d97cf636b264"
+    },
+    {
+      "path": "objaverse/mug/mug_1/visual/material_0.png",
+      "size": 500285,
+      "sha256": "cf6faabf31513785c966bc318d56e8e3673d8c3be13a3672f06ca6a8d52cfe6d"
+    },
+    {
+      "path": "objaverse/mug/mug_1/visual/image0.png",
+      "size": 500285,
+      "sha256": "cf6faabf31513785c966bc318d56e8e3673d8c3be13a3672f06ca6a8d52cfe6d"
+    },
+    {
+      "path": "objaverse/mug/mug_7/model.xml",
+      "size": 12997,
+      "sha256": "eae6f1dd85c3748a09c344f173f1a39eb1894bc52cc7981c12195ac185f4d3fe"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_12.obj",
+      "size": 36193,
+      "sha256": "02d67e163ad3fec7bf67d79f7993ede2d0f8e874b6406a076e5521810fdce42e"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_10.obj",
+      "size": 19559,
+      "sha256": "c4cfbfd7b65268bd44e6a9bc603a906b8e5696bf2a8637a5dfeeed34097963a9"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_5.obj",
+      "size": 9863,
+      "sha256": "befc4dfadd9b79aa3cd1b9ed634536f6cabb2b84637ff370946ac9303895394e"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_16.obj",
+      "size": 1302,
+      "sha256": "f12a60a4acfad06101b6f66f496b32e00545b49cacf656d5899022d00bbf23d9"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_9.obj",
+      "size": 3444,
+      "sha256": "8f6050e19959727986b8dd5f8086fdf8a264f615756061a753d116bef2aa6f2f"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_26.obj",
+      "size": 1283,
+      "sha256": "90c2586aadf22a8fa24a32a552831c6ee0c5208e5eeea02df80923e2c3be82cf"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_3.obj",
+      "size": 24683,
+      "sha256": "76be6038b3e7326b0d22bc105fb1bb70cfeb306e7d4f3a1da4f9e640842aa7f1"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_18.obj",
+      "size": 1697,
+      "sha256": "8ac79d6b100b63783a71e62babef4fed88fce3deec73d0920d1cf4db617c3a11"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_2.obj",
+      "size": 41181,
+      "sha256": "8eb913108152c760bdad6e80f0d47afaef9e549010911a76fe602f1ed9e1b300"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_9.obj",
+      "size": 33365,
+      "sha256": "f938974825924d852e542f59bd2ef86b5902aa9c9293e574ef26bc11e4268ed5"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_21.obj",
+      "size": 1267,
+      "sha256": "1bdac48ae10d813116e3fdf237020c0645f8f3c50afa6741890cc194178bfcb2"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_25.obj",
+      "size": 1632,
+      "sha256": "3c9a1b221834213dac0a1f5c3d8cacf96dc330c54fcbca8bd33c7710a963d2b5"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_31.obj",
+      "size": 427,
+      "sha256": "b8a7184be786178ab713be59cb6da04c3114273fd89fdccac53507250d3c8885"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_15.obj",
+      "size": 35951,
+      "sha256": "ada78cea8f1b9b13e6aef018c033370153a7eee01fee77a7871d0dd4d1eec335"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_1.obj",
+      "size": 3742,
+      "sha256": "37dba8b489ddf4d743b2d9126a4af40870a55c1e393d841ca7f3b3ea95478006"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_6.obj",
+      "size": 21659,
+      "sha256": "57237a4f69c0b72f183e852956b08bbc291484d1a18c432335b32e272b7e4450"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_2.obj",
+      "size": 3622,
+      "sha256": "38e1e0d39b3f933a1b3067255f597f483e68f12297f012a938308feffca272f4"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_12.obj",
+      "size": 1977,
+      "sha256": "fbe52d0402efaefed2f215ad678be9ec0381a31cbc83724952c5148de564f1c5"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_22.obj",
+      "size": 1658,
+      "sha256": "71c44fd2064824cb784dc2f0fc7e27b492da4f3ff61f93b382ad8d900d7312ae"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_23.obj",
+      "size": 1735,
+      "sha256": "f7ece1463bcca8061475a9065d07636a4ea02a2fd7045f9274251052d6115aff"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_8.obj",
+      "size": 3120,
+      "sha256": "91bf1536d7ffa970d17e43ae83630e82eb74d309bf1127d58a8b38e670f8c762"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_4.obj",
+      "size": 2301,
+      "sha256": "1e706efa3fb74a9e76fab9917e0533a95d56691c67701886ead08203c2457004"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_7.obj",
+      "size": 11521,
+      "sha256": "017ee569fff07735d2e30f459f468ed58fe274da5851e2db5edd6b9ebb0be3c6"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_20.obj",
+      "size": 2070,
+      "sha256": "44ada19677b6dc2a98bbf0be0207b966ae4a036712eeae72d57bd4e386ea6334"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_13.obj",
+      "size": 2384,
+      "sha256": "f72da8eabef894f61f654f9f3927fae850d7e7bc87c11639cd5ccbbe184d8988"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_14.obj",
+      "size": 11424,
+      "sha256": "761c29d262ab934d2499d86e868aadd75f59d56288126b231efb121c187f1f2f"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_6.obj",
+      "size": 2838,
+      "sha256": "20cd6b5e24b70490840c1de1b3c0c2d0c73d9195e6535f7c02ff862f2f92f081"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_30.obj",
+      "size": 1704,
+      "sha256": "ab7109ac2283ce2a7d4781213f274bb8df86fb7d5a9d57a1d5e478befd922273"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_3.obj",
+      "size": 2119,
+      "sha256": "e024e84c0625052bde647c1ffc80ce9d8cd456d2975f504a01371ed54e23a06c"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_11.obj",
+      "size": 17198,
+      "sha256": "1395a30b2902ccfe32826d3b17d6f748f8d27ff284eda336d255da7ac007851a"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_10.obj",
+      "size": 1094,
+      "sha256": "1070d59eba1506a3cc8574d491729ea33ffb5c10ef3f1939fd7da260f76656d6"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_14.obj",
+      "size": 1712,
+      "sha256": "18b3563e9aede285fc9e9cfb0f4eb2ac886d882d967878127bf8555400bba59b"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_5.obj",
+      "size": 2518,
+      "sha256": "e16f4b4e1794812d5d3f54aad3ec23973bdb01a35d174f7ce56a188d4a29f81f"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_13.obj",
+      "size": 26895,
+      "sha256": "6392b0475a5dc62f7863d727fcaac7102571ad1e544226475f068334450639c8"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_29.obj",
+      "size": 1579,
+      "sha256": "aaa23e34b3227bb96015a0be09a57e31b8c42fcbcb47e3da1b8db84c09bb8f96"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_11.obj",
+      "size": 2075,
+      "sha256": "8dbf81421f9573db486678f7e449ba95cd0987d96970dbee400091c53a5c9ac3"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_0.obj",
+      "size": 87842,
+      "sha256": "fa213922e7cbdaa946ecd6864bfa208a81c41f42a412af35b8b42eb978289343"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_0.obj",
+      "size": 2305,
+      "sha256": "f4b41a6e14a70608d6d1bea7c1333f55e6a310a1808641fcc6c0f4283a13d73f"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_7.obj",
+      "size": 2736,
+      "sha256": "9e9a894d5501b81f4098bf4b69ad95996b5ca210ab084ac653d8c5aef2040f55"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_1.obj",
+      "size": 20819,
+      "sha256": "965fe4f9a805498d2040cf4ae2c99ab55cbb9ade6e4da7802a4613af171f7e41"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_15.obj",
+      "size": 2542,
+      "sha256": "b7b4fea645e2fae8959319869c66773c542348c73bec8361b032eb2d5fbabb49"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_27.obj",
+      "size": 917,
+      "sha256": "02daf922641f616ec62eaaf571d10f8a29650d585d6399e4e854abeffb5883d8"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_24.obj",
+      "size": 1430,
+      "sha256": "a5abbc89527fab4c879e6743fca07e00a495fb3c1fee164fb893f9c9b1b1979d"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_19.obj",
+      "size": 2547,
+      "sha256": "16c8b104050f92df770de87d3a4e8bf17868821fbcb2283ad3a636b69f5246eb"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_28.obj",
+      "size": 1848,
+      "sha256": "11c48ce529c6e92663b33fcfa32e7729d81851e891ce07a517b8b428af660e50"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/model_normalized_collision_17.obj",
+      "size": 1221,
+      "sha256": "3a07950b8771e82088e8b46ed465c083cdc73fe6e9e2038763e73cda0d80b2a2"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_8.obj",
+      "size": 21212,
+      "sha256": "0a5e052dd019cee91fcb226607dd7c9bbef3aaf5276d830f6e69211645b58121"
+    },
+    {
+      "path": "objaverse/mug/mug_7/collision/collision_mesh_collision_4.obj",
+      "size": 24560,
+      "sha256": "13a2a609ed00fe0e9fda3bf0a5bb8fab3f68825f307ee52f2849382d1877fd61"
+    },
+    {
+      "path": "objaverse/mug/mug_7/visual/model_normalized_0.obj",
+      "size": 205272,
+      "sha256": "e5c57950668848c1cc504339c3f2d76cf45c6394861aa29d37fc92b43e596970"
+    },
+    {
+      "path": "objaverse/mug/mug_7/visual/material.mtl",
+      "size": 198,
+      "sha256": "82779ed1af47cc7bdf29f8ef96f7f5c26c1f7e8773274d858681214a56680677"
+    },
+    {
+      "path": "objaverse/mug/mug_7/visual/material_0.png",
+      "size": 206839,
+      "sha256": "f28e494099575bd6f89e947e1d9d0ab98554a5ad1fdb0f871edf6fa960820ca9"
+    },
+    {
+      "path": "objaverse/mug/mug_7/visual/image0.png",
+      "size": 206839,
+      "sha256": "f28e494099575bd6f89e947e1d9d0ab98554a5ad1fdb0f871edf6fa960820ca9"
+    },
+    {
+      "path": "objaverse/mug/mug_5/model.xml",
+      "size": 14364,
+      "sha256": "8896d2618329ac15409f95026a2be55229f42a99de70fc13da6d3266852db952"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_12.obj",
+      "size": 31739,
+      "sha256": "3149b5e2a29f82df1960dbe0edcbe015f51cfe18c4c07503ecbe7cb872b568c1"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_10.obj",
+      "size": 23080,
+      "sha256": "b5e8c3fa2e11957d7ed828b486672f89f9d5db149583a02b299858006f92ba23"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_5.obj",
+      "size": 24070,
+      "sha256": "4da4cafb8eb7d08326bfe37dd3ff5236a144e4e3aae86565329c536dcdc95078"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_16.obj",
+      "size": 1649,
+      "sha256": "a681ff284a757db9f60e522eb9d3d7a2eadc281b8a40bf6836da0c253c6832c7"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_9.obj",
+      "size": 3066,
+      "sha256": "a1c0346bb264e69f0ba9576ffda4ac74cfd67b4862aec8d7629ff9bc8b1a938f"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_26.obj",
+      "size": 1819,
+      "sha256": "1b225cf94dfb87e38907191014992cbb8574cf06916479c0bb3a29f120a80acf"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_3.obj",
+      "size": 42783,
+      "sha256": "ddcc4793ff7bd03c6fd1899a9477ccd59df5f1bcdf0ebb29ff3241fad5b0757b"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_18.obj",
+      "size": 1791,
+      "sha256": "d9974b8fff4e4fbe4328f62c8f855bec575dcf29632109defa96564b9daa1d57"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_2.obj",
+      "size": 46267,
+      "sha256": "0a30465874848c9f2e22ef70b236a37c0fe1829e910cdc9440e625483c607719"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_9.obj",
+      "size": 24300,
+      "sha256": "46b189cb2beb06ec5e2ca48fdba271bce76b4314b3958cdcfc0471efa9a9fb75"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_21.obj",
+      "size": 2576,
+      "sha256": "a9788768bb228e36aba9e69700d7bda346472f6d93fb75125e98d6dfd72d2fc7"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_25.obj",
+      "size": 1898,
+      "sha256": "7ce617d2da2ea83b2ffee290493cd341fc4c4d270bb9511410263e30f365147b"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_31.obj",
+      "size": 1546,
+      "sha256": "36b4339867446a9adc9a8b409ce5f3465491ca9e2a8bfccd4d935b7092f2b254"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_15.obj",
+      "size": 32589,
+      "sha256": "da27e772e802d5d51071d23c9a58c0921ba27d966bbae44862c6f6a128081c34"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_1.obj",
+      "size": 2626,
+      "sha256": "cdc3986d1436ba7eac422688b8e8507325fe1e91f9cc990ae6a86f0b85603971"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_6.obj",
+      "size": 16977,
+      "sha256": "15834d71014f1c074807b59b89926f3cfea7868bfd26995620ce9219ea8c2c45"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_2.obj",
+      "size": 2120,
+      "sha256": "da644ae5aa4df0a2efbe5161872cb002f7e011bc62eac8c30e7ca44714ad5685"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_12.obj",
+      "size": 2209,
+      "sha256": "2b75c072238cf51f7dea83a0a1cfd9eefce9fce854ae730a75d779b528dd7194"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_22.obj",
+      "size": 3596,
+      "sha256": "b40e1cfc48f6bd84c758c00b093b7042e36f8e505305b647eec5680fc989dada"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_23.obj",
+      "size": 1871,
+      "sha256": "860a0c9d20d9210a469f0e38cf8ab79d5c1b32360f55e5d6c50c509f2e5eb630"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_8.obj",
+      "size": 3609,
+      "sha256": "d95c4394ca783106b6dcb05b31d96ad4162b7c98b9e0eb5a39dabb23db0478ff"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_4.obj",
+      "size": 2075,
+      "sha256": "934ecf96b7cca8152762b9ed1710439f4b6cdf3236548c6ea7de757e1c857895"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_7.obj",
+      "size": 57066,
+      "sha256": "c82c5327f5090720f1ace41356967e728322c946a3a3f06d230361d4d64b1f2a"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_20.obj",
+      "size": 1990,
+      "sha256": "4c1cd46647427fcdef8ad95c6a2284075eeb0d115afb42d94a0dace581c6c497"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_13.obj",
+      "size": 2511,
+      "sha256": "fe69eb2e78d640fcc56bbe817d48206722011306ab29e4ccfdac86f770a92399"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_14.obj",
+      "size": 33677,
+      "sha256": "3eb68a644717d9425462fb3c601770a240c32ce909828ca5e11bbeba3f591e69"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_6.obj",
+      "size": 1881,
+      "sha256": "449906f38e7a4d957dead689280f4b2e5ddbc9e490051d2bbd4deebeecd7bfd6"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_30.obj",
+      "size": 652,
+      "sha256": "0adce6986bfcc6eb137f1995a2523b32456bbc365b8cc631e89544d7f52e0abb"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_3.obj",
+      "size": 3717,
+      "sha256": "5ba976d486972b12dba157b59b799937ee8fd4771c0aafb43419b3b617dd5c2f"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_11.obj",
+      "size": 50601,
+      "sha256": "aa86498484c1f474fcd2a596ff85901aa590b848cb080ad6c8be1c6ba1d033da"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_10.obj",
+      "size": 1927,
+      "sha256": "98efaf2aeac09812066cb16865b0c5479784fc2a0c762f387f3950c1b6743c4f"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_14.obj",
+      "size": 1314,
+      "sha256": "1ed15951da189ecaf7b41d3d69c8744e16fe999a8f718b54d0835b3abb77c884"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_5.obj",
+      "size": 2329,
+      "sha256": "a2b11e37865addc341f6de5d81ec0fd206fba816634bd3b65d9bb4783a4b2be0"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_13.obj",
+      "size": 24483,
+      "sha256": "9968c2e59933705fb3427b618df0c83238cab78c2c14dfcd4b1c4880d5efbf3f"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_29.obj",
+      "size": 1206,
+      "sha256": "1ccd9ead3d5cd1d2832abf35775686c7ffa78afe9101c1abeaa5a2e39c6c2f7c"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_11.obj",
+      "size": 2124,
+      "sha256": "06c00ce7d97a41f4ac71de7e1e6beac67d63f8b806dbe8105183eeed54dac1c2"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_0.obj",
+      "size": 53305,
+      "sha256": "fd2e2d24f6bc916fe807a002390120bf677f5da0b92bd4cbcc88d3fb83b3bb7f"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_0.obj",
+      "size": 2033,
+      "sha256": "1802fd221832bf4c46425b2a0e4798311e2bf0854f7d0aeb170031a17e29df6b"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_7.obj",
+      "size": 767,
+      "sha256": "ee610780f63837b70cef686a42c58cce2a491fc0b897c51322884a5a9f8f33e0"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_1.obj",
+      "size": 44598,
+      "sha256": "1833852bbad35f9d1beabbf08de2471003cc0bfb6a1695a9970d62ec7869e053"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_15.obj",
+      "size": 3409,
+      "sha256": "d991f4c02c833fea95e5e1eeee03cdf7dd466bd489c0aae02ee8dcd60cfd4e6b"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_27.obj",
+      "size": 2060,
+      "sha256": "c4e9d46c856970703593a37831d4f87424dcecc48ce4f68dd2b73ea249a8d6d9"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_24.obj",
+      "size": 1299,
+      "sha256": "93230fc95112c0087c3efb0d09a158f5d549a3d79895021e9765b3f9bed010b4"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_19.obj",
+      "size": 1880,
+      "sha256": "e511232ef74eec6144800f05f17aade6dff3be06da6a225e0fc5b3a3e5e6e5f7"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_28.obj",
+      "size": 2179,
+      "sha256": "17f85f84e5b9b9d9028215f21db3b8936ddb9dc69f5b86e799b5ecd16138aba2"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/model_normalized_collision_17.obj",
+      "size": 1431,
+      "sha256": "8e113cb4047bb709872cfbb4fe192e8dbbecf1bc6008f16da2cf614f9963f770"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_8.obj",
+      "size": 37780,
+      "sha256": "71d2525a1ddb674c4a51ca24e71f9c79d1dd7f76e6be6eb704638436fe0f1e9c"
+    },
+    {
+      "path": "objaverse/mug/mug_5/collision/collision_mesh_collision_4.obj",
+      "size": 27294,
+      "sha256": "4fb7b5e73e5277e7c61a2b68b19b1d704a3bc9a3482800c29781fe84d17fcb19"
+    },
+    {
+      "path": "objaverse/mug/mug_5/visual/model_normalized_0.obj",
+      "size": 348751,
+      "sha256": "0e8b4fe591ec1e7765e128275152c5833809da10ae0f41c00075b6d06f5e21da"
+    },
+    {
+      "path": "objaverse/mug/mug_5/visual/material.mtl",
+      "size": 200,
+      "sha256": "6d46124586ac97d9b0654b46fc1eff144e5ca69e6c1979420f382af7e025708e"
+    },
+    {
+      "path": "objaverse/mug/mug_5/visual/material_0.png",
+      "size": 72339,
+      "sha256": "1db95c4b1a3659ec6d40c8e51e16dc805dd249572bf62b9642c5734d462c5bb6"
+    },
+    {
+      "path": "objaverse/mug/mug_5/visual/image0.png",
+      "size": 72339,
+      "sha256": "1db95c4b1a3659ec6d40c8e51e16dc805dd249572bf62b9642c5734d462c5bb6"
+    },
+    {
+      "path": "objaverse/mug/mug_3/model.xml",
+      "size": 12993,
+      "sha256": "24b40f5139ce3dda39ea77e36c275a94b8fac0679c4c19a1588cfc60cda9902d"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_12.obj",
+      "size": 27510,
+      "sha256": "0d4373109e359677c311ba65b580b56a9adb2376ca3264b6b1963519bdb53feb"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_10.obj",
+      "size": 20874,
+      "sha256": "9c7efb2ffe3af3ee68d216abc17d6ef3d13b03ba8b5875238fddf76e40996c12"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_5.obj",
+      "size": 13932,
+      "sha256": "a81b05a7f488858876c3d6e7f4d0e85213aeade4369b5f95e16de42635278e58"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_16.obj",
+      "size": 1356,
+      "sha256": "e9c83d0da08928f863a1f7404d9b1d44b34cb3037d45135dd6ea872c51fe0128"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_9.obj",
+      "size": 1876,
+      "sha256": "0def07117c7684d22fc8660ea48d4c9c36e1ead99e0f9e77c1ef30bb3b30ae85"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_26.obj",
+      "size": 605,
+      "sha256": "f04dba62ced2e90edb6081055a7095587350f36a1d2fec1bd4f6f785e88edc4c"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_3.obj",
+      "size": 32415,
+      "sha256": "dc7ac6536537bf8c02d6b4b7afda144191043c8b323e890daf92328dcac06d58"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_18.obj",
+      "size": 2147,
+      "sha256": "1881e1d73df170f88cf253cf54739f52743ad978da184e5c45ac044903994384"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_2.obj",
+      "size": 24396,
+      "sha256": "8d8273617349bfccdb263183ffb6b95365597dbd71a5d5acb50e301b9bc7803c"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_9.obj",
+      "size": 34469,
+      "sha256": "b4f7d78fc87e0ae7422ee5a0268b2770ec31ddaa62b897faccbb7b03c2e3d204"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_21.obj",
+      "size": 2100,
+      "sha256": "a9ddfa2e41ee3f61bc2a58b062560996dcff1e532ecc2d9b4a9e1108720270e7"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_25.obj",
+      "size": 1168,
+      "sha256": "ec859caa500d395231172b3fc4611a3f627553fb8cbbe1348e5b9ba8151059f2"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_31.obj",
+      "size": 1177,
+      "sha256": "9ae02bd68fa6a513b97779a3fe4f92152d8f14f1a17da92743b6884cba17fddf"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_15.obj",
+      "size": 20085,
+      "sha256": "4aa8d758a8da6a55540afada2a9364d879236f49ffc1cb9dedec7d68ec848dce"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_1.obj",
+      "size": 3433,
+      "sha256": "3703c20ff9145d7e9849c37081534766e4461170e8db9929259837ea4e179619"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_6.obj",
+      "size": 22690,
+      "sha256": "3ef82215095fbfde9cc63095f7c9645090b05c82917ff0ecaeb48b79c063433e"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_2.obj",
+      "size": 1790,
+      "sha256": "daee22cdfd981031dcdeb5de41327782beea363f3c71bed2ae273c3221e5d533"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_12.obj",
+      "size": 3037,
+      "sha256": "04f53788aa52d255c85551ca61927312cef4715d8649c701ece5d52e90f8caed"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_22.obj",
+      "size": 1867,
+      "sha256": "9d3f6b8049d14b52d837019e755da7da3754b117f00d87999c1ad4318733c86c"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_23.obj",
+      "size": 934,
+      "sha256": "90cddaf04221b131945d3083d9dde32b33dda9884ff56956333a5e9009dfebb1"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_8.obj",
+      "size": 1486,
+      "sha256": "d7a016f34dce3de91c60ad3f150de28c797a24c48330b6302ed925aae71a919c"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_4.obj",
+      "size": 2433,
+      "sha256": "0617fb2da6418c8fb3998cfc01945399de8ad883cce91a016d69848fe8bae492"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_7.obj",
+      "size": 8712,
+      "sha256": "04c835deed91fb3ffb3315993104f2b28ec8241097799c1fd75e0c0cdbd31080"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_20.obj",
+      "size": 1269,
+      "sha256": "868f0741b14b7a100f9a0bc8421c3fca4f1372f938341ea276558b1147a0a4b6"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_13.obj",
+      "size": 1360,
+      "sha256": "ea7dbe3296f8e0b5b5f4e70cad7dac78e0e91754973a2be7828811bbfa4250a9"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_14.obj",
+      "size": 15728,
+      "sha256": "bee814f505e3709c14111f694b6faa2f05393884dd7f62e4f8ae52bf75770e97"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_6.obj",
+      "size": 2016,
+      "sha256": "0c4588289711c0b469d170e59d99ac70fecd4692b876e6ea95a63d0d811b1a94"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_30.obj",
+      "size": 859,
+      "sha256": "ad867082d62e11a7806df4279a1200d1a27c7e5841a3511a19fbb84081cd7b2b"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_3.obj",
+      "size": 2604,
+      "sha256": "206c6e5de41694fada0eb747ef7e32529ad88cbe8ba440393a623efa06d40485"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_11.obj",
+      "size": 6313,
+      "sha256": "7770eb713c991832a5cb5a9eb365c32cf0e08a4dbdf5160d50baa43ed75ad7f5"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_10.obj",
+      "size": 2741,
+      "sha256": "6e035380d3091a82a4f0083aeea1d926bb492197372d250d5ab7ae8df3df59b2"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_14.obj",
+      "size": 1102,
+      "sha256": "9a8a396411662b7523bae10e01d1c0368f955d5720e709b3da64dec161704b91"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_5.obj",
+      "size": 3455,
+      "sha256": "be1bf649aa70104fb06c43f0ea2246f1bb347391bdf6b417b8dd3f78ab5711ee"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_13.obj",
+      "size": 15539,
+      "sha256": "113955dc215201ce48334feff9fa57c1413b3a80559d48470a3bce160234baf3"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_29.obj",
+      "size": 1585,
+      "sha256": "d86448e930aab5645e124acf8aba1057ed43e41bfb40073ad38e0bd499c6fe87"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_11.obj",
+      "size": 1424,
+      "sha256": "3865cdacdccd4a08fcfeb592938bc50a7e8fee92b83b9041c4752ea7f621fbae"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_0.obj",
+      "size": 24524,
+      "sha256": "bd3418f26fe9ea724ba6d32e71b8d2b9e45b8c13824ab0089bb50fa9a3cc9224"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_0.obj",
+      "size": 2998,
+      "sha256": "464929eb9df50ebb66b910abd2088215cb3b7ed9f33fc9c532c449085abb0aaf"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_7.obj",
+      "size": 1601,
+      "sha256": "e132b43558a4e830ad031566a611eaaf52d68d6236f0e3498b0bb1d302abb5a4"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_1.obj",
+      "size": 25690,
+      "sha256": "b7bc98cded7f70b5ecd6d8a8962f069b58d6565d4578eadbb54071cc4ad9fa8e"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_15.obj",
+      "size": 1673,
+      "sha256": "921843ee817e406567a470bdf1e3078a14d4ffc873607a807c2eec9031269e63"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_27.obj",
+      "size": 1662,
+      "sha256": "5d9fe3e2bb8ee11aa0095a9606574e32d2f393b98f9815a2001ed30b3ab5831d"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_24.obj",
+      "size": 1001,
+      "sha256": "a3657042cf3679ca0dc5cf187416fcedc6d4a46cd3379b4b2eb226b67441af01"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_19.obj",
+      "size": 1554,
+      "sha256": "1f0be16c52439e1a5414e8f3c3f736bf577ecae15dae309c8e16787dc85d85e3"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_28.obj",
+      "size": 1446,
+      "sha256": "d6df2f3418662fb3bed4a7986b1de670ef33b7b1246c45dbb91c81f428763fae"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/model_normalized_collision_17.obj",
+      "size": 1243,
+      "sha256": "9c0bdb445f3e330fee8a25dae04f0388b4f0cb78efc75a2b7fc212fdfa66cf35"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_8.obj",
+      "size": 24743,
+      "sha256": "c02896c8286ef8a79f15a292f199108740c122e1d001e29db43608dcf17b9860"
+    },
+    {
+      "path": "objaverse/mug/mug_3/collision/collision_mesh_collision_4.obj",
+      "size": 35978,
+      "sha256": "7b5b417f4a42312200b8003d86007f61f3db80379b2643365dd7ab2e69580ba6"
+    },
+    {
+      "path": "objaverse/mug/mug_3/visual/model_normalized_0.obj",
+      "size": 97808,
+      "sha256": "e6702da29b777e56f476b8e2c60e6ad2a2986082232ff41ef663edf2327d1f99"
+    },
+    {
+      "path": "objaverse/mug/mug_3/visual/material.mtl",
+      "size": 201,
+      "sha256": "a475edfaa643e71a9e9c3eef3ab3c1fa6287b10f9a983243c6b3615dec4447b9"
+    },
+    {
+      "path": "objaverse/mug/mug_3/visual/material_0.png",
+      "size": 51302,
+      "sha256": "e669d786b62115a3b973534088c5b5af7543234df80dd3335cce7625e8c80dd2"
+    },
+    {
+      "path": "objaverse/mug/mug_3/visual/image0.png",
+      "size": 51302,
+      "sha256": "e669d786b62115a3b973534088c5b5af7543234df80dd3335cce7625e8c80dd2"
+    },
+    {
+      "path": "objaverse/mug/mug_18/model.xml",
+      "size": 12382,
+      "sha256": "6865332fe87a78e2516dfea7cd2d75d7274b8c435b31621a9e527e706080c7b6"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_12.obj",
+      "size": 11123,
+      "sha256": "a92214cb870bbe1cde5dd22f07aa56c2056b8c004ac382f56c301c426cece2d0"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_10.obj",
+      "size": 7364,
+      "sha256": "123b124e955da9da90212e5a3b3f872248b6ca98231eab3ad91bb8f00097a78f"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_5.obj",
+      "size": 10580,
+      "sha256": "acada237af42673b5a3f39d4205f7ee95a1ca30db69a8a025e440b84c6b61e8a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_16.obj",
+      "size": 812,
+      "sha256": "cff2ca65db2f722d104b047c14da46615279f4f4ef740ee546e87913d7978bf3"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_9.obj",
+      "size": 1054,
+      "sha256": "d39deb2ab2cd6b06d70d4b5960586fbe471261242e3fc24e09f48e7edf10cfda"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_26.obj",
+      "size": 1358,
+      "sha256": "224b29ac4709a8c0e67ba4104026ec383917118f24596ad9b7a204f7368936a7"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_3.obj",
+      "size": 11785,
+      "sha256": "df1f8a6d272e7d4bbae43aecbb063e26a97acf65af1c5561cc7675804dcfa871"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_18.obj",
+      "size": 1678,
+      "sha256": "ccf13888fdfb2c3cc441a6fe7f206b44fbfb3d9731acedf68e6553b695c5625c"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_2.obj",
+      "size": 12058,
+      "sha256": "264bd7b2608551a2ca69725e8d46793ca6bc4a74c2edbe1f546623c3ea24351c"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_9.obj",
+      "size": 8395,
+      "sha256": "786df848495e293d59d34deb5476c13548c9685fe2c1627bfb972109b20b1e10"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_21.obj",
+      "size": 1042,
+      "sha256": "b01665d4fa966c1de6b542aca5d37b91a54d3d1791f954ab595154d13505eb63"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_25.obj",
+      "size": 1857,
+      "sha256": "8fb040ffa9f846d4c9e5f26a79095d33194dc74bdbb5dc286ccb407b185d969a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_31.obj",
+      "size": 984,
+      "sha256": "ad4e47ae878ad909189927a0554b092977c351a9bfefce71f8b777db53b9af81"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_15.obj",
+      "size": 17858,
+      "sha256": "4dae4876b150b9983426954f47382320127e5d60fa90e5a3c36b9566d46b237b"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_1.obj",
+      "size": 2265,
+      "sha256": "72f9e8beee0289e773faed36dd86300d2fcfb132f229ee02afba4231d0d08a5e"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_6.obj",
+      "size": 18581,
+      "sha256": "2d610074f20204fe91d624ab76ad80c9620859c8acd9a168ca2c26eec9016aaa"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_2.obj",
+      "size": 1132,
+      "sha256": "99da3e9f5511d4dc88845952a3f6e3255e27113691a05faeabc30ab278fbdc62"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_12.obj",
+      "size": 1351,
+      "sha256": "48249c9b435329398facce5e56c72ab509fdd5d053093a30cf8884bef3366545"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_22.obj",
+      "size": 1282,
+      "sha256": "a62c6a3be192444b6b1270b9e0bee7282c3754aba1d1491ab05331fadc2db9d2"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_23.obj",
+      "size": 1111,
+      "sha256": "32a0eac8d452d65c302f8193a05b422e6f8be18b570d582408d0c3a525bade2c"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_8.obj",
+      "size": 752,
+      "sha256": "f379113ba2d92a73f3cb751263abf6ef4de01ae529fac26672df850163eb472e"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_4.obj",
+      "size": 2185,
+      "sha256": "6ab44c96b09d6bc98e0d9698496f49dbeada9ef540391c9c9a8b796bd9715db8"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_7.obj",
+      "size": 9999,
+      "sha256": "14104637c899ff13e1bb2e70825a0b650ee243f64bc9446aa11adf49e4ac0164"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_20.obj",
+      "size": 1105,
+      "sha256": "1facdcccdda1d3a7717be6d3419663734033c431fd7afb5745ab8fcba5f3c424"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_13.obj",
+      "size": 1659,
+      "sha256": "903d9266c72b215e597829e25f33630e01d5ebdfaab1c12106321bed3c4619f2"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_14.obj",
+      "size": 9541,
+      "sha256": "7d33192f4085decb434b1b5f20f591e89d710f6fdda5bdc7131e4dd1776dae7a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_6.obj",
+      "size": 1463,
+      "sha256": "b2192ab145c387b519e6822be1dfa8ebcbe8dba7cbed8f36a8732cb16c1352a6"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_30.obj",
+      "size": 718,
+      "sha256": "d9d92299a727fcacba7d8f6252c2ab61e153a9ec7e66a0ee6eeb41305fe49adb"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_3.obj",
+      "size": 1714,
+      "sha256": "23cf8a61981a9da0172db54674d17d0843f408e40e9b8a8bd91568a386075d8c"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_11.obj",
+      "size": 8297,
+      "sha256": "7b9ad0a6ca7f128b9bd2e0af2029df1b4121fb62c7340940ff8d47ee7eb4a7ce"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_10.obj",
+      "size": 1748,
+      "sha256": "4993095cd846c55a786b2fcc4d58b371913c8edd065e5aae3d219c884f0dcb6b"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_14.obj",
+      "size": 1523,
+      "sha256": "ff3261d93d56bffb05c200deade7244390ff747af1df802c9d2d51108551e2ca"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_5.obj",
+      "size": 973,
+      "sha256": "72b943f1fe3f672d051d1bd55d1230f0930c8e9d45b62f5633034457ab927395"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_13.obj",
+      "size": 10067,
+      "sha256": "7d6f6065a1534b113b557c14a488f99fbc51edcc97592724200adb3e41787724"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_29.obj",
+      "size": 1210,
+      "sha256": "7920fbacf0793359e52796336e44054fd8e6c3f4471faacd8fbdabc0044ef4cb"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_11.obj",
+      "size": 3465,
+      "sha256": "8a6f3c40fff3ca0401fdcb9122f85dde26cb572fd675ad9751a7d2f78381862e"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_0.obj",
+      "size": 9654,
+      "sha256": "5e77d5982e496add634c347e7b343ac004075a90eb32c8f9d47f6a747da65e0c"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_0.obj",
+      "size": 1371,
+      "sha256": "d7245d63efcd034747c22602bff885bd22581ce11be90fc1422ab433d20bb274"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_7.obj",
+      "size": 2082,
+      "sha256": "0fdd0255a4706c312af991c31292d71334fe5084d5b922bbad6a84ac30688a7b"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_1.obj",
+      "size": 20044,
+      "sha256": "060162119794c86431490472d2efcea1e9b0bf1d0b75098512bdb6e823089476"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_15.obj",
+      "size": 1335,
+      "sha256": "0c25fb0ca8a83bb8f732ebba1306b31344a5509700b6f4bdbba519de89c1044a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_27.obj",
+      "size": 2781,
+      "sha256": "4f60a7f9eecc4ef34049835f47955ad27cf1df5cfc66ed426d935830724e94eb"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_24.obj",
+      "size": 1000,
+      "sha256": "30281e2354bf7f7255f04728405318d76896b8d78563cba9d5fabe0f014afb3a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_19.obj",
+      "size": 1234,
+      "sha256": "ffb1c3d8eb8b12d5e9fdf6ee9b7eaab52447015e36aa8a05707eacc9026868ac"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_28.obj",
+      "size": 884,
+      "sha256": "7e33e2ead871313aadcf1ebdddec8a27839fa4fd6cb8709980cb30935e5c9bce"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/model_normalized_collision_17.obj",
+      "size": 1110,
+      "sha256": "818916299d4b676cb98dae9355497e8d7268643f8fb338e91cb69ba67b677006"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_8.obj",
+      "size": 22929,
+      "sha256": "a8ada171e55fba031368005749a932ead986f488a638fdbced66706ad0ff9585"
+    },
+    {
+      "path": "objaverse/mug/mug_18/collision/collision_mesh_collision_4.obj",
+      "size": 68826,
+      "sha256": "132d2e5c7cb2bf5e62ae07a9db2cdcdaba3899cb1765d5ded76c5ab817dda13e"
+    },
+    {
+      "path": "objaverse/mug/mug_18/visual/model_normalized_0.obj",
+      "size": 803407,
+      "sha256": "42fa404a26923e1ec6b01dcc7193fff38a5626532969b75108c784dd0332726a"
+    },
+    {
+      "path": "objaverse/mug/mug_18/visual/material.mtl",
+      "size": 176,
+      "sha256": "a9bd10bfeef800f528ba85a25560f131b49d9462dfff2356e20881f42d1dbf24"
+    },
+    {
+      "path": "objaverse/mug/mug_18/visual/model_normalized_1.obj",
+      "size": 1626856,
+      "sha256": "a00f2e9eeab0b62dd3b13aa1e672a4ddad95e36dc5cf6a96ba06a25a444802ff"
+    },
+    {
+      "path": "objaverse/mug/mug_9/model.xml",
+      "size": 12549,
+      "sha256": "071b0eb0b431fccd9c86bae0fe3186674ebd5064ea1fb6eb769883893969bb98"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_12.obj",
+      "size": 864,
+      "sha256": "4d4e6949aff952154b244608acc7eee764526b62632da57e2e3c040096d0420b"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_10.obj",
+      "size": 2854,
+      "sha256": "f1918a3306528af1a5807d4ff3899bb07d9faaa43aca8f95b50f806ac932da8d"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_5.obj",
+      "size": 2380,
+      "sha256": "32e0de8dedc147a205166a1e318749223a79372c3a59ca6f55d865e1e61dee75"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_16.obj",
+      "size": 1977,
+      "sha256": "9f7ae26f4709f8bccb0b1c512a209df4923f4ff25f78d7b31f76faecebd704dd"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_9.obj",
+      "size": 1844,
+      "sha256": "a0b7255bfc0127ae5bd747e3c86be6ebb9053a38150a0d7e2140879c5072ed71"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_26.obj",
+      "size": 1204,
+      "sha256": "0086984e9a7ec06dc9ad29addbc6b5cdd104033efae66bb159d5d490b69bee05"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_3.obj",
+      "size": 1645,
+      "sha256": "87553b2af1b96bde2fdee8f7a4bdb80bc560857993bb816c2ba58ca37c3430b5"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_18.obj",
+      "size": 1272,
+      "sha256": "9ee70d6f863a20455a7c6ca9cdf3c3a5677a13299188a156eb4449efeb75666b"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_2.obj",
+      "size": 1243,
+      "sha256": "247d24a6c9b262fc4f7d1fa26cfb9b61d64ee954e39c2b4b70a08dae1112444e"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_9.obj",
+      "size": 1717,
+      "sha256": "28e85e47b4be66350c46ec97a994688e8dc19957ddc066df3cd36bfe2d727c92"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_21.obj",
+      "size": 2323,
+      "sha256": "4b5fb645dd757f01dc87e12e0aab8f54c4976df0b5ac9370f1027b5d55c60e43"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_25.obj",
+      "size": 1571,
+      "sha256": "0c3a5fdb463b5455991562b010decad5753fa27fc8c828f9418c1d7be427cb1f"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_31.obj",
+      "size": 948,
+      "sha256": "e32cc18e53a76b9ade3b6fb0b765f39e2587830db8f6964671c04d31294b3abd"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_15.obj",
+      "size": 1618,
+      "sha256": "0384d16205f05257a70a6d39a564098fc18fa81c637b09fa2dc99daecafdd91c"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_1.obj",
+      "size": 3107,
+      "sha256": "6f78ef1def4e18c396b1868c74df2680d7078c3b44cd2f22248c9f26bf1a99a7"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_6.obj",
+      "size": 2095,
+      "sha256": "5d0f145f99ee34e6a5f44c2c24e7c7cdae8c369909487ffaefd6edefc7081eed"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_2.obj",
+      "size": 1539,
+      "sha256": "23b0541e9b6ebd5db2d9cd0f3b9da5110daf42f01dd9eb295bb7964c48d65032"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_12.obj",
+      "size": 1927,
+      "sha256": "62f9f9c6f6f5bd8386f612685d60cf36950b92a21c7f93f9d9cc81dfa45f4ab5"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_22.obj",
+      "size": 1362,
+      "sha256": "9b5212bd1a405f6f6b2805c0bb6652692cbbc30b31de2eb6d2fe8671389a4243"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_23.obj",
+      "size": 1926,
+      "sha256": "48618b11021f9f07ddf79a43a521db7eb8ac5a757eeec9c3f952cb0c647adcba"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_8.obj",
+      "size": 2085,
+      "sha256": "a187f05e49743041d24fd33847a74279be212dce0310e0dfdfe8888b1ac0fe15"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_4.obj",
+      "size": 2283,
+      "sha256": "f82fd2e6e9ac27323ee99b07245b7fe7c32c1fc4f1b6f1dcd02fc38fff79ca07"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_7.obj",
+      "size": 3630,
+      "sha256": "694bff6b80cb3f9d4eeef84e3fbc2478600dadd761ab4ae66618445747b011a8"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_20.obj",
+      "size": 2159,
+      "sha256": "4df3c1e5ff7dc1ae8c1c2faa0a7aeebb8a64251ec7b269ce83cf3989442672b1"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_13.obj",
+      "size": 1413,
+      "sha256": "ad64cac8b5317a045fc31e6537901e56c5e7c4c5eaafe5f0a7682e31da95220b"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_14.obj",
+      "size": 2407,
+      "sha256": "2ceeeb27c2850e6310fd27e3a3b3bb51ce2abdc9c7cf787c057bd885131f1f9b"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_6.obj",
+      "size": 1809,
+      "sha256": "6a2ae6fdce79f1e3fdd5a0ce2dd341f58126e0ce9fefbb8bf64f6b5faff84938"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_30.obj",
+      "size": 867,
+      "sha256": "568284db31bd165066345cdc252e754b7893a1113070223e9bf3f79533767b73"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_3.obj",
+      "size": 2422,
+      "sha256": "09298d320ee0773bb378387287e0573c245e143bb66febbf5aa326ffce96a9ea"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_11.obj",
+      "size": 1341,
+      "sha256": "d06f56a7609665049044843d898f4b50908e0ca9b4252015a90138df8553ad60"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_10.obj",
+      "size": 1646,
+      "sha256": "9a5238524765b0f810acfe38315cb24849d7ee475696eecb34368dec546e311c"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_14.obj",
+      "size": 1969,
+      "sha256": "cbf4e486a87331e28132ca1a20d3d05aa657de0b158964a1731ed2250995707b"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_5.obj",
+      "size": 1782,
+      "sha256": "6827b195b666169065ad2da113fdd9b3602614ecc0794008fb19712e60525406"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_13.obj",
+      "size": 2201,
+      "sha256": "0ce1a43dd8343ce29dabcae5dc364e690ef68988d840a712f90b8ede6da955f1"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_29.obj",
+      "size": 651,
+      "sha256": "01d89baa437535b8bbdd348060e4fb10907e45ceb2876afd9cb5960aaf764fb2"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_11.obj",
+      "size": 2302,
+      "sha256": "2163a73cf10ae13784a558943fdcfb59d61fd9643a98e770ed8754871f2e4802"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_0.obj",
+      "size": 3122,
+      "sha256": "2e604e49727addb81ba66e7b5fe24155788a180b7943146e760156932cdac3f1"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_0.obj",
+      "size": 1323,
+      "sha256": "18b04eca2a4d71df055b3b6b29e02ddf64c26490a17bf49647cff744e4a7c3bd"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_7.obj",
+      "size": 1706,
+      "sha256": "509721bbc91b2a8c9b39de6a2d0bfce9c7c11834de72f1cd97383ae951c2e640"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_1.obj",
+      "size": 1985,
+      "sha256": "8a0060ec1ca00fe3f0a2d087ab7f64a3790ed6b871aac1c650bf639c2c0a336d"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_15.obj",
+      "size": 2078,
+      "sha256": "cf44bd1aa9e5c13a18a4ffd068862709d53b74b7d7d7c3686432576a119fb02a"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_27.obj",
+      "size": 1577,
+      "sha256": "8110f31b85283fecfe274a18cb6f9055238916201ebb0847115f5b1a84cc11b7"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_24.obj",
+      "size": 1457,
+      "sha256": "8b5809010180cc16199f0c74b57e28eabc73ae99b8d4d6c22359ed883c7d1574"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_19.obj",
+      "size": 1305,
+      "sha256": "2a63efb63fc9856a97a33445f22df6558adf1581d8211521807abddb69dcdce1"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_28.obj",
+      "size": 1288,
+      "sha256": "84b59dab5d78581b5f2f98879c773bb4c8aa6e79aebe0f57423a3c12199afe61"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/model_normalized_collision_17.obj",
+      "size": 1562,
+      "sha256": "d25d87afdd1f599dff2ada9e44a63a5ac1a7d2c56dbd9379293ac6047296cbe7"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_8.obj",
+      "size": 3068,
+      "sha256": "bc01d3e6ac6d42f723e60afc8f9cf72cf8a555ce11a8752e189708591e9e54d8"
+    },
+    {
+      "path": "objaverse/mug/mug_9/collision/collision_mesh_collision_4.obj",
+      "size": 1758,
+      "sha256": "a1a2f9471c17162f39988987c6219de425167e11934aa732cbadc78b57a63da4"
+    },
+    {
+      "path": "objaverse/mug/mug_9/visual/model_normalized_0.obj",
+      "size": 58446,
+      "sha256": "e8e33b81d97c04be167b95ca6588a52fcd68f35a82bee99ce97deeb98d700d48"
+    },
+    {
+      "path": "objaverse/mug/mug_9/visual/material.mtl",
+      "size": 200,
+      "sha256": "2ccc8967f0993ffa8689824515b9f193b9b8f7808941ab02941a51a71508e9a4"
+    },
+    {
+      "path": "objaverse/mug/mug_9/visual/material_0.png",
+      "size": 222905,
+      "sha256": "b26e1a186e9602fc09584cb285a8ae4f63076c76cf7bbfe58b7e354091667b66"
+    },
+    {
+      "path": "objaverse/mug/mug_9/visual/image0.png",
+      "size": 222905,
+      "sha256": "b26e1a186e9602fc09584cb285a8ae4f63076c76cf7bbfe58b7e354091667b66"
+    },
+    {
+      "path": "objaverse/mug/mug_17/model.xml",
+      "size": 12972,
+      "sha256": "04e245d49c5b59b6b3519c3af7d82f5b5f1dead7655face51e4c839093c80dc4"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_12.obj",
+      "size": 7903,
+      "sha256": "995ae968b711dc6ccd8953f46847fc9dfdb690e125188db9cd59fc018d0724d7"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_10.obj",
+      "size": 21666,
+      "sha256": "b2c0b2a44429f0c7fda0cf2469c8f925e0a40d1bcadceda4dc397e1124c64bcd"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_5.obj",
+      "size": 33909,
+      "sha256": "a151a0363f3b5f4368e02b42a726b9465c8da27fe9da006d9a8a652be583612d"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_16.obj",
+      "size": 2431,
+      "sha256": "1b42b90f076b0aeef6106974e7a705dd6c4d966fb8c56666e0f140ec68160391"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_9.obj",
+      "size": 1679,
+      "sha256": "7ac910ecc960335890bae45ce67d367708534a545b9ed8a0496e084a168080d4"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_26.obj",
+      "size": 3698,
+      "sha256": "a2f27b769956afc5f3a4e4ea3aa3b4df3eba6dcf61ba5ad44b9f5b77552b5281"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_3.obj",
+      "size": 20554,
+      "sha256": "1118a4075dafa08b3496117e839bd8bf6ad36d2822b1af579f6950271e5dc1d2"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_18.obj",
+      "size": 1631,
+      "sha256": "ab742e4d06b179cc266f388f4a40f376297169d4bd0f9e99e53f0cd53f859e4a"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_2.obj",
+      "size": 18170,
+      "sha256": "a9833526869d495efba888d73d179d8f5e723f1114f50c23f0ac9653823ee3c7"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_9.obj",
+      "size": 33607,
+      "sha256": "c5dd9949c55343d5621adbd288826e1962b7cb15701c922d47642246d4681712"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_21.obj",
+      "size": 1874,
+      "sha256": "0a45755837b1438db222f967052e06f7a53d6268c0a816ba1159e031f995d53b"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_25.obj",
+      "size": 1517,
+      "sha256": "021ca0c340ca0b460bcdda71bf724e3c5454ff58ed8a378cae9e26a69b4110f0"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_31.obj",
+      "size": 871,
+      "sha256": "0f2475a60d1fb4bca9a4188a641118215f5feb0aa5875ddad5dd164ade9c1fd9"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_15.obj",
+      "size": 26763,
+      "sha256": "5f0142a1cfd43989205a6e261c363c2e6f4b7d05ea66134e8c2bd4dde504f03b"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_1.obj",
+      "size": 2293,
+      "sha256": "23f9d93cd00d539acf7f5e1a690a5040b33d214038dfaf9f08ca25789b72ec31"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_6.obj",
+      "size": 27341,
+      "sha256": "ddabb0598a1ddd11804d1bed7e7a53a4feea9b4640d7112da6108c8bd65e5429"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_2.obj",
+      "size": 3744,
+      "sha256": "e1ca7678c9f30b2a478491f454dcc699d3daa821f2d73557acfd88d767c2b698"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_12.obj",
+      "size": 1234,
+      "sha256": "a0c2af30746849a047a3ecd5cc1fe5ae6f9de669726ac92c11d4f6f5aab7c0e1"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_22.obj",
+      "size": 1314,
+      "sha256": "1f3fe324747a4d1bc41e85f10210489c3e576c5def44463da5009413c3fd0267"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_23.obj",
+      "size": 2902,
+      "sha256": "a91684e3b218e0a4310540d8f39352cfac6289e3d0bb2b4babebc10bb17f87bc"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_8.obj",
+      "size": 2661,
+      "sha256": "9b6f099314d935e8743ebbc45bc059859711a3153e0693e4c6dd12618f622acb"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_4.obj",
+      "size": 1003,
+      "sha256": "b010d060e738aba6aa4660c47d9e08f78669f062cf328073e83b8f34b10fadae"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_7.obj",
+      "size": 44769,
+      "sha256": "9650300071c1fb33de9e29eb19b1cfcd3e13f99a2a6988df444c4d493fb0bfa3"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_20.obj",
+      "size": 1741,
+      "sha256": "704292f6cdbd8315edd6932f4806aea69df21de80a0c4c38c499b2e3052e8c29"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_13.obj",
+      "size": 3141,
+      "sha256": "6e80753c8347a4f156e72d741cc7519cadcdab0e85305d4ff5108e46e2f933c1"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_14.obj",
+      "size": 16390,
+      "sha256": "16b28c1846ecd9dc10323d78bed898fac41aadd3e2e4ce973c239f98725ac767"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_6.obj",
+      "size": 1336,
+      "sha256": "e4f89399f874d6e8f62ae0e3d493c5551cad066850db94afa81ab797d7a940f6"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_30.obj",
+      "size": 871,
+      "sha256": "ff3eb42d271226138b1432ee1505b899ceb009c8f28891e5f93a409aa56297ff"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_3.obj",
+      "size": 1480,
+      "sha256": "956363854ce6779fd73f411676228396016de6679fedfcbf267e6141a9f74324"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_11.obj",
+      "size": 34447,
+      "sha256": "68b1eef81288fc51543c961e9a96cc060be1e5055c0fc88b1cc1dc31f16d02c0"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_10.obj",
+      "size": 1997,
+      "sha256": "78e34546932ccf18196767a1743b11b5444180c0a416666fcb7ace74e47b0779"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_14.obj",
+      "size": 1943,
+      "sha256": "dbbf6ebd08d4d0f10b16bdf01f5da2ba51c26f40a5572b574b5c5fc9e9700920"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_5.obj",
+      "size": 2381,
+      "sha256": "bc4613e39123dd677df20bb0ec383428064f5fd83a0d98046b19c37424152208"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_13.obj",
+      "size": 30632,
+      "sha256": "6a36cba8e24851d088323f393a2f47cd05dc5b29d76c89686dffa7731f65fa0b"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_29.obj",
+      "size": 1895,
+      "sha256": "7775363791cb99c65f391095e2f1965c8bb9b32c2ba1792204d18c9a9ec0c6eb"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_11.obj",
+      "size": 1804,
+      "sha256": "22677c0cde592ef89cb85da14073cde36a1dbbbb0204f7ebbee8e6315676fca7"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_0.obj",
+      "size": 85184,
+      "sha256": "b45deb70728ba44f8919a94f6aa28e68d80ed1af0b09a26eddab4a7a792330a5"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_0.obj",
+      "size": 2292,
+      "sha256": "6cfbe77408501c199e2afa3d7ad2af2bb158f66379de81453728b9f0562374cd"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_7.obj",
+      "size": 1307,
+      "sha256": "be9efcd31803f81ab2541ed77a8aa68a2b2aec085b5fd6269bb6ac2e48b5dc29"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_1.obj",
+      "size": 16592,
+      "sha256": "e0b5b196edfadc1819a4c0327d21d7b5c131b60e6ae953e0dab5b516a1c09381"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_15.obj",
+      "size": 1376,
+      "sha256": "9fc262585c6bb8d5e1a0a4033fd3a3bc96add1e6c1527ecfa2994b0d12ab6c3c"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_27.obj",
+      "size": 1177,
+      "sha256": "90c2484cf3199e006d9996a7a9661900977f92fb3b28ccb4f8e704bff8a8e3af"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_24.obj",
+      "size": 2164,
+      "sha256": "18c10ffbc3970a401a5b4fd3e9b315a9473f6fc7b66e896981397e204ce2d92d"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_19.obj",
+      "size": 1426,
+      "sha256": "20cfa42ab357ba9f8b1cab848c00f46651cb469b6e48c16d4e2ee91392f8be68"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_28.obj",
+      "size": 1430,
+      "sha256": "2fdcbdf63a68bce62c6a6548f29cd386c36105252d2a93ada712fb09431c73ff"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/model_normalized_collision_17.obj",
+      "size": 1851,
+      "sha256": "4463139ed0c5edd14532a205c0d91fc7afe2ee35c0080876e7c7db161844b7ad"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_8.obj",
+      "size": 35480,
+      "sha256": "ba52009adf389804b73be3cc67bdfca74246d5b301109879da29f6d4bdb95bd9"
+    },
+    {
+      "path": "objaverse/mug/mug_17/collision/collision_mesh_collision_4.obj",
+      "size": 19925,
+      "sha256": "389b8fe751abeb91b9d1ed59ea2688c9527bca08bed51f5675c9f2a9f86a0553"
+    },
+    {
+      "path": "objaverse/mug/mug_17/visual/model_normalized_0.obj",
+      "size": 571306,
+      "sha256": "b545885200e6c01b6a662ef0f7d6acb6d3fd41fb9302b29653e05ad14bcdeac6"
+    },
+    {
+      "path": "objaverse/mug/mug_17/visual/material.mtl",
+      "size": 178,
+      "sha256": "152e22ee9ca2f0ad5ba2ef3301dc68892e526c4d4a39aebc75a4134db84befc7"
+    },
+    {
+      "path": "objaverse/mug/mug_17/visual/model_normalized_1.obj",
+      "size": 2510850,
+      "sha256": "1fd5f76e990783da91f09fa33b0fd543abf01a0a15ae884458bb331b50895298"
+    },
+    {
+      "path": "objaverse/mug/mug_15/model.xml",
+      "size": 13429,
+      "sha256": "9f9a2dd21d3d80d407edfe183365690c8bbe9229e53c25bb82ab286385f4d9f6"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_12.obj",
+      "size": 14888,
+      "sha256": "b83d596b50953a388232b39a7d26b235cb7478c90bd81c71eb4c0b738d11a996"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_10.obj",
+      "size": 22995,
+      "sha256": "74c2d5cce8a120b1318583c7073a336d3533473111eeefaa1f55f29ff45b553f"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_5.obj",
+      "size": 21379,
+      "sha256": "9f50b9cde0a8db75b1b8c3a67cbb04859ca79470a82894cd88e409f855ad1931"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_16.obj",
+      "size": 1886,
+      "sha256": "2484cac7123d019d345b29f5a19b154c7ac413de332cb615fa630780eccc425b"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_9.obj",
+      "size": 1661,
+      "sha256": "2662f2794d688d765d3f1f99204dd940080c1fc531b9874f9294838c9d1451f6"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_26.obj",
+      "size": 1019,
+      "sha256": "85f06e5f42b5f4355222a7c5b5245f2dbfaf60fca1954285ee0a574b1bbdb985"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_3.obj",
+      "size": 23871,
+      "sha256": "268b25e2b2ca8b1f62ae914c7ed89a4d321c36098b58fd96a7187937c5aefb71"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_18.obj",
+      "size": 1279,
+      "sha256": "715cf3e12ae723340862cf702c3a5a19be46184d6848dffd88424d5cb8bd773a"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_2.obj",
+      "size": 13608,
+      "sha256": "1d7585818f1666ad2c2fc6016d83ec49e437d3ed346268b3e2179fb8eb76e8d6"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_9.obj",
+      "size": 18194,
+      "sha256": "d12a7da7a972e03611c2cef452aba19156ae7d1b5afe6fdfc2cac69d59e5c39f"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_21.obj",
+      "size": 996,
+      "sha256": "33ef1c7fe416e2d1442acf75f6343947157946203d3568034fe87fb7f49052a6"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_25.obj",
+      "size": 1081,
+      "sha256": "03519654e46dadad6fdbe072ff2fb60ed06d832b010328351b6a615ca4bddefc"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_31.obj",
+      "size": 1298,
+      "sha256": "ccef108aab3c35e664a52736579df62cd8970cd44f3e93869679225386d638d2"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_15.obj",
+      "size": 17332,
+      "sha256": "85785d6dbd6c40cc77641a0d5882945b20ee6a9065d559d3b3c57c2a5eec8d90"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_1.obj",
+      "size": 2971,
+      "sha256": "8a5fdf619b6929a5f51608fc5d8a602f03921b0cc20f84ba1e6e67d001d9ae76"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_6.obj",
+      "size": 14235,
+      "sha256": "7466feaf8e66c8bc0473b526691f0e4ee7d6d03dc9b705b918109908ab250dcc"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_2.obj",
+      "size": 658,
+      "sha256": "ef8dcd44517aa22bbfa6e51d29372e5831cadc52a72b0097b49f3bf43c96bc8e"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_12.obj",
+      "size": 3460,
+      "sha256": "443a9240eb74c2c0b449bb33f373209211bcf8137745398a110941ce3c8887d2"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_22.obj",
+      "size": 1512,
+      "sha256": "b2ccb039e89ca894fe952c00a27e3a62bca79f9ae6bb78b20e1e3658aae715a9"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_23.obj",
+      "size": 1599,
+      "sha256": "d7f63d6c4ba1582bd9b5c1cf804449b39fb671f78a8b88e0adc692a4d5bfa8c1"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_8.obj",
+      "size": 3576,
+      "sha256": "5c0ad253a620ed3bc894749011a3dd729ad52e5f2f2431f634fb05a403926d55"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_4.obj",
+      "size": 1206,
+      "sha256": "2262309e1bfca91865f59204b403a0df20cfa7a488a7acce281633362a7e7f85"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_7.obj",
+      "size": 8115,
+      "sha256": "26d4c55198be714558dd599373bf178f28dc360f8420470c82e3ab72571c0013"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_20.obj",
+      "size": 961,
+      "sha256": "05eabc4dd2b08944bff4a57af954fa9fe8fd547f13b8d27e6f356534c8687282"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_13.obj",
+      "size": 1478,
+      "sha256": "7bb3b6c6c1ad641753e9f67db7a39abbb5a30159aca257e9ac50beac66412c0b"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_14.obj",
+      "size": 3912,
+      "sha256": "9266c9563fc6420f8567a79bee701784959bb67055ceeee70e79a0e996334348"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_6.obj",
+      "size": 1244,
+      "sha256": "a9070d8eee7d51a30ee5fa5a91d0d9c76e2909fa045fbd81f3091911e915119b"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_30.obj",
+      "size": 930,
+      "sha256": "8e070dd418b1e808b71083492c702dc057ccd50932dd5d438b52156f80cad347"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_3.obj",
+      "size": 2110,
+      "sha256": "f59ca79d6e39ee586a09578651dfabd5175323cb5e33cb8fa9e8a011d79ac908"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_11.obj",
+      "size": 7933,
+      "sha256": "48bc8e8725d5721fd570245fae3851c6c3d5d956865c0cd7154826b8df345e39"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_10.obj",
+      "size": 1870,
+      "sha256": "a966c4c002fcc4dc31c0d37d87c7212328bb14b547067364eba5a2d75f10b377"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_14.obj",
+      "size": 1706,
+      "sha256": "3dc968c4ff5b8033fe37853fbbcfca3f4fcb3d34f11ab3512f0164ad92e93d78"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_5.obj",
+      "size": 3628,
+      "sha256": "b13f78c05c93d1a090282b40a75a4b536efc31d7445d8fa9626ee8c85ce1c10a"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_13.obj",
+      "size": 12480,
+      "sha256": "25cca400114f4175e36734f5e105b607295e870bbc82b3b052c34db836b553b0"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_29.obj",
+      "size": 592,
+      "sha256": "52fb1cfc0cffc1574fc2a452a10f80a298e7766ca6f86a0c8889b0cb4e18bd43"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_11.obj",
+      "size": 2273,
+      "sha256": "2b5beec9b6720179ec23d50baaeb3a4028f73359296b912af2659e2f0cbcdd65"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_0.obj",
+      "size": 31335,
+      "sha256": "2881e75296a07c8ced85e6a57d51af2f83a06944db821e79e3a95d8e44ce63f5"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_0.obj",
+      "size": 1154,
+      "sha256": "7b2afabce38cb4605e2f92d8b962e26f8a574ad95dc893e9b93af5f810d5f10c"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_7.obj",
+      "size": 3148,
+      "sha256": "69fd3664c6e9ac2b4ebb7a42c8412b5d5b93b005ef177fb92b387cc38a66e0a6"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_1.obj",
+      "size": 23156,
+      "sha256": "f836f61f06977c4c0d89dac52cca05ec39cc66965c4269c795488eee12595471"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_15.obj",
+      "size": 1710,
+      "sha256": "e85e5aa04c8bdcc63d95fcb14f84ea7da7f3099008d1dc1ce5e6ebba3e8c1ff3"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_27.obj",
+      "size": 1164,
+      "sha256": "bca02dd4f8e1fc7c7226dc32babd62ad71a8bc65f26517b66e8717c9999123b0"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_24.obj",
+      "size": 1012,
+      "sha256": "2c23cdd4aafc82ce07c141bda32a81792f42e29331a46625ae471f74ff6b93cb"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_19.obj",
+      "size": 1449,
+      "sha256": "9dc3f2f5d1909443f7e7253b2c6498df3c57f47a8a22555c9aae06c156f81960"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_28.obj",
+      "size": 1460,
+      "sha256": "ec38ed4da6387819ef8c5029a0cf9458c514815488d61decf9e0943a0edca487"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/model_normalized_collision_17.obj",
+      "size": 2367,
+      "sha256": "e82f8b3db2b327b939a59b1b0fa347bdec3e81cf017d2ee56586c3f3c5473c53"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_8.obj",
+      "size": 10655,
+      "sha256": "015ca737030d1482cb9c78c67b60b8a30f76809437f2f8017318a71485295f77"
+    },
+    {
+      "path": "objaverse/mug/mug_15/collision/collision_mesh_collision_4.obj",
+      "size": 24135,
+      "sha256": "b94548582e1bf38d291f0ba93e8782af3021fa10c2737f5d9ab82fa95893e3f8"
+    },
+    {
+      "path": "objaverse/mug/mug_15/visual/model_normalized_0.obj",
+      "size": 483586,
+      "sha256": "d59d584da7def238ab0a9a6b70f2b2f3febaab9fd066f3e755a9d2807b77d738"
+    },
+    {
+      "path": "objaverse/mug/mug_15/visual/material.mtl",
+      "size": 176,
+      "sha256": "25cee66e26d96a4b3d6a97b92f95726bce86aeb48e3f22e82a0bb3451397f204"
+    },
+    {
+      "path": "objaverse/mug/mug_15/visual/model_normalized_1.obj",
+      "size": 1280272,
+      "sha256": "1f259135987f51c15265cff1fd9edf5a6da6f857f3043efab99091138d19acc9"
+    },
+    {
+      "path": "objaverse/mug/.DS_Store",
+      "size": 10244,
+      "sha256": "102b6ff79473fad0fb05eca9f74f59fa977bf025e80dde72b903a84c8e442152"
+    }
+  ]
+}
