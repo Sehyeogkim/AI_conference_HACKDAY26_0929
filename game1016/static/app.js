@@ -196,7 +196,13 @@
         const emblem=document.createElement('div');emblem.className='episode-emblem';emblem.textContent=episode.success===true?'✓':'↗';
         const detail=document.createElement('div');detail.className='episode-detail';
         const title=document.createElement('strong');title.textContent=taskTitle(episode.task_id);
-        const metadata=document.createElement('p');let date='';if(episode.created_at||episode.submitted_at){const parsed=new Date(episode.created_at||episode.submitted_at);if(!Number.isNaN(parsed.getTime()))date=`${parsed.toLocaleString()} · `;}
+        const metadata=document.createElement('p');let date='';
+        const recordedAt=episode.created_at??episode.submitted_at;
+        if(recordedAt!==undefined&&recordedAt!==null&&recordedAt!==''){
+          const numeric=typeof recordedAt==='number'||(typeof recordedAt==='string'&&/^\d+(?:\.\d+)?$/.test(recordedAt))?Number(recordedAt):null;
+          const parsed=new Date(numeric===null?recordedAt:Math.abs(numeric)<1e12?numeric*1000:numeric);
+          if(!Number.isNaN(parsed.getTime()))date=`${parsed.toLocaleString()} · `;
+        }
         metadata.textContent=`${date}${id}`;detail.append(title,metadata);
         const metrics=document.createElement('div');metrics.className='episode-metrics';const result=document.createElement('div');result.textContent=episode.success===true?'Task success':episode.success===false?'Incomplete attempt':'Result not reported';metrics.append(result);
         const stats=document.createElement('div');stats.textContent=`${episode.steps??episode.frames??'—'} steps${episode.mode?` · ${episode.mode}`:''}`;metrics.append(stats);
