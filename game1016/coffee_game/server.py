@@ -242,6 +242,7 @@ class LocalGame:
         recorder = self.recorder
         self.clear_input()
         self.phase = "submitting"
+        await self.emit({"type": "status", **self.status()})
 
         async def finish() -> dict:
             try:
